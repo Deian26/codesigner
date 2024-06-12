@@ -1,0 +1,73 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|a:\\development_software\\codesigner-ide\\codesigner-ide\\forms\\diagnostics\\d0_maindiagnosticspanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|solutionrelative:forms\\diagnostics\\d0_maindiagnosticspanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|a:\\development_software\\codesigner-ide\\codesigner-ide\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|solutionrelative:start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|a:\\development_software\\codesigner-ide\\codesigner-ide\\forms\\ide\\f0_logo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|solutionrelative:forms\\ide\\f0_logo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 446,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "D0_MainDiagnosticsPanel.cs [Design]",
+              "DocumentMoniker": "A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\FORMS\\Diagnostics\\D0_MainDiagnosticsPanel.cs",
+              "RelativeDocumentMoniker": "FORMS\\Diagnostics\\D0_MainDiagnosticsPanel.cs",
+              "ToolTip": "A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\FORMS\\Diagnostics\\D0_MainDiagnosticsPanel.cs [Design]",
+              "RelativeToolTip": "FORMS\\Diagnostics\\D0_MainDiagnosticsPanel.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-12T20:16:20.287Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Start.cs",
+              "DocumentMoniker": "A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\Start.cs",
+              "RelativeDocumentMoniker": "Start.cs",
+              "ToolTip": "A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\Start.cs",
+              "RelativeToolTip": "Start.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-12T20:13:55.595Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "F0_Logo.cs [Design]",
+              "DocumentMoniker": "A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\FORMS\\IDE\\F0_Logo.cs",
+              "RelativeDocumentMoniker": "FORMS\\IDE\\F0_Logo.cs",
+              "ToolTip": "A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\FORMS\\IDE\\F0_Logo.cs [Design]",
+              "RelativeToolTip": "FORMS\\IDE\\F0_Logo.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-12T20:12:12.051Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
