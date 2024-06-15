@@ -7,11 +7,11 @@
       "RelativeMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|solutionrelative:forms\\diagnostics\\d0_maindiagnosticspanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|a:\\development_software\\codesigner-ide\\codesigner-ide\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|solutionrelative:start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|a:\\development_software\\codesigner-ide\\codesigner-ide\\forms\\ide\\f0_logo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\forms\\ide\\f0_logo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{94F4FEB4-F841-42D5-858B-790D69976E56}|CoDesigner-IDE.csproj|solutionrelative:forms\\ide\\f0_logo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
@@ -50,8 +50,7 @@
               "RelativeToolTip": "Start.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T20:13:55.595Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-12T20:13:55.595Z"
             },
             {
               "$type": "Document",
@@ -62,8 +61,7 @@
               "ToolTip": "A:\\Development_Software\\CoDesigner-IDE\\CoDesigner-IDE\\FORMS\\IDE\\F0_Logo.cs [Design]",
               "RelativeToolTip": "FORMS\\IDE\\F0_Logo.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T20:12:12.051Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2024-06-12T20:12:12.051Z"
             }
           ]
         }
