@@ -1,0 +1,16 @@
+<component name="MCL" type="programming-language">
+	
+	<description>
+		MiniComp Language
+	</description>
+	
+	<project>
+
+		<control name = "MiniComp-hardware" values = "00.01.00,00.01.01" /> <!-- MiniComp hardware used -->
+
+	</project>
+	
+	<programming-language name="MCL" />
+	
+	
+</component>

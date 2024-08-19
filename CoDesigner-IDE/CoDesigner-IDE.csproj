@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{94F4FEB4-F841-42D5-858B-790D69976E56}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>CoDesigner_IDE</RootNamespace>
+    <AssemblyName>CoDesigner-IDE</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FORMS\Diagnostics\D0_MainDiagnosticsPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\Diagnostics\D0_MainDiagnosticsPanel.Designer.cs">
+      <DependentUpon>D0_MainDiagnosticsPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\F0_Logo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\F0_Logo.Designer.cs">
+      <DependentUpon>F0_Logo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\F1_Projects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\F1_Projects.Designer.cs">
+      <DependentUpon>F1_Projects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\F2_ConfigureNewProject.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\F2_ConfigureNewProject.Designer.cs">
+      <DependentUpon>F2_ConfigureNewProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\F3_MainEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\F3_MainEditor.Designer.cs">
+      <DependentUpon>F3_MainEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SYSTEM\Utility\Components\Component.cs" />
+    <Compile Include="SYSTEM\Utility\Components\Components.cs" />
+    <Compile Include="SYSTEM\Utility\Diagnostics\Diagnostics.cs" />
+    <Compile Include="SYSTEM\Utility\Diagnostics\LogEvent.cs" />
+    <Compile Include="SYSTEM\Utility\Paths.cs" />
+    <Compile Include="SYSTEM\Utility\Projects\Project.cs" />
+    <Compile Include="SYSTEM\Utility\Projects\ProjectManagement.cs" />
+    <Compile Include="SYSTEM\Utility\GUI\Customization.cs" />
+    <Compile Include="SYSTEM\Utility\GUI\Prompts.cs" />
+    <EmbeddedResource Include="FORMS\Diagnostics\D0_MainDiagnosticsPanel.resx">
+      <DependentUpon>D0_MainDiagnosticsPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\F0_Logo.resx">
+      <DependentUpon>F0_Logo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Projects\F1_Projects.resx">
+      <DependentUpon>F1_Projects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Projects\F2_ConfigureNewProject.resx">
+      <DependentUpon>F2_ConfigureNewProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Projects\F3_MainEditor.resx">
+      <DependentUpon>F3_MainEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="COMPONENTS\MCL\" />
+    <Folder Include="SYSTEM\Utility\Diagnostics\Logs\" />
+    <Folder Include="SYSTEM\Utility\FileManagement\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SYSTEM\Resources\Diagnostics\EVENTS.xml" />
+    <Content Include="SYSTEM\Resources\GUI\MESSAGES.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

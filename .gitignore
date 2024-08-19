@@ -1,0 +1,4 @@
+#ignore artifacts
+/CoDesigner-IDE/bin/
+/CoDesigner-IDE/obj/
+/CoDesigner-IDE/.vs/
