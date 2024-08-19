@@ -1,0 +1,12 @@
+﻿<messages>
+	<!-- 
+	- The code must be unique in the default files (for components, the code must unique in the component);
+	  The code from each message will be 'prepended' by a 2-byte value, which marks the origin of the message (defined in the program code)
+	- The dialog buttons must have one of the values defined in the 'MessageBoxButtons' enum
+	- The dialog icon must have one of the values defined in the 'MessageBoxIcon' enum
+	-->	
+	<message code="1" description="Overwrite project directory confirmation dialog; YesNo, Question" dialog_buttons ="4" dialog_icon="32">
+		<EN caption="Overwrite" text="A directory. with files and/or subfolders, with the same name alreayd exists at this location. Do you want to create the project in it?"/>
+	</message>
+
+</messages>

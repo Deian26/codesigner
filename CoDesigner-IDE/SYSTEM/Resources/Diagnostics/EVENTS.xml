@@ -1,0 +1,33 @@
+﻿<events>
+	<!-- 
+	- The event code must be unique in the default files (for components, the codes must be unique component-wide); the event code will be: bytes0-1= origin, bytes2-3=code
+	  The event code here is represented as a decimal
+	- Origin: Undefined = 0, IDE = 1, Component = 2, UserProgram = 3 (for component events, this is attribute is not used)
+	- Severity: Info = 0, Debug = 1, Warning = 2, Error = 3, Fatal = 4
+	-->
+	
+	<event code="1" origin="0" severity="3"> 
+		<!-- 0x0000 0001 -->
+		<EN message="Invalid component loaded: not a programming language!"/>
+	</event>
+	
+	<event code="2" origin="0" severity="2"> 
+		<EN message="Invalid project name! Check textbox hint for details on valid names."/>
+	</event>
+	
+	<event code="3" origin="0" severity="2"> 
+		<EN message="Invalid project folder location!"/>
+	</event>
+
+	<event code="4" origin="0" severity="2"> 
+		<EN message="Invalid message box buttons or icon code. "/>
+	</event>
+
+	<event code="5" origin="0" severity="4">
+		<EN message="Could not load GUI default messages! "/>
+	</event>
+
+	<event code="6" origin="0" severity="3">
+		<EN message="Could not load a GUI default message translation for the current language. "/>
+	</event>
+</events>
