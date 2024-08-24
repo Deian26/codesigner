@@ -33,6 +33,24 @@ namespace CoDesigner_IDE
                 Diagnostics.LogEvent(0x00000004, ex.Message);
             }
         }
+
+        /// <summary>
+        /// Returns a description of the object, as a string.
+        /// </summary>
+        /// <returns></returns>
+        override public string ToString()
+        {
+            string str;
+            str = "Prompt Message\n";
+            str += ("Caption: "+this.Caption+"\n");
+            str += ("Text: "+this.Text+"\n");
+            str += ("MessageBox Buttons: "+this.Buttons.ToString())+"\n";
+            str += ("MessageBox Icon: "+this.Icon.ToString()+"\n");
+
+            str += "\n";
+
+            return str;
+        }
     }
     /// <summary>
     /// Handles IDE wide prompts and messages

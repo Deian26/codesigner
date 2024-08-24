@@ -42,5 +42,13 @@
 	<event code="9" origin="0" severity="3">
 		<EN message="Could not load active projects! "/>
 	</event>
+
+	<event code="10" origin="0" severity="4">
+		<EN message="Could not load program items due to invalid files or file formats (including components)! "/>
+	</event>
+
+	<event code="11" origin="0" severity="3">
+		<EN message="Could not load versions! "/>
+	</event>
 	
 </events>

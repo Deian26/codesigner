@@ -1,4 +1,4 @@
-<component name="MCL" type="programming-language" version="00.01.00">
+<component name="MCL" type="programming-language" version="00.01.00" default_component="true">
 	
 	<description>
 		MiniComp Language

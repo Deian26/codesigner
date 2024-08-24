@@ -13,7 +13,7 @@ namespace CoDesigner_IDE
     {
         //forms
         //Diagnostics
-        public static D0_MainDiagnosticsPanel D0 = null;
+        public static D0_MainDiagnosticsForm D0 = null;
         //IDE
         public static F1_Projects F1 = null;
         public static F1_Projects F2 = null;
@@ -31,7 +31,7 @@ namespace CoDesigner_IDE
 
         private static void startDiagnostics()
         {
-            Program.D0 = new D0_MainDiagnosticsPanel();
+            Program.D0 = new D0_MainDiagnosticsForm();
             Program.D0.Visible = false;
             
             Application.Run(Program.D0); //DEV - remove diagnostic form start ('Application.Run()')

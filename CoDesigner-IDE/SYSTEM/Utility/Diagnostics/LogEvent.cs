@@ -15,7 +15,7 @@ namespace CoDesigner_IDE
     {
         Diagnostics.EVENT_ORIGIN origin { get; }
         Diagnostics.EVENT_SEVERITY severity { get; }
-        short code { get; }
+        int code { get; }
         string message { get; }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace CoDesigner_IDE
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <param name="showMessageBox">ignored for FATAL and UNDEFINED events </param>
-        public LogEvent(Diagnostics.EVENT_ORIGIN origin, Diagnostics.EVENT_SEVERITY severity, short code, string message, bool showMessageBox)
+        public LogEvent(Diagnostics.EVENT_ORIGIN origin, Diagnostics.EVENT_SEVERITY severity, int code, string message, bool showMessageBox)
         {
             this.origin = origin;
             this.severity = severity;
