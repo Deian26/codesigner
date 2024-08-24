@@ -7,7 +7,6 @@
 	-->
 	
 	<event code="1" origin="0" severity="3"> 
-		<!-- 0x0000 0001 -->
 		<EN message="Invalid component loaded: not a programming language!"/>
 	</event>
 	
@@ -30,4 +29,18 @@
 	<event code="6" origin="0" severity="3">
 		<EN message="Could not load a GUI default message translation for the current language. "/>
 	</event>
+
+	<event code="7" origin="0" severity="3">
+		<EN message="Could not load project from file. The file does not exist or has an invalid format! "/>
+	</event>
+	
+	
+	<event code="8" origin="1" severity="3">
+		<EN message="Could not load event! "/>
+	</event>
+
+	<event code="9" origin="0" severity="3">
+		<EN message="Could not load active projects! "/>
+	</event>
+	
 </events>

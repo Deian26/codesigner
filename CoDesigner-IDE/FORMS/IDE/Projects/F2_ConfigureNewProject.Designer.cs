@@ -49,9 +49,9 @@
             // 
             // F2_button_CreateNewProject
             // 
-            this.F2_button_CreateNewProject.Location = new System.Drawing.Point(488, 470);
+            this.F2_button_CreateNewProject.Location = new System.Drawing.Point(451, 470);
             this.F2_button_CreateNewProject.Name = "F2_button_CreateNewProject";
-            this.F2_button_CreateNewProject.Size = new System.Drawing.Size(177, 27);
+            this.F2_button_CreateNewProject.Size = new System.Drawing.Size(214, 34);
             this.F2_button_CreateNewProject.TabIndex = 1;
             this.F2_button_CreateNewProject.Text = "Create New Project";
             this.F2_button_CreateNewProject.UseVisualStyleBackColor = true;
@@ -62,7 +62,7 @@
             this.F2_label_NewProjectName.AutoSize = true;
             this.F2_label_NewProjectName.Location = new System.Drawing.Point(12, 29);
             this.F2_label_NewProjectName.Name = "F2_label_NewProjectName";
-            this.F2_label_NewProjectName.Size = new System.Drawing.Size(48, 18);
+            this.F2_label_NewProjectName.Size = new System.Drawing.Size(60, 22);
             this.F2_label_NewProjectName.TabIndex = 2;
             this.F2_label_NewProjectName.Text = "Name:";
             // 
@@ -71,7 +71,7 @@
             this.F2_label_NewProjectLocation.AutoSize = true;
             this.F2_label_NewProjectLocation.Location = new System.Drawing.Point(12, 149);
             this.F2_label_NewProjectLocation.Name = "F2_label_NewProjectLocation";
-            this.F2_label_NewProjectLocation.Size = new System.Drawing.Size(80, 18);
+            this.F2_label_NewProjectLocation.Size = new System.Drawing.Size(100, 22);
             this.F2_label_NewProjectLocation.TabIndex = 3;
             this.F2_label_NewProjectLocation.Text = "Location:";
             // 
@@ -79,7 +79,7 @@
             // 
             this.F2_button_BrowseNewProjectLocation.Location = new System.Drawing.Point(579, 146);
             this.F2_button_BrowseNewProjectLocation.Name = "F2_button_BrowseNewProjectLocation";
-            this.F2_button_BrowseNewProjectLocation.Size = new System.Drawing.Size(86, 23);
+            this.F2_button_BrowseNewProjectLocation.Size = new System.Drawing.Size(86, 29);
             this.F2_button_BrowseNewProjectLocation.TabIndex = 4;
             this.F2_button_BrowseNewProjectLocation.Text = "Browse";
             this.F2_button_BrowseNewProjectLocation.UseVisualStyleBackColor = true;
@@ -87,9 +87,9 @@
             // 
             // F2_textBox_NewProjectName
             // 
-            this.F2_textBox_NewProjectName.Location = new System.Drawing.Point(133, 29);
+            this.F2_textBox_NewProjectName.Location = new System.Drawing.Point(148, 29);
             this.F2_textBox_NewProjectName.Name = "F2_textBox_NewProjectName";
-            this.F2_textBox_NewProjectName.Size = new System.Drawing.Size(244, 24);
+            this.F2_textBox_NewProjectName.Size = new System.Drawing.Size(425, 29);
             this.F2_textBox_NewProjectName.TabIndex = 5;
             // 
             // F2_label_NewProjectDescription
@@ -97,17 +97,17 @@
             this.F2_label_NewProjectDescription.AutoSize = true;
             this.F2_label_NewProjectDescription.Location = new System.Drawing.Point(12, 72);
             this.F2_label_NewProjectDescription.Name = "F2_label_NewProjectDescription";
-            this.F2_label_NewProjectDescription.Size = new System.Drawing.Size(104, 18);
+            this.F2_label_NewProjectDescription.Size = new System.Drawing.Size(130, 22);
             this.F2_label_NewProjectDescription.TabIndex = 6;
             this.F2_label_NewProjectDescription.Text = "Description:";
             // 
             // F2_textBox_NewProjectDescription
             // 
             this.F2_textBox_NewProjectDescription.AcceptsReturn = true;
-            this.F2_textBox_NewProjectDescription.Location = new System.Drawing.Point(133, 69);
+            this.F2_textBox_NewProjectDescription.Location = new System.Drawing.Point(148, 69);
             this.F2_textBox_NewProjectDescription.Multiline = true;
             this.F2_textBox_NewProjectDescription.Name = "F2_textBox_NewProjectDescription";
-            this.F2_textBox_NewProjectDescription.Size = new System.Drawing.Size(244, 61);
+            this.F2_textBox_NewProjectDescription.Size = new System.Drawing.Size(425, 61);
             this.F2_textBox_NewProjectDescription.TabIndex = 7;
             // 
             // F2_folderBrowserDialog_NewProjectLocation
@@ -116,17 +116,17 @@
             // 
             // F2_textBox_SelectedProjectLocation
             // 
-            this.F2_textBox_SelectedProjectLocation.Location = new System.Drawing.Point(133, 146);
+            this.F2_textBox_SelectedProjectLocation.Location = new System.Drawing.Point(148, 146);
             this.F2_textBox_SelectedProjectLocation.Name = "F2_textBox_SelectedProjectLocation";
-            this.F2_textBox_SelectedProjectLocation.Size = new System.Drawing.Size(440, 24);
+            this.F2_textBox_SelectedProjectLocation.Size = new System.Drawing.Size(425, 29);
             this.F2_textBox_SelectedProjectLocation.TabIndex = 8;
             // 
             // F2_ConfigureNewProject
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(677, 509);
+            this.ClientSize = new System.Drawing.Size(677, 517);
             this.Controls.Add(this.F2_textBox_SelectedProjectLocation);
             this.Controls.Add(this.F2_textBox_NewProjectDescription);
             this.Controls.Add(this.F2_label_NewProjectDescription);

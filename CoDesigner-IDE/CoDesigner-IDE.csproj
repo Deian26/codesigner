@@ -125,11 +125,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="COMPONENTS\MCL\" />
     <Folder Include="SYSTEM\Utility\Diagnostics\Logs\" />
     <Folder Include="SYSTEM\Utility\FileManagement\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="COMPONENTS\MCL\CONFIGURATION.xml" />
+    <Content Include="SYSTEM\Memory\Projects\ActiveProjects.xml" />
     <Content Include="SYSTEM\Resources\Diagnostics\EVENTS.xml" />
     <Content Include="SYSTEM\Resources\GUI\MESSAGES.xml" />
   </ItemGroup>
