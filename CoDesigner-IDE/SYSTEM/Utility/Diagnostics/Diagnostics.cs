@@ -21,21 +21,38 @@ namespace CoDesigner_IDE
         {
             public Diagnostics.EVENT_ORIGIN origin;
             public Diagnostics.EVENT_SEVERITY severity;
-            public short code;
+            public int code;
             public string message;
 
-            public Event(Diagnostics.EVENT_ORIGIN origin, Diagnostics.EVENT_SEVERITY severity, short code, string message)
+            public Event(Diagnostics.EVENT_ORIGIN origin, Diagnostics.EVENT_SEVERITY severity, int code, string message)
             {
                 this.origin = origin;
                 this.severity = severity;
                 this.code = code;
                 this.message = message;
             }
+
+            override public string ToString()
+            {
+                string str;
+
+                str = "Event\n";
+
+                str += ("Code: "+"0x"+this.code.ToString("X8")+"\n");
+                str += ("Message: "+this.message+"\n");
+                str += ("Origin: "+Enum.GetName(typeof(Diagnostics.EVENT_ORIGIN),this.origin)+"\n");
+                str += ("Severity: "+Enum.GetName(typeof(Diagnostics.EVENT_SEVERITY), this.severity)+"\n");
+                str += "\n";
+
+                return str;
+            }
         }
         /// <summary>
         /// List of possible events, based on read EVENTS files
         /// </summary>
         public static Dictionary<int,Event> PossibleEvents = new Dictionary<int,Event>(); //format: code,event
+
+        public static Dictionary<string, string> DefaultVersions = new Dictionary<string, string>(); // list of default item versions
 
         /// <summary>
         /// Logged event severity; does not include the user program
@@ -63,7 +80,7 @@ namespace CoDesigner_IDE
         public static void DeleteLogs()
         {
             List<string> logs = Directory.EnumerateFiles(Diagnostics.LOG_FOLDER_PATH).ToList();
-
+            
             foreach(string log in logs) 
             { 
                 if(log.EndsWith(".log") == true) File.Delete(log);

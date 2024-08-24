@@ -33,6 +33,9 @@ namespace CoDesigner_IDE.FORMS.IDE
 
         private void F1_Projects_Load(object sender, EventArgs e)
         {
+            //set minimum and maximum form sizes
+            this.MinimumSize = this.MaximumSize = this.Size;
+
             //load active projects
             foreach(string activeProjectName in ProjectManagement.Projects.Keys)
             {

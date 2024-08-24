@@ -25,7 +25,8 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
 
         private void F3_MainEditor_Load(object sender, EventArgs e)
         {
-
+            //set minimum and maximum form sizes
+            this.MinimumSize = this.MaximumSize = this.Size;
         }
 
         private void F3_MainEditor_FormClosed(object sender, FormClosedEventArgs e)

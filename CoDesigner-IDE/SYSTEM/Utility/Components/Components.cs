@@ -12,5 +12,6 @@ namespace CoDesigner_IDE
     internal static class Components
     {
         public static Dictionary<string,Component> LoadedComponents = new Dictionary<string, Component>();
+        public static bool FLAG_AllowThirdPartyComponents = true;
     }
 }

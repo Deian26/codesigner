@@ -16,6 +16,7 @@ namespace CoDesigner_IDE
         public static string DEFAULT_EVENTS_FILEPATH = "../../SYSTEM/Resources/Diagnostics/EVENTS.xml"; //default events
         public static string DEFAULT_MESSAGES_FILEPATH = "../../SYSTEM/Resources/GUI/MESSAGES.xml"; //default messages
         public static string ACTIVE_PROJECTS_FILEPATH = "../../SYSTEM/Memory/Projects/ActiveProjects.xml";
+        public static string VERSIONS_FILEPATH = "../../SYSTEM/Resources/Diagnostics/VERSIONS.xml"; //program element versions
         #endregion
 
         #region names

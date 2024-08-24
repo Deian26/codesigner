@@ -46,11 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FORMS\Diagnostics\D0_MainDiagnosticsPanel.cs">
+    <Compile Include="FORMS\Diagnostics\D0_MainDiagnosticsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FORMS\Diagnostics\D0_MainDiagnosticsPanel.Designer.cs">
-      <DependentUpon>D0_MainDiagnosticsPanel.cs</DependentUpon>
+    <Compile Include="FORMS\Diagnostics\D0_MainDiagnosticsForm.Designer.cs">
+      <DependentUpon>D0_MainDiagnosticsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FORMS\IDE\F0_Logo.cs">
       <SubType>Form</SubType>
@@ -87,8 +87,8 @@
     <Compile Include="SYSTEM\Utility\Projects\ProjectManagement.cs" />
     <Compile Include="SYSTEM\Utility\GUI\Customization.cs" />
     <Compile Include="SYSTEM\Utility\GUI\Prompts.cs" />
-    <EmbeddedResource Include="FORMS\Diagnostics\D0_MainDiagnosticsPanel.resx">
-      <DependentUpon>D0_MainDiagnosticsPanel.cs</DependentUpon>
+    <EmbeddedResource Include="FORMS\Diagnostics\D0_MainDiagnosticsForm.resx">
+      <DependentUpon>D0_MainDiagnosticsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FORMS\IDE\F0_Logo.resx">
       <DependentUpon>F0_Logo.cs</DependentUpon>
@@ -132,6 +132,7 @@
     <Content Include="COMPONENTS\MCL\CONFIGURATION.xml" />
     <Content Include="SYSTEM\Memory\Projects\ActiveProjects.xml" />
     <Content Include="SYSTEM\Resources\Diagnostics\EVENTS.xml" />
+    <Content Include="SYSTEM\Resources\Diagnostics\VERSIONS.xml" />
     <Content Include="SYSTEM\Resources\GUI\MESSAGES.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

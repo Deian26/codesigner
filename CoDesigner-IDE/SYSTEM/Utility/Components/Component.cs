@@ -69,92 +69,95 @@ namespace CoDesigner_IDE
 
             try
             {
-                //get component details
-                this.Name = rootElement.Attributes["name"].Value.Trim();
-
-                //add component to the loaded components list
-                Components.LoadedComponents.Add(this.Name,this);
-
-                this.Version = rootElement.Attributes["version"].Value.Trim();
-
-                //get component type
-                switch (rootElement.Attributes["type"].Value.Trim())
+                if ((rootElement.Attributes.GetNamedItem("default_component") != null && rootElement.Attributes["default_component"].Value == "true") || Components.FLAG_AllowThirdPartyComponents == true)
                 {
-                    case "programming-language":
-                        {
-                            foreach (XmlNode configElement in rootElement.ChildNodes)
+                    //get component details
+                    this.Name = rootElement.Attributes["name"].Value.Trim();
+
+                    //add component to the loaded components list
+                    Components.LoadedComponents.Add(this.Name, this);
+
+                    this.Version = rootElement.Attributes["version"].Value.Trim();
+
+                    //get component type
+                    switch (rootElement.Attributes["type"].Value.Trim())
+                    {
+                        case "programming-language":
                             {
-                                //determine configuration element type
-                                switch (configElement.Name)
+                                foreach (XmlNode configElement in rootElement.ChildNodes)
                                 {
-                                    case "description":
-                                        {
-                                            this.Description = configElement.InnerText.Trim();
-                                            break;
-                                        }
-                                    case "project": //defines the project to be set up for the component
-                                        {
-                                            //determine controls to be added to the new project configuration form
-                                            foreach (XmlNode projectControl in configElement.ChildNodes)
+                                    //determine configuration element type
+                                    switch (configElement.Name)
+                                    {
+                                        case "description":
                                             {
-                                                switch (projectControl.Name)
-                                                {
-                                                    case "control":
-                                                        {
-                                                            //  add a combo-box control to the new project configuration list of controls
-                                                            comboBoxDetails.Add(new ProjectComboBoxDetails(projectControl.Attributes["name"].Value, projectControl.Attributes["values"].Value.Split(',').ToList()));
-                                                            break;
-                                                        }
-                                                    case "subfolder": // subfolder(s) to add to add in the root folder of the project (if this is a path, all subfolders will be created)
-                                                        {
-                                                            this.MandatorySubfolders.Add(projectControl.Attributes["relative_path"].Value.Trim());
-                                                            break;
-                                                        }
-
-                                                    default:
-                                                        {
-                                                            break;
-                                                        }
-                                                }
+                                                this.Description = configElement.InnerText.Trim();
+                                                break;
                                             }
-                                            break;
-                                        }
-                                    case "programming-language":
-                                        {
-                                            this.ProgrammingLanguage = configElement.Attributes["name"].Value.Trim();
-                                            break;
-                                        }
+                                        case "project": //defines the project to be set up for the component
+                                            {
+                                                //determine controls to be added to the new project configuration form
+                                                foreach (XmlNode projectControl in configElement.ChildNodes)
+                                                {
+                                                    switch (projectControl.Name)
+                                                    {
+                                                        case "control":
+                                                            {
+                                                                //  add a combo-box control to the new project configuration list of controls
+                                                                comboBoxDetails.Add(new ProjectComboBoxDetails(projectControl.Attributes["name"].Value, projectControl.Attributes["values"].Value.Split(',').ToList()));
+                                                                break;
+                                                            }
+                                                        case "subfolder": // subfolder(s) to add to add in the root folder of the project (if this is a path, all subfolders will be created)
+                                                            {
+                                                                this.MandatorySubfolders.Add(projectControl.Attributes["relative_path"].Value.Trim());
+                                                                break;
+                                                            }
 
-                                    default: //undefined
-                                        {
-                                            break;
-                                        }
+                                                        default:
+                                                            {
+                                                                break;
+                                                            }
+                                                    }
+                                                }
+                                                break;
+                                            }
+                                        case "programming-language":
+                                            {
+                                                this.ProgrammingLanguage = configElement.Attributes["name"].Value.Trim();
+                                                break;
+                                            }
+
+                                        default: //undefined
+                                            {
+                                                break;
+                                            }
+                                    }
                                 }
+                                break;
                             }
-                            break;
-                        }
 
-                    case "language-pack":
-                        {
+                        case "language-pack":
+                            {
 
-                            break;
-                        }
+                                break;
+                            }
 
-                    case "theme-pack":
-                        {
+                        case "theme-pack":
+                            {
 
-                            break;
-                        }
+                                break;
+                            }
 
 
-                    default:
-                        {
-                            break;
-                        }
+                        default:
+                            {
+                                break;
+                            }
 
 
-                }
-                if(configurationRead==false) throw new Exception();
+                    }
+                    if (configurationRead == false) throw new Exception();
+                }    
             }
             catch (Exception ex)
             {
@@ -179,6 +182,25 @@ namespace CoDesigner_IDE
         {
             
             return this.comboBoxDetails;
+        }
+
+        /// <summary>
+        /// Returns details about the current object, as a string
+        /// </summary>
+        /// <returns></returns>
+        override public string ToString()
+        {
+            string str;
+
+            str = "Component\n";
+
+            str += ("Name: " + this.Name + "\n");
+            str += ("Version: " + this.Version + "\n");
+            str += ("Description: " + this.Description + "\n");
+            str += ("Programming language: " + this.ProgrammingLanguage.ToString() + "\n");
+            str += "\n";
+
+            return str;
         }
     }
 }

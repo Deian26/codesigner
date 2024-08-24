@@ -76,6 +76,9 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
         /// <param name="e"></param>
         private void F2_ConfigureNewProject_Load(object sender, EventArgs e)
         {
+            //set minimum and maximum form sizes
+            this.MinimumSize = this.MaximumSize = this.Size;
+
             //load default values
             this.F2_textBox_NewProjectName.Text = this.component.Name + "_Project";
         }

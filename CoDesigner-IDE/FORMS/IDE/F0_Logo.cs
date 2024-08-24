@@ -16,7 +16,7 @@ namespace CoDesigner_IDE
 {
     public partial class F0_Logo : Form
     {
-        private int delayTimerIntervalMs = 2000;
+        private int delayTimerIntervalMs = 500;
         private int cancelLoadingTimerFactor = 2000; //factor by which to multiply the number of elements to be loaded, which will then be used as a maximum amount of time to wait for them to be loaded
 
         public F0_Logo()
@@ -31,22 +31,53 @@ namespace CoDesigner_IDE
         /// <param name="e"></param>
         private void F0_Logo_Load(object sender, EventArgs e)
         {
+            //set minimum and maximum form sizes
+            this.MinimumSize = this.MaximumSize = this.Size;
+
             List<string> installedComponents = Directory.EnumerateDirectories(Paths.COMPONENT_INSTALLATION_FOLDER).ToList();
             XmlDocument eventsFile = new XmlDocument();
-            eventsFile.Load(Paths.DEFAULT_EVENTS_FILEPATH);
             XmlDocument activeProjectsFile = new XmlDocument();
-            activeProjectsFile.Load(Paths.ACTIVE_PROJECTS_FILEPATH);
             XmlDocument defaultMessages = new XmlDocument();
-            defaultMessages.Load(Paths.DEFAULT_MESSAGES_FILEPATH);
+            XmlDocument versions = new XmlDocument();
+
+            try
+            {
+                eventsFile.Load(Paths.DEFAULT_EVENTS_FILEPATH);
+                activeProjectsFile.Load(Paths.ACTIVE_PROJECTS_FILEPATH);
+                defaultMessages.Load(Paths.DEFAULT_MESSAGES_FILEPATH);
+                versions.Load(Paths.VERSIONS_FILEPATH);
+            }catch(Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE,10,ex.Message);
+            }
 
             this.F0_progressBar_IdeLoading.Maximum = installedComponents.Count +  
                                                      activeProjectsFile.DocumentElement.ChildNodes.Count +
+                                                     versions.DocumentElement.ChildNodes.Count +
                                                      2 ; //events + messages (1 step each)
             this.F0_progressBar_IdeLoading.Step = 1;
 
             //start the timer used to cancel the loading of elements, if a certain time limit is reached (dynamic, based on the number of elements to load)
             this.F0_timer_CancelLoadTimer.Interval = this.F0_progressBar_IdeLoading.Maximum * this.cancelLoadingTimerFactor;
             this.F0_timer_CancelLoadTimer.Start();
+
+            //  load versions
+            if(File.Exists(Paths.VERSIONS_FILEPATH) == true)
+            {
+                try
+                {
+                    foreach (XmlNode version in versions.DocumentElement.ChildNodes)
+                    {
+                        if (version.Name.Equals("item") == true)
+                        {
+                            Diagnostics.DefaultVersions.Add(version.Attributes["name"].Value, version.Attributes["version"].Value);
+                        }
+                    }
+                }catch(Exception ex)
+                {
+                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 11, ex.Message);
+                }
+            }
 
             //  load event and message definitions
             //load a list of default possible event; each component can defined their own events, in the configuration file
@@ -65,12 +96,12 @@ namespace CoDesigner_IDE
                     {
                         try
                         {
-                            short code;
+                            int code;
                             Diagnostics.EVENT_ORIGIN origin;
                             string message = null;
 
-                            code = Convert.ToInt16(_event.Attributes["code"].Value.ToString());
                             origin = (Diagnostics.EVENT_ORIGIN)Convert.ToInt32(_event.Attributes["origin"].Value.ToString());
+                            code = ((Convert.ToInt32(_event.Attributes["code"].Value) & 0xFFFF) | (((int)origin & 0xFFFF) << 16));
 
                             //get event message, based on the current language
                             foreach (XmlNode messageTranslation in _event.ChildNodes)
