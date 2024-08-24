@@ -1,4 +1,4 @@
-<component name="MCL" type="programming-language">
+<component name="MCL" type="programming-language" version="00.01.00">
 	
 	<description>
 		MiniComp Language
@@ -7,10 +7,13 @@
 	<project>
 
 		<control name = "MiniComp-hardware" values = "00.01.00,00.01.01" /> <!-- MiniComp hardware used -->
-
+		
+		<subfolder relative_path="Output"/> <!-- Creates the 'Output' subfolder, in the root folder of the project -->
 	</project>
 	
-	<programming-language name="MCL" />
+	<programming-language name="MCL" >
+		
+	</programming-language>
 	
 	
 </component>

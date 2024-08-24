@@ -13,8 +13,6 @@ namespace CoDesigner_IDE.FORMS.IDE
 {
     public partial class F1_Projects : Form
     {
-        private Dictionary<string, Component> componentList = new Dictionary<string, Component>();
-
         public F1_Projects()
         {
             InitializeComponent();
@@ -29,17 +27,22 @@ namespace CoDesigner_IDE.FORMS.IDE
         {
             F2_ConfigureNewProject f2_ConfigureNewProject;
 
-            f2_ConfigureNewProject = new F2_ConfigureNewProject(this.componentList[this.F1_comboBox_NewProjectComponent.SelectedItem.ToString()]);
+            f2_ConfigureNewProject = new F2_ConfigureNewProject(Components.LoadedComponents[this.F1_comboBox_NewProjectComponent.SelectedItem.ToString()]);
             f2_ConfigureNewProject.Show();
         }
 
         private void F1_Projects_Load(object sender, EventArgs e)
         {
-            //load component names
-            foreach(Component component in Components.LoadedComponents)
+            //load active projects
+            foreach(string activeProjectName in ProjectManagement.Projects.Keys)
             {
-                this.F1_comboBox_NewProjectComponent.Items.Add(component.Name);
-                this.componentList.Add(component.Name, component);
+                this.F1_comboBox_ExistingProjects.Items.Add(activeProjectName);
+            }
+
+            //load component names
+            foreach(string componentName in Components.LoadedComponents.Keys)
+            {
+                this.F1_comboBox_NewProjectComponent.Items.Add(componentName);
             }
 
             //select the first element

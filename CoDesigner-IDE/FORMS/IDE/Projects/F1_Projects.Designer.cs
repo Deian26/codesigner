@@ -30,7 +30,7 @@
         {
             this.F1_label_ExistingProjectsList = new System.Windows.Forms.Label();
             this.F1_button_ConfigureProject = new System.Windows.Forms.Button();
-            this.comboBox_ExistingProjects = new System.Windows.Forms.ComboBox();
+            this.F1_comboBox_ExistingProjects = new System.Windows.Forms.ComboBox();
             this.F1_groupBox_ExistingProjects = new System.Windows.Forms.GroupBox();
             this.F1_button_BrowseForExistingProject = new System.Windows.Forms.Button();
             this.F1_folderBrowserDialog_BrowseExistingProject = new System.Windows.Forms.FolderBrowserDialog();
@@ -47,7 +47,7 @@
             this.F1_label_ExistingProjectsList.Location = new System.Drawing.Point(15, 56);
             this.F1_label_ExistingProjectsList.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.F1_label_ExistingProjectsList.Name = "F1_label_ExistingProjectsList";
-            this.F1_label_ExistingProjectsList.Size = new System.Drawing.Size(135, 19);
+            this.F1_label_ExistingProjectsList.Size = new System.Drawing.Size(164, 23);
             this.F1_label_ExistingProjectsList.TabIndex = 1;
             this.F1_label_ExistingProjectsList.Text = "Projects list:";
             // 
@@ -63,18 +63,18 @@
             this.F1_button_ConfigureProject.UseVisualStyleBackColor = true;
             this.F1_button_ConfigureProject.Click += new System.EventHandler(this.F1_button_ConfigureProject_Click);
             // 
-            // comboBox_ExistingProjects
+            // F1_comboBox_ExistingProjects
             // 
-            this.comboBox_ExistingProjects.FormattingEnabled = true;
-            this.comboBox_ExistingProjects.Location = new System.Drawing.Point(176, 53);
-            this.comboBox_ExistingProjects.Name = "comboBox_ExistingProjects";
-            this.comboBox_ExistingProjects.Size = new System.Drawing.Size(321, 27);
-            this.comboBox_ExistingProjects.TabIndex = 2;
+            this.F1_comboBox_ExistingProjects.FormattingEnabled = true;
+            this.F1_comboBox_ExistingProjects.Location = new System.Drawing.Point(176, 53);
+            this.F1_comboBox_ExistingProjects.Name = "F1_comboBox_ExistingProjects";
+            this.F1_comboBox_ExistingProjects.Size = new System.Drawing.Size(321, 31);
+            this.F1_comboBox_ExistingProjects.TabIndex = 2;
             // 
             // F1_groupBox_ExistingProjects
             // 
             this.F1_groupBox_ExistingProjects.Controls.Add(this.F1_button_BrowseForExistingProject);
-            this.F1_groupBox_ExistingProjects.Controls.Add(this.comboBox_ExistingProjects);
+            this.F1_groupBox_ExistingProjects.Controls.Add(this.F1_comboBox_ExistingProjects);
             this.F1_groupBox_ExistingProjects.Controls.Add(this.F1_label_ExistingProjectsList);
             this.F1_groupBox_ExistingProjects.Location = new System.Drawing.Point(12, 12);
             this.F1_groupBox_ExistingProjects.Name = "F1_groupBox_ExistingProjects";
@@ -112,7 +112,7 @@
             this.F1_comboBox_NewProjectComponent.FormattingEnabled = true;
             this.F1_comboBox_NewProjectComponent.Location = new System.Drawing.Point(166, 48);
             this.F1_comboBox_NewProjectComponent.Name = "F1_comboBox_NewProjectComponent";
-            this.F1_comboBox_NewProjectComponent.Size = new System.Drawing.Size(249, 27);
+            this.F1_comboBox_NewProjectComponent.Size = new System.Drawing.Size(249, 31);
             this.F1_comboBox_NewProjectComponent.TabIndex = 6;
             // 
             // F1_label_NewProjectType
@@ -121,13 +121,13 @@
             this.F1_label_NewProjectType.Location = new System.Drawing.Point(5, 51);
             this.F1_label_NewProjectType.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.F1_label_NewProjectType.Name = "F1_label_NewProjectType";
-            this.F1_label_NewProjectType.Size = new System.Drawing.Size(126, 19);
+            this.F1_label_NewProjectType.Size = new System.Drawing.Size(153, 23);
             this.F1_label_NewProjectType.TabIndex = 5;
             this.F1_label_NewProjectType.Text = "Project type:";
             // 
             // F1_Projects
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(956, 203);
@@ -151,7 +151,7 @@
         #endregion
         private System.Windows.Forms.Label F1_label_ExistingProjectsList;
         private System.Windows.Forms.Button F1_button_ConfigureProject;
-        private System.Windows.Forms.ComboBox comboBox_ExistingProjects;
+        private System.Windows.Forms.ComboBox F1_comboBox_ExistingProjects;
         private System.Windows.Forms.GroupBox F1_groupBox_ExistingProjects;
         private System.Windows.Forms.FolderBrowserDialog F1_folderBrowserDialog_BrowseExistingProject;
         private System.Windows.Forms.Button F1_button_BrowseForExistingProject;

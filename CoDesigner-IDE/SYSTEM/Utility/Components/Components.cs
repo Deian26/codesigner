@@ -11,6 +11,6 @@ namespace CoDesigner_IDE
     /// </summary>
     internal static class Components
     {
-        public static List<Component> LoadedComponents = new List<Component>();
+        public static Dictionary<string,Component> LoadedComponents = new Dictionary<string, Component>();
     }
 }

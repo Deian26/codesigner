@@ -34,7 +34,7 @@ namespace CoDesigner_IDE
             Program.D0 = new D0_MainDiagnosticsPanel();
             Program.D0.Visible = false;
             
-            Application.Run();
+            Application.Run(Program.D0); //DEV - remove diagnostic form start ('Application.Run()')
         }
 
         public static void StopAll()
@@ -54,14 +54,13 @@ namespace CoDesigner_IDE
 
             Diagnostics.DeleteLogs();
 
-            Diagnostics.LoadDefaultPossibleEvents(); //load a list of default possible event; each component can defined their own events, in the configuration file
-            Prompts.LoadDefaultMessages(); //load default messages
-
             //start application and diagnostics threads
             application.SetApartmentState(ApartmentState.STA);
+            application.Name = "Application";
             application.Start();
 
             diagnostics.SetApartmentState(ApartmentState.STA);
+            diagnostics.Name = "Diagnostics";
             diagnostics.Start();
             
         }

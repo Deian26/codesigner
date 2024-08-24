@@ -18,7 +18,15 @@ namespace CoDesigner_IDE
         short code { get; }
         string message { get; }
 
-        public LogEvent(Diagnostics.EVENT_ORIGIN origin, Diagnostics.EVENT_SEVERITY severity, short code, string message)
+        /// <summary>
+        /// Logs an event
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="severity"></param>
+        /// <param name="code"></param>
+        /// <param name="message"></param>
+        /// <param name="showMessageBox">ignored for FATAL and UNDEFINED events </param>
+        public LogEvent(Diagnostics.EVENT_ORIGIN origin, Diagnostics.EVENT_SEVERITY severity, short code, string message, bool showMessageBox)
         {
             this.origin = origin;
             this.severity = severity;
@@ -29,7 +37,7 @@ namespace CoDesigner_IDE
             {
                 case Diagnostics.EVENT_SEVERITY.Info:
                     {
-                        MessageBox.Show(message, "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if(showMessageBox==true) MessageBox.Show(message, "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                     }
                 case Diagnostics.EVENT_SEVERITY.Debug:
@@ -39,12 +47,12 @@ namespace CoDesigner_IDE
                     }
                 case Diagnostics.EVENT_SEVERITY.Warning:
                     {
-                        MessageBox.Show(message, "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        if (showMessageBox == true) MessageBox.Show(message, "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
                     }
                 case Diagnostics.EVENT_SEVERITY.Error:
                     {
-                        MessageBox.Show(message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (showMessageBox == true) MessageBox.Show(message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
                     }
                 case Diagnostics.EVENT_SEVERITY.Fatal:

@@ -100,15 +100,20 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
             //check project name
             if (isValidName(this.F2_textBox_NewProjectName.Text.ToString().Trim()) == false)
             {
-                Diagnostics.LogEvent(0,2);
+                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 2);
                 return;
             }
 
             //create project folder, if it does not already exist
             try
             {
+                if (Directory.Exists(this.F2_textBox_SelectedProjectLocation.Text) == false) //check the project location (again)
+                {
+                    Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 3);
+                    return;
+                }
                 // if the directory already exists and it is not empty, prompt the user for confirmation (the folder will be merged with the incoming files and directories)
-                if(Directory.Exists(this.F2_textBox_SelectedProjectLocation.Text) && 
+                else if (Directory.Exists(this.F2_textBox_SelectedProjectLocation.Text) && 
                     (Directory.GetFiles(this.F2_textBox_SelectedProjectLocation.Text).Length!=0 || Directory.GetDirectories(this.F2_textBox_SelectedProjectLocation.Text).Length!=0))
                     {
                     DialogResult locationConfirmation = Prompts.OpenDialog(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, 1);
@@ -126,20 +131,29 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
             }
 
             //create project
-            Project project = new Project(
-                this.F2_textBox_NewProjectName.Text.ToString().Trim(),
-                this.F2_textBox_NewProjectDescription.Text.ToString().Trim(),
-                this.F2_textBox_SelectedProjectLocation.Text,
-                this.component);
+            Project project = null;
+            try
+            {
+                project = new Project(
+                    this.F2_textBox_NewProjectName.Text.ToString().Trim(),
+                    this.F2_textBox_NewProjectDescription.Text.ToString().Trim(),
+                    this.F2_textBox_SelectedProjectLocation.Text,
+                    this.component
+                    );
 
-            //create a new project object and add it to the loaded projects list
-            ProjectManagement.Projects.Add(project);
+                //create a new project object and add it to the loaded projects list
+                ProjectManagement.Projects.Add(project.Name,project);
 
-            //open the main editor form
-            F3_MainEditor f3_MainEditor = new F3_MainEditor(project);
-            this.Hide();
+                //open the main editor form
+                F3_MainEditor f3_MainEditor = new F3_MainEditor(project);
+                this.Hide();
 
-            f3_MainEditor.Show();
+                f3_MainEditor.Show();
+            } catch (Exception ex)
+            {
+               
+            }
+
             
             
 

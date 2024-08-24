@@ -33,8 +33,11 @@ namespace CoDesigner_IDE
         public string Name { get; }
         public string Description { get; }
 
+        public string Version { get;  }        
+        
         //only filled if the component represents a programming language
         private string ProgrammingLanguage;
+        public List<string> MandatorySubfolders = new List<string>(); 
 
         List<ProjectComboBoxDetails> comboBoxDetails = new List<ProjectComboBoxDetails>();
 
@@ -68,7 +71,12 @@ namespace CoDesigner_IDE
             {
                 //get component details
                 this.Name = rootElement.Attributes["name"].Value.Trim();
-                
+
+                //add component to the loaded components list
+                Components.LoadedComponents.Add(this.Name,this);
+
+                this.Version = rootElement.Attributes["version"].Value.Trim();
+
                 //get component type
                 switch (rootElement.Attributes["type"].Value.Trim())
                 {
@@ -89,11 +97,24 @@ namespace CoDesigner_IDE
                                             //determine controls to be added to the new project configuration form
                                             foreach (XmlNode projectControl in configElement.ChildNodes)
                                             {
-                                                if (projectControl.Name.Equals("control") == true)
+                                                switch (projectControl.Name)
                                                 {
-                                                    //  add a combo-box control to the new project configuration list of controls
-                                                    comboBoxDetails.Add(new ProjectComboBoxDetails(projectControl.Attributes["name"].Value, projectControl.Attributes["values"].Value.Split(',').ToList()));
+                                                    case "control":
+                                                        {
+                                                            //  add a combo-box control to the new project configuration list of controls
+                                                            comboBoxDetails.Add(new ProjectComboBoxDetails(projectControl.Attributes["name"].Value, projectControl.Attributes["values"].Value.Split(',').ToList()));
+                                                            break;
+                                                        }
+                                                    case "subfolder": // subfolder(s) to add to add in the root folder of the project (if this is a path, all subfolders will be created)
+                                                        {
+                                                            this.MandatorySubfolders.Add(projectControl.Attributes["relative_path"].Value.Trim());
+                                                            break;
+                                                        }
 
+                                                    default:
+                                                        {
+                                                            break;
+                                                        }
                                                 }
                                             }
                                             break;
@@ -135,10 +156,12 @@ namespace CoDesigner_IDE
                 }
                 if(configurationRead==false) throw new Exception();
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
             {
                 //log error
                 //dev
+
+                throw ex;
             }
             
         }

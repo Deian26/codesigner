@@ -54,61 +54,8 @@ namespace CoDesigner_IDE
         public static short UNDEFINED_ERROR_CODE = 0x0000;
         public static short UNDEFINED_FATAL_ERROR_CODE = 0x00FF;
 
-        /// <summary>
-        /// Loads a list of default possible events and their codes
-        /// </summary>
-        public static void LoadDefaultPossibleEvents()
-        {
-            //get default events
-            if(File.Exists(Paths.DEFAULT_EVENTS_FILEPATH) == true)
-            {
-                XmlDocument eventsFile = new XmlDocument();
-                eventsFile.Load(Paths.DEFAULT_EVENTS_FILEPATH);
-                XmlNode root = eventsFile.DocumentElement;
-
-                foreach(XmlNode _event in root.ChildNodes)
-                {
-                    if(_event.Name.Equals("event")==true)
-                    {
-                        try
-                        {
-                            short code;
-                            Diagnostics.EVENT_ORIGIN origin;
-                            string message = null;
-
-                            code = Convert.ToInt16(_event.Attributes["code"].Value.ToString());
-                            origin = (Diagnostics.EVENT_ORIGIN)Convert.ToInt32(_event.Attributes["origin"].Value.ToString());
-
-                            //get event message, based on the current language
-                            foreach(XmlNode messageTranslation in _event.ChildNodes)
-                            {
-                                if (messageTranslation.Name.Equals(Customization.Language) == true)
-                                {
-                                    message = messageTranslation.Attributes["message"].Value.ToString();
-                                    break;
-                                }
-                            }
-
-                            Diagnostics.PossibleEvents.Add(((int)origin<<16)|(code&0xFFFF), new Event(
-                                origin,
-                                (Diagnostics.EVENT_SEVERITY)Convert.ToInt32(_event.Attributes["severity"].Value.ToString()),
-                                code,
-                                message
-                                ));
-                        }catch (Exception ex)
-                        {
-                            //invalid event definition
-                            Diagnostics.EventLog.Add(new LogEvent(EVENT_ORIGIN.Undefined, EVENT_SEVERITY.Error, Diagnostics.UNDEFINED_ERROR_CODE, "Invalid event definition: "+ex.Message.ToString()));
-                        }
-                    }
-                }
-
-            }
-            else //fatal error -> could not load default events
-            {
-                new LogEvent(EVENT_ORIGIN.Undefined, EVENT_SEVERITY.Fatal, Diagnostics.UNDEFINED_FATAL_ERROR_CODE, "COULD NOT LOAD DEFAULT LOG EVENTS!");
-            }
-        }
+        public static short DEFAULT_IDE_ORIGIN_CODE = 0x0000;
+        public static short DEFAULT_COMPONENT_ORIGIN_CODE = 0x0001;
 
         /// <summary>
         /// Deletes old log files
@@ -133,7 +80,24 @@ namespace CoDesigner_IDE
                 Diagnostics.PossibleEvents[code].origin,
                 Diagnostics.PossibleEvents[code].severity,
                 Diagnostics.PossibleEvents[code].code,
-                Diagnostics.PossibleEvents[code].message));
+                Diagnostics.PossibleEvents[code].message,
+                true
+                ));
+        }
+
+        /// <summary>
+        /// Logs an event without displaying a message box
+        /// </summary>
+        /// <param name="code"></param>
+        public static void LogSilentEvent(int code)
+        {
+            Diagnostics.EventLog.Add(new LogEvent(
+                Diagnostics.PossibleEvents[code].origin,
+                Diagnostics.PossibleEvents[code].severity,
+                Diagnostics.PossibleEvents[code].code,
+                Diagnostics.PossibleEvents[code].message,
+                false //silent
+                ));
         }
 
         /// <summary>
@@ -150,7 +114,28 @@ namespace CoDesigner_IDE
                 Diagnostics.PossibleEvents[code].origin,
                 Diagnostics.PossibleEvents[code].severity,
                 Diagnostics.PossibleEvents[code].code,
-                Diagnostics.PossibleEvents[code].message));
+                Diagnostics.PossibleEvents[code].message,
+                true //a MessageBox is displayed
+                ));
+        }
+
+        /// <summary>
+        /// Logs an event without displaying a message box
+        /// </summary>
+        /// <param name="originCode"></param>
+        /// <param name="eventCode"></param>
+        public static void LogSilentEvent(int originCode, int eventCode)
+        {
+            int code;
+            code = (originCode << 16) | eventCode;
+
+            Diagnostics.EventLog.Add(new LogEvent(
+                Diagnostics.PossibleEvents[code].origin,
+                Diagnostics.PossibleEvents[code].severity,
+                Diagnostics.PossibleEvents[code].code,
+                Diagnostics.PossibleEvents[code].message,
+                false //silent (no MessageBox is displayed) 
+                ));
         }
 
         /// <summary>
@@ -164,9 +149,27 @@ namespace CoDesigner_IDE
                 Diagnostics.PossibleEvents[code].origin,
                 Diagnostics.PossibleEvents[code].severity,
                 Diagnostics.PossibleEvents[code].code,
-                Diagnostics.PossibleEvents[code].message + message));
+                Diagnostics.PossibleEvents[code].message + message,
+                true
+                ));
         }
-        
+
+        /// <summary>
+        /// Logs an event without displaying a message box
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="message"></param>
+        public static void LogSilentEvent(int code, string message)
+        {
+            Diagnostics.EventLog.Add(new LogEvent(
+                Diagnostics.PossibleEvents[code].origin,
+                Diagnostics.PossibleEvents[code].severity,
+                Diagnostics.PossibleEvents[code].code,
+                Diagnostics.PossibleEvents[code].message + message,
+                false //silent
+                ));
+        }
+
         /// <summary>
         /// Logs an event with a custom message based on the given origin and event codes
         /// </summary>
@@ -181,8 +184,35 @@ namespace CoDesigner_IDE
                 Diagnostics.PossibleEvents[code].origin,
                 Diagnostics.PossibleEvents[code].severity,
                 Diagnostics.PossibleEvents[code].code,
-                Diagnostics.PossibleEvents[code].message + message));
+                Diagnostics.PossibleEvents[code].message + message,
+                true
+                ));
         }
+
+        /// <summary>
+        /// Logs an event without displaying a message box
+        /// </summary>
+        /// <param name="originCode"></param>
+        /// <param name="eventCode"></param>
+        /// <param name="message"></param>
+        public static void LogSilentEvent(int originCode, int eventCode, string message)
+        {
+            int code;
+            code = (originCode << 16) | eventCode;
+
+            Diagnostics.EventLog.Add(new LogEvent(
+                Diagnostics.PossibleEvents[code].origin,
+                Diagnostics.PossibleEvents[code].severity,
+                Diagnostics.PossibleEvents[code].code,
+                Diagnostics.PossibleEvents[code].message + message,
+                false //silent
+                ));
+        }
+
+        #endregion
+
+        #region diagnostic-service
+
 
         #endregion
     }
