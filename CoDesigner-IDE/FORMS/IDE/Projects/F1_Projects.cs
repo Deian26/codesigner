@@ -27,8 +27,12 @@ namespace CoDesigner_IDE.FORMS.IDE
         {
             F2_ConfigureNewProject f2_ConfigureNewProject;
 
-            f2_ConfigureNewProject = new F2_ConfigureNewProject(Components.LoadedComponents[this.F1_comboBox_NewProjectComponent.SelectedItem.ToString()]);
-            f2_ConfigureNewProject.Show();
+            if (this.F1_comboBox_NewProjectComponent.SelectedItem != null &&
+                ComponentFactory.LoadedComponents.ContainsKey(this.F1_comboBox_NewProjectComponent.SelectedItem.ToString()))
+            {
+                f2_ConfigureNewProject = new F2_ConfigureNewProject(ComponentFactory.LoadedComponents[this.F1_comboBox_NewProjectComponent.SelectedItem.ToString()]);
+                f2_ConfigureNewProject.Show();
+            }
         }
 
         private void F1_Projects_Load(object sender, EventArgs e)
@@ -43,7 +47,7 @@ namespace CoDesigner_IDE.FORMS.IDE
             }
 
             //load component names
-            foreach(string componentName in Components.LoadedComponents.Keys)
+            foreach(string componentName in ComponentFactory.LoadedComponents.Keys)
             {
                 this.F1_comboBox_NewProjectComponent.Items.Add(componentName);
             }
@@ -65,7 +69,7 @@ namespace CoDesigner_IDE.FORMS.IDE
             //browse for project file
             this.F1_folderBrowserDialog_BrowseExistingProject.ShowDialog();
 
-            //dev - add project browsing
+            //TODO: Implement project browsing  
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using static CoDesigner_IDE.Diagnostics;
 
 namespace CoDesigner_IDE
 {
@@ -17,7 +18,7 @@ namespace CoDesigner_IDE
         /// <summary>
         /// Determines some workspace attributes
         /// </summary>
-        public Component Component { get; }
+        public dynamic Component { get; }
 
         public string Name { get; }
         public string Description { get; }
@@ -26,9 +27,7 @@ namespace CoDesigner_IDE
 
         public DateTime DateCreated { get; }
 
-        public string ProgrammingLanguage { get; }
-
-        private string ProjectFilePath = null;
+        public string ProjectFilePath { get; } = null;
         private FileStream ProjectFileStream;
 
         /// <summary>
@@ -45,27 +44,24 @@ namespace CoDesigner_IDE
             this.Location = location;
             this.Component = component;
             this.DateCreated = DateTime.Now;
-            this.ProgrammingLanguage = this.Component.GetProgrammingLanguage();
 
-            //create mandatory sub-folders, if there are any and if they do not already exist
-            foreach (string subfolderRelativePath in this.Component.MandatorySubfolders)
+            this.ProjectFilePath = Path.Combine(this.Location, this.Name + ".xml");
+
+            // determine project type
+            if(component is ProgrammingLanguage) //=> programming language
             {
-                try
-                {
-                    Directory.CreateDirectory(Path.Combine(this.Location, subfolderRelativePath));
-                }
-                catch (Exception ex)
-                {
-                    //Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE,,ex.PromptMessage)
-                    //dev implement component event origin codes
-
-                    throw new Exception();
-                }
+                this.Component = (ProgrammingLanguage)component;
+            }else if(component is SimulationAddon) //=> simulation
+            {
+                this.Component = (SimulationAddon)component;
             }
-
+            else // unsupported project type
+            {
+                Diagnostics.LogEvent(Diagnostics.DefaultEventCodes.ERROR_CREATING_NEW_PROJECT, component.Name);
+            }
+            
             this.createProjectFile();
-
-            //add this project to the list of active projects
+            
         }
 
         /// <summary>
@@ -96,13 +92,13 @@ namespace CoDesigner_IDE
                                 }
                             case "programming-language":
                                 {
-                                    this.ProgrammingLanguage = projectConfig.Attributes["name"].Value;
+                                    //TODO: Implement programming language project loading
                                     break;
                                 }
                             case "component":
                                 {
                                     //get component object based on the component name
-                                    this.Component = Components.LoadedComponents[projectConfig.Attributes["name"].Value];
+                                    this.Component = ComponentFactory.LoadedComponents[projectConfig.Attributes["name"].Value];
                                     break;
                                 }
 
@@ -115,13 +111,13 @@ namespace CoDesigner_IDE
                     }
                 } catch (Exception ex) 
                 {
-                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE,7,ex.Message);
+                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_PROJECT, ex.Message);
                     throw ex;
                 }
             }
             else
             {
-                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE,7,projectFilePath);
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_PROJECT, projectFilePath);
                 throw new Exception("Invalid project file path: "+projectFilePath);
             }
         }
@@ -131,7 +127,6 @@ namespace CoDesigner_IDE
         /// </summary>
         private void createProjectFile()
         {
-            this.ProjectFilePath = Path.Combine(this.Location, this.Name + ".xml");
             this.ProjectFileStream = File.Create(this.ProjectFilePath);
 
             XmlWriterSettings xws = new XmlWriterSettings();
@@ -140,7 +135,7 @@ namespace CoDesigner_IDE
 
             xw.WriteStartDocument();
 
-                //<project name=this.Name>
+                //<project name=this.FileNameAndExt>
                 xw.WriteStartElement("project");
                 xw.WriteAttributeString("name", this.Name);
                 xw.WriteAttributeString("date_created", this.DateCreated.ToString());
@@ -153,23 +148,26 @@ namespace CoDesigner_IDE
                     //<specifications />
                     xw.WriteStartElement("specifications");
 
-                    //programming language
-                    if (this.Component.GetProgrammingLanguage() != null)
+                    if (this.Component.GetType() == typeof(ProgrammingLanguage)) //programming language
                     {
-                        //<programming_language />
-                        xw.WriteStartElement("programming-language");
-                        xw.WriteAttributeString("name", this.Component.GetProgrammingLanguage());
-                        xw.WriteEndElement();
+                        if (this.Component.Name != null)
+                        {
+                            //<programming_language />
+                            xw.WriteStartElement("programming-language");
+                            xw.WriteAttributeString("name", this.Component.Name);
+                            xw.WriteEndElement();
 
-                        //<component />
-                        xw.WriteStartElement("component");
-                        xw.WriteAttributeString("name", this.Component.Name);
-                        xw.WriteAttributeString("version", this.Component.Version);
+                            //<component />
+                            xw.WriteStartElement("component");
+                            xw.WriteAttributeString("name", this.Component.Name);
+                            xw.WriteAttributeString("version", this.Component.Version);
+                        }
+                        else //error
+                        {
+                            Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.UNSUPPORTED_COMPONENT); //event defined in the default events file
+                        }
                     }
-                    else //error
-                    {
-                        Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 1); //event defined in the default events file
-                    }
+
                     xw.WriteEndElement();
                 
                 xw.WriteEndElement();
@@ -179,5 +177,6 @@ namespace CoDesigner_IDE
             xw.Close();
             this.ProjectFileStream.Close();
         }
+        
     }
 }

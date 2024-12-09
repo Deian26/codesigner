@@ -3,7 +3,7 @@
     partial class D0_MainDiagnosticsForm
     {
         /// <summary>
-        /// Required designer variable.
+        /// Required designer Variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
@@ -118,7 +118,7 @@
             // 
             // D0_treeView_LoadedElements
             // 
-            this.D0_treeView_LoadedElements.Font = new System.Drawing.Font("Consolas", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.D0_treeView_LoadedElements.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.D0_treeView_LoadedElements.FullRowSelect = true;
             this.D0_treeView_LoadedElements.HideSelection = false;
             this.D0_treeView_LoadedElements.Location = new System.Drawing.Point(10, 31);
@@ -201,7 +201,7 @@
             this.Controls.Add(this.D0_groupBox_Actions);
             this.Controls.Add(this.D0_groupBox_Status);
             this.Controls.Add(this.D0_groupBox_DiagnosticLog);
-            this.Font = new System.Drawing.Font("Consolas", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "D0_MainDiagnosticsForm";
             this.Text = "Diagnostics";

@@ -2,11 +2,18 @@
 	<!-- 
 	- The code must be unique in the default files (for components, the code must unique in the component);
 	  The code from each message will be 'prepended' by a 2-byte value, which marks the origin of the message (defined in the program code)
-	- The dialog buttons must have one of the values defined in the 'MessageBoxButtons' enum
-	- The dialog icon must have one of the values defined in the 'MessageBoxIcon' enum
+	- The dialog buttons must have one of the values defined in the 'MessageBoxButtons' enum or "" if the item will only represent a simple string
+	- The dialog icon must have one of the values defined in the 'MessageBoxIcon' enum or "" if the item will only represent a simple string
+	- The caption, dialog_buttons, dialog_icon attributes are ignored if the message is to be assigned to a simple string element (in this case, the attribute values should be set to "")
 	-->	
 	<message code="1" description="Overwrite project directory confirmation dialog; YesNo, Question" dialog_buttons ="4" dialog_icon="32">
 		<EN caption="Overwrite" text="A directory. with files and/or subfolders, with the same name alreayd exists at this location. Do you want to create the project in it?"/>
 	</message>
+
+	<message code="2" description="Project item invalid path or type" dialog_buttons ="0" dialog_icon="16">
+		<EN caption="Invalid item" text="The path to the item is invalid or is of an unsupported type."/>
+	</message>
+	
+	
 
 </messages>

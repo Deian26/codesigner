@@ -3,7 +3,7 @@
     partial class F0_Logo
     {
         /// <summary>
-        /// Required designer variable.
+        /// Required designer Variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
@@ -81,7 +81,7 @@
             this.Controls.Add(this.F0_label_LoadingElements);
             this.Controls.Add(this.F0_listBox_LoadingElements);
             this.Controls.Add(this.F0_progressBar_IdeLoading);
-            this.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Font = new System.Drawing.Font("Cascadia Code", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "F0_Logo";

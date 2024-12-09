@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using static CoDesigner_IDE.Diagnostics;
 
 namespace CoDesigner_IDE.FORMS.IDE.Projects
 {
@@ -30,20 +31,22 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
             this.component = component;
 
             //display project controls for this component
-            foreach (ProjectComboBoxDetails projectControl in component.GetProjectComboboxDetails())
+            foreach (ProjectComboBoxDetails projectControl in component.GetAdditionOptionControls())
             {
+                // label
                 projectControlLabel = new Label();
                 projectControlComboBox = new ComboBox();
 
                 projectControlLabel.Text = projectControl.labelText;
                 projectControlLabel.Width = 250;
 
+                // combo-box
                 projectControlComboBox.Items.AddRange(projectControl.comboValues.ToArray());
 
                 projectControlComboBox.Width = 300;
                 projectControlComboBox.Text = "";
 
-                if(projectControlComboBox.Items.Count>=1) projectControlComboBox.SelectedIndex = 0;
+                if(projectControlComboBox.Items.Count>=1) projectControlComboBox.SelectedIndex = 0; //select the first element
                 
                 this.F2_flowLayoutPanel_ConfigureNewProject_Controls.Controls.Add(projectControlLabel); //add label
                 this.F2_flowLayoutPanel_ConfigureNewProject_Controls.Controls.Add(projectControlComboBox); //add combobox
@@ -76,6 +79,9 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
         /// <param name="e"></param>
         private void F2_ConfigureNewProject_Load(object sender, EventArgs e)
         {
+#if DEBUG
+            this.F2_textBox_SelectedProjectLocation.Text = "A:\\Development_Software\\Playground\\MCL_Project\\MCL_Project";
+#endif
             //set minimum and maximum form sizes
             this.MinimumSize = this.MaximumSize = this.Size;
 
@@ -103,33 +109,31 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
             //check project name
             if (isValidName(this.F2_textBox_NewProjectName.Text.ToString().Trim()) == false)
             {
-                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 2);
+                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.INVALID_PROJECT_NAME);
                 return;
             }
 
             //create project folder, if it does not already exist
             try
             {
-                if (Directory.Exists(this.F2_textBox_SelectedProjectLocation.Text) == false) //check the project location (again)
-                {
-                    Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 3);
-                    return;
-                }
+                // create the project's directory, if needed
+                Directory.CreateDirectory(this.F2_textBox_SelectedProjectLocation.Text);
+
                 // if the directory already exists and it is not empty, prompt the user for confirmation (the folder will be merged with the incoming files and directories)
-                else if (Directory.Exists(this.F2_textBox_SelectedProjectLocation.Text) && 
+                if (Directory.Exists(this.F2_textBox_SelectedProjectLocation.Text) && 
                     (Directory.GetFiles(this.F2_textBox_SelectedProjectLocation.Text).Length!=0 || Directory.GetDirectories(this.F2_textBox_SelectedProjectLocation.Text).Length!=0))
                     {
                     DialogResult locationConfirmation = Prompts.OpenDialog(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, 1);
 
-                    if(locationConfirmation.Equals(DialogResult.Yes)) //create the project in the existing folder
+                    if(locationConfirmation.Equals(DialogResult.Yes) == false) // do not create project
                         {
-                        Directory.CreateDirectory(this.F2_textBox_SelectedProjectLocation.Text);
+                        return;
                         }
                     }
                 
             }catch (Exception ex)
             {
-                Diagnostics.LogEvent(0,3, ex.Message);
+                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.INVALID_PROJECT_FOLDER_LOC, ex.Message); //error creating a folder for the new project
                 return;
             }
 
@@ -148,17 +152,14 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
                 ProjectManagement.Projects.Add(project.Name,project);
 
                 //open the main editor form
-                F3_MainEditor f3_MainEditor = new F3_MainEditor(project);
-                this.Hide();
+                Program.Crt_F3 = new F3_MainEditor(project);
+                this.Close(); // close the new project form
 
-                f3_MainEditor.Show();
-            } catch (Exception ex)
+                Program.Crt_F3.Show();
+            } catch (Exception ex) // project creation error
             {
-               
+                Diagnostics.LogEvent(Diagnostics.DefaultEventCodes.ERROR_CREATING_NEW_PROJECT,ex.Message);
             }
-
-            
-            
 
         }
     }

@@ -1,0 +1,15 @@
+﻿<elements>
+	<transport-mediums>
+		<!-- 
+		This node defines the transport (communication) medium (buses, radio etc.) between the circuits connected in this circuit.
+		Each sub-node must define the formal name (attribute 'name')
+				
+		E.g.: 
+			<medium name="CommLine" type="bus"/>
+		-->
+		<medium name="Bus" type="bus"/>
+		<medium name="Wi-Fi" type="radio"/>
+
+	</transport-mediums>
+	
+</elements>
