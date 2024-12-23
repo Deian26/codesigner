@@ -2,12 +2,21 @@
 	<!-- 
 	- The event code must be unique in the default files (for components, the codes must be unique component-wide); the event code will be: bytes0-1= origin, bytes2-3=code
 	  The event code here is represented as a decimal
-	- Origin: Undefined = 0, IDE = 1, Component = 2, UserProgram = 3 (for component events, this is attribute is not used)
-	- Severity: Info = 0, Debug = 1, Warning = 2, Error = 3, Fatal = 4
+	- Origin: 
+		-> 0 = Undefined
+		-> 1 = IDE
+		-> 2 = Component
+		-> 3 = UserProgram (for component events, this is attribute is not used)
+	- Severity: 
+		-> 0 = Info
+		-> 1 = Debug
+		-> 2 = Warning
+		-> 3 = Error
+		-> 4 = Fatal
 	-->
 	
 	<event code="1" origin="0" severity="3"> 
-		<EN message="Invalid component loaded: not a programming language!"/>
+		<EN message="Invalid component loaded: unsupported component type!"/>
 	</event>
 	
 	<event code="2" origin="0" severity="2"> 
@@ -43,12 +52,48 @@
 		<EN message="Could not load active projects! "/>
 	</event>
 
-	<event code="10" origin="0" severity="4">
+	<event code="10" origin="1" severity="4">
 		<EN message="Could not load program items due to invalid files or file formats (including components)! "/>
 	</event>
 
 	<event code="11" origin="0" severity="3">
 		<EN message="Could not load versions! "/>
+	</event>
+
+	<event code="12" origin="2" severity="3">
+		<EN message="Could not load component control for project configuration (invalid name). "/>
+	</event>
+
+	<event code="13" origin="2" severity="3">
+		<EN message="Could not load component (undefined). "/>
+	</event>
+
+	<event code="14" origin="2" severity="3">
+		<EN message="Could not load simulation addon (invalid definition). Check the transport mediums, transport protocols and elements nodes."/>
+	</event>
+
+	<event code="15" origin="2" severity="3">
+		<EN message="Could not load simulation addon (invalid element definition). "/>
+	</event>
+
+	<event code="16" origin="2" severity="3">
+		<EN message="Could not load component configuration (invalid component file or invalid required classes implementations). "/>
+	</event>
+
+	<event code="17" origin="3" severity="3">
+		<EN message="Invalid signal generator value type representation. "/>
+	</event>
+
+	<event code="18" origin="3" severity="3">
+		<EN message="Unsupported concrete simulation element type. "/>
+	</event>
+
+	<event code="19" origin="3" severity="3">
+		<EN message="Could not create the project. "/>
+	</event>
+
+	<event code="20" origin="3" severity="3">
+		<EN message="Could not retrieve project item details. Check if the file / directory still exists. "/>
 	</event>
 	
 </events>

@@ -74,6 +74,30 @@ namespace CoDesigner_IDE
         public static short DEFAULT_IDE_ORIGIN_CODE = 0x0000;
         public static short DEFAULT_COMPONENT_ORIGIN_CODE = 0x0001;
 
+        public static class DefaultEventCodes
+        {
+            public const int UNSUPPORTED_COMPONENT                      = 1;
+            public const int INVALID_PROJECT_NAME                       = 2;
+            public const int INVALID_PROJECT_FOLDER_LOC                 = 3;
+            public const int INVALID_MSGBOX_BUTONS_OR_ICON_CODE         = 4;
+            public const int ERR_LOADING_GUI_DEF_MSGS                   = 5;
+            public const int ERR_LOADING_GUI_TRANSLATED_MSGS            = 6;
+            public const int ERR_LOADING_PROJECT                        = 7;
+            public const int ERR_LOADING_EVENT                          = 8;
+            public const int ERR_LOADING_ACTIVE_PROJECTS                = 9;
+            public const int INVALID_PROGR_ITEMS_DEFINITIONS            = 10;
+            public const int ERR_LOADING_VERSIONS                       = 11;
+            public const int ERR_LOADING_COMPONENT_CTRL_FROM_FILE       = 12;
+            public const int UNDEFINED_COMPONENT                        = 13;
+            public const int INVALID_SIM_ADDON_DEFINITION               = 14;
+            public const int INVALID_SIM_ADDON_ELEM_DEFINITION          = 15;
+            public const int GENERAL_ERR_LOADING_COMPONENT              = 16;
+            public const int SIGNAL_GENERATOR_UNSUPPORTED_VALUE_TYPE    = 17;
+            public const int UNSUPPORTED_CONCRETE_ELEMENT_TYPE          = 18;
+            public const int ERROR_CREATING_NEW_PROJECT                 = 19;
+            public const int INVALID_PROJ_ITEMPATH_OR_UNSUPPORTED_ITEM  = 20;
+        }
+
         /// <summary>
         /// Deletes old log files
         /// </summary>
@@ -216,7 +240,7 @@ namespace CoDesigner_IDE
         {
             int code;
             code = (originCode << 16) | eventCode;
-
+            
             Diagnostics.EventLog.Add(new LogEvent(
                 Diagnostics.PossibleEvents[code].origin,
                 Diagnostics.PossibleEvents[code].severity,
@@ -227,7 +251,7 @@ namespace CoDesigner_IDE
         }
 
         #endregion
-
+        
         #region diagnostic-service
 
 

@@ -1,19 +1,43 @@
-<component name="MCL" type="programming-language" version="00.01.00" default_component="true">
+<component name="MCL" type="programming-language" version="00.01.00" timestamp="18.11.2024 21:15:28" signature="">
+	
 	
 	<description>
 		MiniComp Language
 	</description>
-	
-	<project>
 
-		<control name = "MiniComp-hardware" values = "00.01.00,00.01.01" /> <!-- MiniComp hardware used -->
+
+	<!-- Additional project options to be used -->
+	<project>
+		<!-- Options (pairs of (label,combo-box) controls) to be added to the new project form, alongside default options -->
+		<options>
+			<control name="MiniComp-hardware" values="00.01.00,00.01.01" /> <!-- MiniComp hardware versions supported by this component, comma-separated -->
+		</options>
+
+		<!-- Required folder structure (relative to the project folder) -->
+		<folder-substructure>
+			<subfolder relative_path="Output"/> <!-- Creates the 'Output' subfolder, in the root folder of the project which will contain the output (compiled code) -->
+		</folder-substructure>
 		
-		<subfolder relative_path="Output"/> <!-- Creates the 'Output' subfolder, in the root folder of the project -->
+		<!-- File formats for files that can be executed by this component -->
+		<executable-files>
+			<executable-file extension="emcl"/> <!-- Only the extension text should be included here (i.e., excluding the dot - '.' ) -->
+		</executable-files>
+		
+		<!-- Source files extensions supported by this component -->
+		<src-files>
+			<src extension="mcl"/>
+		</src-files>
 	</project>
 	
-	<programming-language name="MCL" >
+	
+	<!-- Grammar definition -->
+	<grammar>
+		<!-- Keywords -->
+		<keyword name="" code="1" style="0,0,0" case-sensitive="true" /> <!-- The 'name' attribute is the actual string to be searched for in the source code; the 'style' attributes defines how the token will be displayed in the editor (the int 3-tuple defines the RGB colour to be used for the token) -->
 		
-	</programming-language>
+		<!-- Rules -->
+		<rule name="Assignment"/> <!-- 'rule' sub-nodes must formally define grammar rules -->
+	</grammar>
 	
 	
 </component>

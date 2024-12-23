@@ -3,7 +3,7 @@
     partial class F1_Projects
     {
         /// <summary>
-        /// Required designer variable.
+        /// Required designer Variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
@@ -47,13 +47,13 @@
             this.F1_label_ExistingProjectsList.Location = new System.Drawing.Point(15, 56);
             this.F1_label_ExistingProjectsList.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.F1_label_ExistingProjectsList.Name = "F1_label_ExistingProjectsList";
-            this.F1_label_ExistingProjectsList.Size = new System.Drawing.Size(164, 23);
+            this.F1_label_ExistingProjectsList.Size = new System.Drawing.Size(180, 27);
             this.F1_label_ExistingProjectsList.TabIndex = 1;
             this.F1_label_ExistingProjectsList.Text = "Projects list:";
             // 
             // F1_button_ConfigureProject
             // 
-            this.F1_button_ConfigureProject.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.F1_button_ConfigureProject.Font = new System.Drawing.Font("Cascadia Code", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.F1_button_ConfigureProject.Location = new System.Drawing.Point(271, 111);
             this.F1_button_ConfigureProject.Margin = new System.Windows.Forms.Padding(5);
             this.F1_button_ConfigureProject.Name = "F1_button_ConfigureProject";
@@ -68,7 +68,7 @@
             this.F1_comboBox_ExistingProjects.FormattingEnabled = true;
             this.F1_comboBox_ExistingProjects.Location = new System.Drawing.Point(176, 53);
             this.F1_comboBox_ExistingProjects.Name = "F1_comboBox_ExistingProjects";
-            this.F1_comboBox_ExistingProjects.Size = new System.Drawing.Size(321, 31);
+            this.F1_comboBox_ExistingProjects.Size = new System.Drawing.Size(321, 35);
             this.F1_comboBox_ExistingProjects.TabIndex = 2;
             // 
             // F1_groupBox_ExistingProjects
@@ -85,7 +85,7 @@
             // 
             // F1_button_BrowseForExistingProject
             // 
-            this.F1_button_BrowseForExistingProject.Font = new System.Drawing.Font("Consolas", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.F1_button_BrowseForExistingProject.Font = new System.Drawing.Font("Cascadia Code", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.F1_button_BrowseForExistingProject.Location = new System.Drawing.Point(176, 111);
             this.F1_button_BrowseForExistingProject.Margin = new System.Windows.Forms.Padding(5);
             this.F1_button_BrowseForExistingProject.Name = "F1_button_BrowseForExistingProject";
@@ -112,7 +112,7 @@
             this.F1_comboBox_NewProjectComponent.FormattingEnabled = true;
             this.F1_comboBox_NewProjectComponent.Location = new System.Drawing.Point(166, 48);
             this.F1_comboBox_NewProjectComponent.Name = "F1_comboBox_NewProjectComponent";
-            this.F1_comboBox_NewProjectComponent.Size = new System.Drawing.Size(249, 31);
+            this.F1_comboBox_NewProjectComponent.Size = new System.Drawing.Size(249, 35);
             this.F1_comboBox_NewProjectComponent.TabIndex = 6;
             // 
             // F1_label_NewProjectType
@@ -121,19 +121,19 @@
             this.F1_label_NewProjectType.Location = new System.Drawing.Point(5, 51);
             this.F1_label_NewProjectType.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.F1_label_NewProjectType.Name = "F1_label_NewProjectType";
-            this.F1_label_NewProjectType.Size = new System.Drawing.Size(153, 23);
+            this.F1_label_NewProjectType.Size = new System.Drawing.Size(168, 27);
             this.F1_label_NewProjectType.TabIndex = 5;
             this.F1_label_NewProjectType.Text = "Project type:";
             // 
             // F1_Projects
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(956, 203);
             this.Controls.Add(this.F1_groupBox_NewProject);
             this.Controls.Add(this.F1_groupBox_ExistingProjects);
-            this.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Font = new System.Drawing.Font("Cascadia Code", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "F1_Projects";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>CoDesigner_IDE.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="COMPONENTS\MCL\Compiler\MCL.cs" />
+    <Compile Include="COMPONENTS\MCS\Simulation\MCS.cs" />
     <Compile Include="FORMS\Diagnostics\D0_MainDiagnosticsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,23 +75,73 @@
     <Compile Include="FORMS\IDE\Projects\F2_ConfigureNewProject.Designer.cs">
       <DependentUpon>F2_ConfigureNewProject.cs</DependentUpon>
     </Compile>
-    <Compile Include="FORMS\IDE\Projects\F3_MainEditor.cs">
+    <Compile Include="FORMS\IDE\Projects\ProjectEditor\F3_MainEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FORMS\IDE\Projects\F3_MainEditor.Designer.cs">
+    <Compile Include="FORMS\IDE\Projects\ProjectEditor\F3_MainEditor.Designer.cs">
       <DependentUpon>F3_MainEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_1_TextEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_1_TextEditor.Designer.cs">
+      <DependentUpon>F3_1_TextEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_2_ProjectStructure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_2_ProjectStructure.Designer.cs">
+      <DependentUpon>F3_2_ProjectStructure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_3_Console.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_3_Console.Designer.cs">
+      <DependentUpon>F3_3_Console.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Simulation\F1_SimulationContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Simulation\F1_SimulationContainer.Designer.cs">
+      <DependentUpon>F1_SimulationContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Simulation\MdiWindows\F1_1_SimBlueprints.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Simulation\MdiWindows\F1_1_SimBlueprints.Designer.cs">
+      <DependentUpon>F1_1_SimBlueprints.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FORMS\IDE\Simulation\MdiWindows\F1_2_SimulationWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FORMS\IDE\Simulation\MdiWindows\F1_2_SimulationWindow.Designer.cs">
+      <DependentUpon>F1_2_SimulationWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SYSTEM\Utility\Components\Component.cs" />
-    <Compile Include="SYSTEM\Utility\Components\Components.cs" />
+    <Compile Include="SYSTEM\Utility\Components\Interfaces\IIDEProgrammingLanguageComponent.cs" />
+    <Compile Include="SYSTEM\Utility\Components\Interfaces\IIDESimulationAddonComponent.cs" />
+    <Compile Include="SYSTEM\Utility\Components\Types\SimulationAddon.cs" />
+    <Compile Include="SYSTEM\Utility\Components\Types\ProgrammingLanguage.cs" />
+    <Compile Include="SYSTEM\Utility\GUI\CustomControls\U1_CodeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SYSTEM\Utility\GUI\CustomControls\U1_CodeEditor.Designer.cs">
+      <DependentUpon>U1_CodeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SYSTEM\Utility\Projects\ProjectItemInfo.cs" />
+    <Compile Include="SYSTEM\Utility\Simulation\Logic\Engine\SimulationEngine.cs" />
+    <Compile Include="SYSTEM\Utility\Simulation\Logic\SimManager\SimulationManager.cs" />
+    <Compile Include="SYSTEM\Utility\Components\Types\Component.cs" />
+    <Compile Include="SYSTEM\Utility\Components\ComponentFactory.cs" />
     <Compile Include="SYSTEM\Utility\Diagnostics\Diagnostics.cs" />
     <Compile Include="SYSTEM\Utility\Diagnostics\LogEvent.cs" />
-    <Compile Include="SYSTEM\Utility\Paths.cs" />
+    <Compile Include="SYSTEM\Utility\GeneralPaths.cs" />
     <Compile Include="SYSTEM\Utility\Projects\Project.cs" />
     <Compile Include="SYSTEM\Utility\Projects\ProjectManagement.cs" />
     <Compile Include="SYSTEM\Utility\GUI\Customization.cs" />
     <Compile Include="SYSTEM\Utility\GUI\Prompts.cs" />
+    <Compile Include="SYSTEM\Utility\TimeManagement.cs" />
     <EmbeddedResource Include="FORMS\Diagnostics\D0_MainDiagnosticsForm.resx">
       <DependentUpon>D0_MainDiagnosticsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -99,8 +154,26 @@
     <EmbeddedResource Include="FORMS\IDE\Projects\F2_ConfigureNewProject.resx">
       <DependentUpon>F2_ConfigureNewProject.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FORMS\IDE\Projects\F3_MainEditor.resx">
+    <EmbeddedResource Include="FORMS\IDE\Projects\ProjectEditor\F3_MainEditor.resx">
       <DependentUpon>F3_MainEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_1_TextEditor.resx">
+      <DependentUpon>F3_1_TextEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_2_ProjectStructure.resx">
+      <DependentUpon>F3_2_ProjectStructure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_3_Console.resx">
+      <DependentUpon>F3_3_Console.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Simulation\F1_SimulationContainer.resx">
+      <DependentUpon>F1_SimulationContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Simulation\MdiWindows\F1_1_SimBlueprints.resx">
+      <DependentUpon>F1_1_SimBlueprints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FORMS\IDE\Simulation\MdiWindows\F1_2_SimulationWindow.resx">
+      <DependentUpon>F1_2_SimulationWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -111,6 +184,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SYSTEM\Utility\GUI\CustomControls\U1_CodeEditor.resx">
+      <DependentUpon>U1_CodeEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -130,10 +206,25 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="COMPONENTS\MCL\CONFIGURATION.xml" />
-    <Content Include="SYSTEM\Memory\Projects\ActiveProjects.xml" />
+    <Content Include="COMPONENTS\MCS\CONFIGURATION.xml" />
+    <Content Include="COMPONENTS\MCS\Resources\MC_uC_BlueprintImg.jpg" />
+    <Content Include="SYSTEM\Resources\GUI\Code\BuildCode.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\Code\Info.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\Code\Load.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\Code\RunCode.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\Code\Save.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\FormIcons\TextEditorIcon.bmp" />
+    <Content Include="SYSTEM\Storage\Projects\ActiveProjects.xml" />
     <Content Include="SYSTEM\Resources\Diagnostics\EVENTS.xml" />
     <Content Include="SYSTEM\Resources\Diagnostics\VERSIONS.xml" />
     <Content Include="SYSTEM\Resources\GUI\MESSAGES.xml" />
+    <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\SelProjectImg.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\SelDirectoryImg.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\UnselProjectImg.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\UnselFileImg.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\UnselDirectoryImg.bmp" />
+    <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\SelFileImg.bmp" />
+    <Content Include="SYSTEM\Resources\Simulation\DefaultElements\DEFAULT_ELEMENTS.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

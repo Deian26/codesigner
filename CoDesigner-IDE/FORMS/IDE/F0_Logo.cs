@@ -34,7 +34,7 @@ namespace CoDesigner_IDE
             //set minimum and maximum form sizes
             this.MinimumSize = this.MaximumSize = this.Size;
 
-            List<string> installedComponents = Directory.EnumerateDirectories(Paths.COMPONENT_INSTALLATION_FOLDER).ToList();
+            List<string> installedComponents = Directory.EnumerateDirectories(GeneralPaths.COMPONENTS).ToList();
             XmlDocument eventsFile = new XmlDocument();
             XmlDocument activeProjectsFile = new XmlDocument();
             XmlDocument defaultMessages = new XmlDocument();
@@ -42,13 +42,13 @@ namespace CoDesigner_IDE
 
             try
             {
-                eventsFile.Load(Paths.DEFAULT_EVENTS_FILEPATH);
-                activeProjectsFile.Load(Paths.ACTIVE_PROJECTS_FILEPATH);
-                defaultMessages.Load(Paths.DEFAULT_MESSAGES_FILEPATH);
-                versions.Load(Paths.VERSIONS_FILEPATH);
+                eventsFile.Load(GeneralPaths.DEFAULT_EVENTS_FILEPATH);
+                activeProjectsFile.Load(GeneralPaths.ACTIVE_PROJECTS_FILEPATH);
+                defaultMessages.Load(GeneralPaths.DEFAULT_MESSAGES_FILEPATH);
+                versions.Load(GeneralPaths.VERSIONS_FILEPATH);
             }catch(Exception ex)
             {
-                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE,10,ex.Message);
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.INVALID_PROGR_ITEMS_DEFINITIONS, ex.Message);
             }
 
             this.F0_progressBar_IdeLoading.Maximum = installedComponents.Count +  
@@ -62,7 +62,7 @@ namespace CoDesigner_IDE
             this.F0_timer_CancelLoadTimer.Start();
 
             //  load versions
-            if(File.Exists(Paths.VERSIONS_FILEPATH) == true)
+            if(File.Exists(GeneralPaths.VERSIONS_FILEPATH) == true)
             {
                 try
                 {
@@ -75,17 +75,17 @@ namespace CoDesigner_IDE
                     }
                 }catch(Exception ex)
                 {
-                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 11, ex.Message);
+                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_VERSIONS, ex.Message);
                 }
             }
 
             //  load event and message definitions
             //load a list of default possible event; each component can defined their own events, in the configuration file
             //get default events
-            this.F0_listBox_LoadingElements.Items.Add("Loading events from " + Paths.DEFAULT_EVENTS_FILEPATH + " ... ");
+            this.F0_listBox_LoadingElements.Items.Add("Loading events from " + GeneralPaths.DEFAULT_EVENTS_FILEPATH + " ... ");
             bool allEventsLoaded = true;
 
-            if (File.Exists(Paths.DEFAULT_EVENTS_FILEPATH) == true)
+            if (File.Exists(GeneralPaths.DEFAULT_EVENTS_FILEPATH) == true)
             {
 
                 XmlNode root = eventsFile.DocumentElement;
@@ -126,7 +126,7 @@ namespace CoDesigner_IDE
                         {
                             allEventsLoaded = false;
                             //invalid event definition
-                            Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 8, ex.Message);
+                            Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_EVENT, ex.Message);
                         }
                     }
                 }
@@ -151,7 +151,7 @@ namespace CoDesigner_IDE
 
             //load default messages
             bool allMessagesLoaded = true;
-            this.F0_listBox_LoadingElements.Items.Add("Loading prompts from "+ Paths.DEFAULT_MESSAGES_FILEPATH + " ... ");
+            this.F0_listBox_LoadingElements.Items.Add("Loading prompts from "+ GeneralPaths.DEFAULT_MESSAGES_FILEPATH + " ... ");
             try
             {
                 XmlNode root = defaultMessages.DocumentElement;
@@ -193,7 +193,7 @@ namespace CoDesigner_IDE
                         else //translation not found
                         {
                             allMessagesLoaded = false;
-                            Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 6, "Language: " + Customization.Language.ToString() + "; message code: " + code.ToString());
+                            Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_GUI_TRANSLATED_MSGS, "Language: " + Customization.Language.ToString() + "; message code: " + code.ToString());
                         }
 
                     }
@@ -203,7 +203,7 @@ namespace CoDesigner_IDE
             catch (Exception ex)
             {
                 allMessagesLoaded = false;
-                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE,5, ex.Message);
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_GUI_DEF_MSGS, ex.Message);
             }
 
             if(allMessagesLoaded == false)
@@ -227,7 +227,11 @@ namespace CoDesigner_IDE
                     {
                         try
                         {
-                            this.F0_listBox_LoadingElements.Items.Add("Loading project: " + project.Name + " ...");
+                            if (project.Attributes["name"] != null) this.F0_listBox_LoadingElements.Items.Add("Loading project: " + project.Attributes["name"].Value.Trim() + " ...");
+                            else
+                            {
+                                throw new Exception(); // could not load this project
+                            }
 
                             ProjectManagement.Projects.Add(
                                 project.Attributes["project_filepath"].Value,
@@ -255,7 +259,7 @@ namespace CoDesigner_IDE
             catch (Exception ex)
             {
                 allActiveProjectsLoaded = false;
-                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, 9, ex.Message);
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_ACTIVE_PROJECTS, ex.Message);
                 this.F0_listBox_LoadingElements.Items.Add(" X ERROR: COULD NOT LOAD ACTIVE PROJECTS: " + ex.Message);
             }
 
@@ -269,7 +273,7 @@ namespace CoDesigner_IDE
             }
 
             //load components
-            this.F0_listBox_LoadingElements.Items.Add("Loading components from " + Paths.COMPONENT_INSTALLATION_FOLDER +" ...");
+            this.F0_listBox_LoadingElements.Items.Add("Loading components from " + GeneralPaths.COMPONENTS +" ...");
             bool allComponentsLoaded = true;
 
             foreach (string componentFolder in installedComponents)
@@ -281,12 +285,12 @@ namespace CoDesigner_IDE
 
                 try
                 {
-                      new Component(componentFolder); //the component will be added to the loaded components list in the constructor
+                    ComponentFactory.CreateComponent(componentFolder); //the component will be added to the loaded components list in the constructor
                 }
                 catch (Exception ex)
                 {
                     allComponentsLoaded = false;
-                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_COMPONENT_ORIGIN_CODE, 8, componentFolder+"; "+ex.Message);
+                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_COMPONENT_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_EVENT, componentFolder+"; "+ex.Message);
                     //event logged in the constructor
                     this.F0_listBox_LoadingElements.Items[this.F0_listBox_LoadingElements.Items.Count - 1] += (" X ERROR: " + ex.Message);
                     continue;
@@ -305,6 +309,39 @@ namespace CoDesigner_IDE
             {
                 this.F0_listBox_LoadingElements.Items.Add("Loaded all components.");
             }
+
+            // load some of the default elements
+            // project structure imagelist
+
+            //=// File images
+            ProjectManagement.ProjectStructureImages.Images.Clear(); //=> reset list
+            ProjectManagement.ProjectStructureImages.Images.Add(
+                ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_GENERAL_FILE_UNSEL_IMGKEY, //=> key = the name (string) of the object's type (e.g., File or Directory)
+                Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_FILE_UNSEL_IMAGE_FILEPATH)); //=> unselected image
+
+            ProjectManagement.ProjectStructureImages.Images.Add(
+                ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_GENERAL_FILE_SEL_IMGKEY,
+                Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_FILE_SEL_IMAGE_FILEPATH));
+
+            //=// Directory images
+            ProjectManagement.ProjectStructureImages.Images.Add(
+                ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_DIRECTORY_UNSEL_IMGKEY,
+                Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_DIRECTORY_UNSEL_IMAGE_FILEPATH));
+
+            ProjectManagement.ProjectStructureImages.Images.Add(
+                ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_DIRECTORY_SEL_IMGKEY,
+                Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_DIRECTORY_SEL_IMAGE_FILEPATH));
+
+
+            //=// Project images
+            ProjectManagement.ProjectStructureImages.Images.Add(
+                ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_PROJECT_UNSEL_IMGKEY,
+                Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_PROJECT_UNSEL_IMAGE_FILEPATH));
+
+            ProjectManagement.ProjectStructureImages.Images.Add(
+                ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_PROJECT_SEL_IMGKEY,
+                Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_PROJECT_SEL_IMAGE_FILEPATH));
+
 
             //close form
             if (this.F0_progressBar_IdeLoading.Value == this.F0_progressBar_IdeLoading.Maximum)

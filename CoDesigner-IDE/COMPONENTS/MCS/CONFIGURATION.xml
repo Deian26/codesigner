@@ -1,0 +1,78 @@
+<component name="MCS" type="simulation-addon" version="00.01.00" timestamp="18.11.2024 21:15:28" signature="">
+	
+	<description>
+		MiniComp Simulation
+		This component adds the MiniComp hardware logic, communication protocols and I/O descriptions, needed for simulating MC &lt;-&gt; communication, to the built-in circuit simulator.
+	</description>
+
+	<simulation>
+		<!-- Transport medium types are currently only defined in the IDE -->
+		<transport-mediums>
+			<!-- 
+			Mandatory attributes for each sub-node ('transport-protocol') : name (string), parallel-bits (int-string), bus-sel (bool-string), port (string)
+				
+			Example: 
+				MiniComp Transport Protocol; abstractly defines the protocol:
+					- name = "MCTM" -> MiniComp Transport Medium; the name must be unique within the simulation
+					- description = "MiniComp Transport Medium"
+					- parallel-bits = "2" -> 2 bits being transmitted at the same time
+					- sel = "true" -> if true, selection is used to secure the before transmitting data
+			-->
+			<transport-medium name="MCTM"
+							description="MiniComp Transport Medium; bus medium"
+							parallel-bits="2"
+							sel="true"
+			/> 
+							    	
+		</transport-mediums>
+
+		<!-- Simulation elements -->
+		<abstract-simulation-elements>
+			<!-- 
+			This node defines the simulation elements. Each sub-node defines an abstract element, which must contain a unique name (attribute 'name') within the simulation:
+				- name (string; formal name, the displayed name can be different)
+				- description
+				- image-filepath (relative to the components' folder)
+			
+			The types of abstract elements supported by the IDE are defined below, with their attributes / sub-nodes (the 'name' (string) attribute is mandatory for all abstract elements):
+					- uP; sub-nodes:
+						(optional) 
+							<power
+								min-tension="int; volts" 
+								max-tension="int; volts" 
+								min-consumption="int; amps" 
+								max-consumption="int; amps"/>
+						
+						(mandatory)
+						<logic supports-floating-point="false" supports-programming="true"/>
+						<ports>
+							<port name="string; must be unique" 
+									number="int-string; the number of ports of this type on the uP" 
+									transport-mediums="string; a comma-separated list of supported transport mediums; they must also be defined in the 'transport-mediums' node"/>
+							...
+						</ports>
+					
+					(defined by the IDE; definitions here will be ignored)
+					- logic-input; mandatory attributes: <logic-input name="" num-type="same as for 'sensor'" /> ; this element injects a value directly onto a transport-line; this element is supported by default by the IDE and may not be defined; if it is defined, its definition is ignored !
+					- logic-output; this element displays the current value from the transport-line;  this element is supported by default by the IDE and may not be defined; if it is defined, its definition is ignored !
+					- note; this element displays a note (comment) and has no other function; this element is supported by default by the IDE and may not be defined; if it is defined, its definition is ignored !
+				
+				E.g.: 
+				<uP name="Element1">
+					...
+				</uP>
+			-->
+			
+			<uP name="MC" description="MiniComp microprocessor" image-filepath="Resources/MC_uC_BlueprintImg.jpg"> <!-- Defines a Mini Comp uP -->
+				<logic supports-floating-point="false" supports-programming="true"/>
+				<ports>
+					<port name="GAP" 
+							number="2" 
+							transport-mediums="MCTM"/>
+				</ports>
+			</uP>
+			
+		</abstract-simulation-elements>
+	</simulation>
+	
+</component>

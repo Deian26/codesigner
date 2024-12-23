@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using static CoDesigner_IDE.Diagnostics;
 
 namespace CoDesigner_IDE
 {
@@ -30,7 +31,7 @@ namespace CoDesigner_IDE
 
             }catch(Exception ex) 
             {
-                Diagnostics.LogEvent(0x00000004, ex.Message);
+                Diagnostics.LogEvent(DefaultEventCodes.INVALID_MSGBOX_BUTONS_OR_ICON_CODE, ex.Message); //error creating a prompt
             }
         }
 
@@ -57,8 +58,14 @@ namespace CoDesigner_IDE
     /// </summary>
     public static class Prompts
     {
-        public static Dictionary<int,PromptMessage> Messages = new Dictionary<int,PromptMessage>();
+        public static Dictionary<int,PromptMessage> Messages = new Dictionary<int,PromptMessage>(); // key = event code
         public static int DEFAULT_MESSAGES_ORIGIN_CODE = 0x000F; //2 bytes
+
+        public struct PromptMessageCodes
+        {
+            public const int MERGE_PROJ_FOLDER              = 1;
+            public const int INVALID_PROJ_ITEMPATH_OR_TYPE  = 2;
+        }
 
         /// <summary>
         /// Opens a dialog configured based on the given code (which must be found in the list of loaded messages)

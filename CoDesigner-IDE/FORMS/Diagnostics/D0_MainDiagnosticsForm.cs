@@ -13,7 +13,7 @@ namespace CoDesigner_IDE
 {
     public partial class D0_MainDiagnosticsForm : Form
     {
-        private string D0_TreeViewNodeTitle_COMPONENTS = "Components";
+        private string D0_TreeViewNodeTitle_COMPONENTS = "ComponentFactory";
         private string D0_TreeViewNodeTitle_DEFAULTS = "Defaults";
         private string D0_TreeViewNodeTitle_DEFAULT_EVENTS = "Events";
         private string D0_TreeViewNodeTitle_DEFAULT_PROMPTS = "Prompts";
@@ -81,7 +81,7 @@ namespace CoDesigner_IDE
             //        this.D0_treeView_LoadedElements.Nodes[this.D0_TreeViewNodeTitle_COMPONENTS].Nodes.Clear();
 
             //add components
-            foreach (string componentName in Components.LoadedComponents.Keys)
+            foreach (string componentName in ComponentFactory.LoadedComponents.Keys)
             {
                 this.D0_treeView_LoadedElements
                     .Nodes[this.D0_TreeViewNodeTitle_COMPONENTS]
@@ -150,13 +150,13 @@ namespace CoDesigner_IDE
             //if (this.D0_treeView_LoadedElements.Nodes[this.D0_TreeViewNodeTitle_DEFAULTS].Nodes[this.D0_TreeViewNodeTitle_DEFAULT_LANGUAGES] != null && 
             //    this.D0_treeView_LoadedElements.Nodes[this.D0_TreeViewNodeTitle_DEFAULTS].Nodes[this.D0_TreeViewNodeTitle_DEFAULT_LANGUAGES].GetNodeCount(true) != 0)
             //    this.D0_treeView_LoadedElements.Nodes[this.D0_TreeViewNodeTitle_DEFAULTS].Nodes[this.D0_TreeViewNodeTitle_DEFAULT_LANGUAGES].Nodes.Clear();
-            //DEV - add language detection based on loaded elements
+            //TODO: Add language loading first, then display the loaded languages here
 
             //  themes (including defaults)
             //if (this.D0_treeView_LoadedElements.Nodes[this.D0_TreeViewNodeTitle_DEFAULTS].Nodes[this.D0_TreeViewNodeTitle_DEFAULT_THEMES] != null && 
             //    this.D0_treeView_LoadedElements.Nodes[this.D0_TreeViewNodeTitle_DEFAULTS].Nodes[this.D0_TreeViewNodeTitle_DEFAULT_THEMES].GetNodeCount(true) != 0)
             //    this.D0_treeView_LoadedElements.Nodes[this.D0_TreeViewNodeTitle_DEFAULTS].Nodes[this.D0_TreeViewNodeTitle_DEFAULT_THEMES].Nodes.Clear();
-            // DEV - add theme loading first, then display the loaded themes here
+            //TODO: Add theme loading first, then display the loaded themes here
 
             //  versions
             this.D0_richTextBox_StatusVersions.Text = "";
@@ -189,7 +189,7 @@ namespace CoDesigner_IDE
                 {
                     case D0_TreeViewNodeComponentTag: 
                         {
-                            details += Components.LoadedComponents[e.Node.Name].ToString();
+                            details += ComponentFactory.LoadedComponents[e.Node.Name].ToString();
                             break;
                         }
 
@@ -213,7 +213,7 @@ namespace CoDesigner_IDE
 
                     case D0_TreeViewNodeThemeTag:
                         {
-                            //DEV - implement themes first
+                            //TODO: Implement displaying theme details
                             break;
                         }
 
@@ -243,13 +243,13 @@ namespace CoDesigner_IDE
         /// <param name="e"></param>
         private void D0_button_Actions_CheckLocalFiles_Click(object sender, EventArgs e)
         {
-            // DEV - implement file signatures first
+            //TODO: Implement file signatures first
         }
 
         //if checked, allows the loading of third-party components
         private void D0_checkBox_AllowThirdPartyComponents_CheckedChanged(object sender, EventArgs e)
         {
-            Components.FLAG_AllowThirdPartyComponents = this.D0_checkBox_AllowThirdPartyComponents.Checked;
+            ComponentFactory.FLAG_AllowThirdPartyComponents = this.D0_checkBox_AllowThirdPartyComponents.Checked;
         }
     }
 }
