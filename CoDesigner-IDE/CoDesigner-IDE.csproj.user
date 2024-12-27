@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PublishUrlHistory>publish\</PublishUrlHistory>
+    <InstallUrlHistory />
+    <SupportUrlHistory />
+    <UpdateUrlHistory />
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory />
+    <FallbackCulture>en-US</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="FORMS\Diagnostics\D0_MainDiagnosticsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\F0_Logo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Projects\F1_Projects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Projects\F2_ConfigureNewProject.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Projects\ProjectEditor\F3_MainEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_1_TextEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_2_ProjectStructure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Projects\ProjectEditor\MdiWindows\F3_3_Console.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Simulation\F1_SimulationContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Simulation\MdiWindows\F1_1_SimBlueprints.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FORMS\IDE\Simulation\MdiWindows\F1_2_SimulationWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

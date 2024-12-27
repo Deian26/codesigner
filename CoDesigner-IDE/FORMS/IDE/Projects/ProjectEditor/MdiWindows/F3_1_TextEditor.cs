@@ -190,7 +190,7 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
         public void CodeUpdated()
         {
             // Computes the wordcount.
-            // Done in parallel with the application part of the IDE.
+            // Done in parallel with the applicationThread part of the IDE.
             Parallel.Invoke(new Action(countWords));
         }
 

@@ -95,5 +95,33 @@
 	<event code="20" origin="3" severity="3">
 		<EN message="Could not retrieve project item details. Check if the file / directory still exists. "/>
 	</event>
+
+	<event code="21" origin="0" severity="3">
+		<EN message="Could not generate the signature. "/>
+	</event>
+
+	<event code="22" origin="1" severity="3">
+		<EN message="Could not load security properties. "/>
+	</event>
+
+	<event code="23" origin="1" severity="3">
+		<EN message="Invalid token."/>
+	</event>
+
+	<event code="24" origin="1" severity="3">
+		<EN message="Invalid token length."/>
+	</event>
+
+	<event code="25" origin="1" severity="3">
+		<EN message="Token expired."/>
+	</event>
+
+	<event code="26" origin="1" severity="3">
+		<EN message="The provided token does not grant a sufficient access level for this operation."/>
+	</event>
+
+	<event code="27" origin="1" severity="3">
+		<EN message="Could not store the new security properties."/>
+	</event>
 	
 </events>

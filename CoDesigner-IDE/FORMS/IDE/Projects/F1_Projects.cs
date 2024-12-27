@@ -4,18 +4,37 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using static CoDesigner_IDE.Security;
 
 namespace CoDesigner_IDE.FORMS.IDE
 {
     public partial class F1_Projects : Form
     {
+        delegate bool Delegate_DisplayForm(Security.Token token);
+        
         public F1_Projects()
         {
             InitializeComponent();
+
+            // if this is a admin-workstation, skip token verification for the diagnostic utility
+            if(Utility.CurrentSecurityProperties.ADMIN_WORKSTATION==true)
+            {
+                // hide token controls
+                this.F1_label_TokenLabel.Enabled = false;
+                this.F1_label_TokenLabel.Visible = false;
+
+                this.F1_textBox_Token.Enabled = false;
+                this.F1_textBox_Token.Visible = false;
+
+                // display diagnostic utility button
+
+            }
         }
 
         /// <summary>
@@ -60,16 +79,69 @@ namespace CoDesigner_IDE.FORMS.IDE
 
         private void F1_Projects_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //stop program
+            // Stop program
             Program.StopAll();
         }
 
         private void F1_button_BrowseForExistingProject_Click(object sender, EventArgs e)
         {
-            //browse for project file
+            // Browse for project file
             this.F1_folderBrowserDialog_BrowseExistingProject.ShowDialog();
 
             //TODO: Implement project browsing  
+        }
+        
+        private void F1_button_AuthorizeAdmin_Click(object sender, EventArgs e)
+        {
+            // reset error
+            this.F1_errorProvider_ErrorMessages.Clear();
+
+            // process token
+            if (this.F1_textBox_Token.Text.Length > 0) //=> basic length check (a more detailed length check is done when the token is generated)
+            {
+                // Check if the token is valid and authorize access
+                Security.TokenVerificationStatus tokenVerificationStatus = Security.VerifyToken(this.F1_textBox_Token.Text.Trim());
+
+                if (tokenVerificationStatus.token != null &&
+                    tokenVerificationStatus.token.VALID == true) //=> double check
+                {
+                    // if the diagnostics utility has been shut down, re-start it and display an error
+                    if(Program.D0.IsDisposed == true)
+                    {
+                        MessageBox.Show("DIAGNOSTICS FATAL ERROR","The Diagnostics Utility has been previously shut down!",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Program.StopAll();
+                    }
+                    // open the Diagnostics utility
+                    bool accessGranted = (bool)this.Invoke(new Delegate_DisplayForm(Program.D0.DisplayForm), tokenVerificationStatus.token);
+
+                    if (accessGranted == false) // form was not displayed due to the access level not being accepted
+                    {
+                        string eventMessage = Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INSUFFICIENT_TOKEN_ACCESS_LEVEL);
+                        this.F1_errorProvider_ErrorMessages.SetError(this.F1_textBox_Token, eventMessage);
+                    }
+                }
+                else //=> invalid token
+                {
+                    this.F1_errorProvider_ErrorMessages.SetError(this.F1_textBox_Token, tokenVerificationStatus.eventMessage);
+                }
+            }
+            else //=> no token provided
+            {
+                this.F1_errorProvider_ErrorMessages.SetError(this.F1_textBox_Token, Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_TOKEN_LENGTH));
+            }
+
+        }
+
+        private void F1_button_AdminWorkstationOpenDiagnostiUtility_Click(object sender, EventArgs e)
+        {
+            // open the diagnostic utility without a token (admin-workstation)
+            bool accessGranted = (bool)this.Invoke(new Delegate_DisplayForm(Program.D0.DisplayForm), null);
+
+            if (accessGranted == false) // form was not displayed due to the access level not being accepted
+            {
+                string eventMessage = Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INSUFFICIENT_TOKEN_ACCESS_LEVEL);
+                this.F1_errorProvider_ErrorMessages.SetError(this.F1_button_AdminWorkstationOpenDiagnostiUtility, eventMessage);
+            }
         }
     }
 }

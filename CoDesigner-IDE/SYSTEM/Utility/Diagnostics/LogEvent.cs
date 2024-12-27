@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Text;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,8 +33,21 @@ namespace CoDesigner_IDE
             this.severity = severity;
             this.code = code;
             this.message = message;
-            
-            switch(severity)
+
+            // log the event to the log file
+            if (File.Exists(GeneralPaths.LOG_FILE_PATH) == false) //=> create file
+            {
+                StreamWriter logFile = File.CreateText(GeneralPaths.LOG_FILE_PATH);
+
+                logFile.WriteLine($"{Diagnostics.LOGFILE_HEADER_PREFIX} {DateTime.Now.ToString()}\n");
+
+                logFile.Close();
+            }
+
+            File.AppendAllText(GeneralPaths.LOG_FILE_PATH,$"[{DateTime.Now.ToString()}] > {message}\n");
+
+            // show a message box and stop applicationThread, depending on the options
+            switch (severity)
             {
                 case Diagnostics.EVENT_SEVERITY.Info:
                     {

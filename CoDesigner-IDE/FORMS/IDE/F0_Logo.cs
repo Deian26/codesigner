@@ -39,7 +39,7 @@ namespace CoDesigner_IDE
             XmlDocument activeProjectsFile = new XmlDocument();
             XmlDocument defaultMessages = new XmlDocument();
             XmlDocument versions = new XmlDocument();
-
+            
             try
             {
                 eventsFile.Load(GeneralPaths.DEFAULT_EVENTS_FILEPATH);
@@ -214,6 +214,9 @@ namespace CoDesigner_IDE
             {
                 this.F0_listBox_LoadingElements.Items.Add("Loaded default messages.");
             }
+
+            // load general enc/dec key
+            Security.SetGenKey();
 
             //load active projects
             bool allActiveProjectsLoaded = true;

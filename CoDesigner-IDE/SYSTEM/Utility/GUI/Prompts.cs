@@ -54,7 +54,7 @@ namespace CoDesigner_IDE
         }
     }
     /// <summary>
-    /// Handles IDE wide prompts and messages
+    /// Handles IDE prompts and messages
     /// </summary>
     public static class Prompts
     {

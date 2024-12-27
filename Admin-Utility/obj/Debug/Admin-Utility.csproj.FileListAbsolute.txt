@@ -1,0 +1,10 @@
+D:\CoDesigner-IDE\Admin-Utility\obj\Debug\Admin-Utility.csproj.AssemblyReference.cache
+D:\CoDesigner-IDE\Admin-Utility\obj\Debug\Admin_Utility.Properties.Resources.resources
+D:\CoDesigner-IDE\Admin-Utility\obj\Debug\Admin_Utility.U0_MainForm.resources
+D:\CoDesigner-IDE\Admin-Utility\obj\Debug\Admin-Utility.csproj.GenerateResource.cache
+D:\CoDesigner-IDE\Admin-Utility\obj\Debug\Admin-Utility.csproj.CoreCompileInputs.cache
+D:\CoDesigner-IDE\Admin-Utility\bin\Debug\Admin-Utility.exe.config
+D:\CoDesigner-IDE\Admin-Utility\bin\Debug\Admin-Utility.exe
+D:\CoDesigner-IDE\Admin-Utility\bin\Debug\Admin-Utility.pdb
+D:\CoDesigner-IDE\Admin-Utility\obj\Debug\Admin-Utility.exe
+D:\CoDesigner-IDE\Admin-Utility\obj\Debug\Admin-Utility.pdb
