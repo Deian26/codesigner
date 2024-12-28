@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +15,7 @@ namespace CoDesigner_IDE
     /// <summary>
     /// Defines a Programming Language
     /// </summary>
+    [SupportedOSPlatform("windows")]
     public class ProgrammingLanguage : Component
     {
         /// <summary>
@@ -44,9 +46,18 @@ namespace CoDesigner_IDE
         }
         const int MAX_SUBFOLDER_RELPATH_LEN = 64;
 
+        /// <summary>
+        /// Additional component options
+        /// </summary>
         public List<ProjectComboBoxDetails> projectAdditionalOptions { get; } = new List<ProjectComboBoxDetails>(); // additional project options for a project which uses this component
+        /// <summary>
+        /// Executable file formats (extensions) 
+        /// </summary>
         public List<string> ExecutableFileFormats { get; } = new List<string>();
-        
+
+        /// <summary>
+        /// Source file formats (extensions) 
+        /// </summary>
         public List<string> SrcExtensions { get; } = new List<string>() ; // key = file extension; value = method used to analyze the contents of a corresponding file type; if the first character of the extension int the component configuration is not a dot ('.'), the dot is prepended to the string when it is added to this list
 
         /// <summary>

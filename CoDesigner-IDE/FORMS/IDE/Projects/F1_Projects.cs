@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,10 +15,15 @@ using static CoDesigner_IDE.Security;
 
 namespace CoDesigner_IDE.FORMS.IDE
 {
+    [SupportedOSPlatform("windows")]
     public partial class F1_Projects : Form
     {
         delegate bool Delegate_DisplayForm(Security.Token token);
-        
+
+        /// <summary>
+        /// Handles project creation and management
+        /// </summary>
+        [SupportedOSPlatform("windows")]
         public F1_Projects()
         {
             InitializeComponent();
@@ -25,17 +31,33 @@ namespace CoDesigner_IDE.FORMS.IDE
             // if this is a admin-workstation, skip token verification for the diagnostic utility
             if(Utility.CurrentSecurityProperties.ADMIN_WORKSTATION==true)
             {
-                // hide token controls
-                this.F1_label_TokenLabel.Enabled = false;
-                this.F1_label_TokenLabel.Visible = false;
-
-                this.F1_textBox_Token.Enabled = false;
-                this.F1_textBox_Token.Visible = false;
-
-                // display diagnostic utility button
-
+                // change how the controls are displayed
+                this.setAdminWorkstation();
             }
         }
+
+        #region utility
+        private void setAdminWorkstation()
+        {
+            // hide token controls
+            this.F1_label_TokenLabel.Enabled = false;
+            this.F1_label_TokenLabel.Visible = false;
+
+            this.F1_textBox_Token.Enabled = false;
+            this.F1_textBox_Token.Visible = false;
+
+            this.F1_button_AuthorizeAdmin.Enabled = false;
+            this.F1_button_AuthorizeAdmin.Visible = false;
+
+            // display diagnostic utility button
+            this.F1_button_AdminWorkstationOpenDiagnostiUtility.Location = this.F1_button_AuthorizeAdmin.Location;
+            this.F1_button_AdminWorkstationOpenDiagnostiUtility.Enabled = true;
+            this.F1_button_AdminWorkstationOpenDiagnostiUtility.Visible = true;
+
+            // display a message stating that this is an admin workstation
+            this.F1_groupBox_Admin.Text += " - ADMIN";
+        }
+        #endregion
 
         /// <summary>
         /// Open new project configuration form
@@ -54,6 +76,7 @@ namespace CoDesigner_IDE.FORMS.IDE
             }
         }
 
+        [SupportedOSPlatform("windows")]
         private void F1_Projects_Load(object sender, EventArgs e)
         {
             //set minimum and maximum form sizes
@@ -83,6 +106,7 @@ namespace CoDesigner_IDE.FORMS.IDE
             Program.StopAll();
         }
 
+        [SupportedOSPlatform("windows")]
         private void F1_button_BrowseForExistingProject_Click(object sender, EventArgs e)
         {
             // Browse for project file
@@ -90,52 +114,68 @@ namespace CoDesigner_IDE.FORMS.IDE
 
             //TODO: Implement project browsing  
         }
-        
+
+        [SupportedOSPlatform("windows")]
         private void F1_button_AuthorizeAdmin_Click(object sender, EventArgs e)
         {
             // reset error
             this.F1_errorProvider_ErrorMessages.Clear();
-
+            this.F1_textBox_Token.BackColor = Utility.BACKCOLOUR_DEFAULT_CONTROL;
             // process token
-            if (this.F1_textBox_Token.Text.Length > 0) //=> basic length check (a more detailed length check is done when the token is generated)
-            {
-                // Check if the token is valid and authorize access
-                Security.TokenVerificationStatus tokenVerificationStatus = Security.VerifyToken(this.F1_textBox_Token.Text.Trim());
 
-                if (tokenVerificationStatus.token != null &&
-                    tokenVerificationStatus.token.VALID == true) //=> double check
+            // Check if the token is valid and authorize access
+            Security.TokenVerificationStatus tokenVerificationStatus = Security.VerifyToken(this.F1_textBox_Token.Text.Trim());
+                
+            if (tokenVerificationStatus.token != null)
+            {
+                if (tokenVerificationStatus.token.VALID == true) //=> double check validity
                 {
                     // if the diagnostics utility has been shut down, re-start it and display an error
-                    if(Program.D0.IsDisposed == true)
+                    if (Program.D0.IsDisposed == true)
                     {
-                        MessageBox.Show("DIAGNOSTICS FATAL ERROR","The Diagnostics Utility has been previously shut down!",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("DIAGNOSTICS FATAL ERROR", "The Diagnostics Utility has been previously shut down!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Program.StopAll();
                     }
+
                     // open the Diagnostics utility
-                    bool accessGranted = (bool)this.Invoke(new Delegate_DisplayForm(Program.D0.DisplayForm), tokenVerificationStatus.token);
+                    bool accessGranted = (bool)Program.D0.Invoke(new Delegate_DisplayForm(Program.D0.DisplayForm), tokenVerificationStatus.token);
+                    
+                    // if this machine is an admin workstation, change how the controls are displayed
+                    if (tokenVerificationStatus.token.ACCESS_LEVEL == Security.AccessLevel.ADMIN_WORKSTATION)
+                    { 
+                        this.setAdminWorkstation();
+                    }
 
                     if (accessGranted == false) // form was not displayed due to the access level not being accepted
                     {
                         string eventMessage = Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INSUFFICIENT_TOKEN_ACCESS_LEVEL);
                         this.F1_errorProvider_ErrorMessages.SetError(this.F1_textBox_Token, eventMessage);
+                        this.F1_textBox_Token.BackColor = Utility.BACKCOLOUR_ERROR;
                     }
                 }
-                else //=> invalid token
-                {
+            }
+            else //=> invalid token
+            {
+                if (tokenVerificationStatus.eventMessage != null) // reason for token invalidity provided
+                { 
                     this.F1_errorProvider_ErrorMessages.SetError(this.F1_textBox_Token, tokenVerificationStatus.eventMessage);
+                    this.F1_textBox_Token.BackColor = Utility.BACKCOLOUR_ERROR;
+                }
+                else //=> no reason provided for the token's invalidity
+                {
+                    this.F1_errorProvider_ErrorMessages.SetError(this.F1_textBox_Token, Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_TOKEN_STRING_FORMAT));
+                    this.F1_textBox_Token.BackColor = Utility.BACKCOLOUR_ERROR;
                 }
             }
-            else //=> no token provided
-            {
-                this.F1_errorProvider_ErrorMessages.SetError(this.F1_textBox_Token, Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_TOKEN_LENGTH));
-            }
 
+            
         }
 
+        [SupportedOSPlatform("windows")]
         private void F1_button_AdminWorkstationOpenDiagnostiUtility_Click(object sender, EventArgs e)
         {
             // open the diagnostic utility without a token (admin-workstation)
-            bool accessGranted = (bool)this.Invoke(new Delegate_DisplayForm(Program.D0.DisplayForm), null);
+            bool accessGranted = (bool)Program.D0.Invoke(new Delegate_DisplayForm(Program.D0.DisplayForm), new object[] {null});
 
             if (accessGranted == false) // form was not displayed due to the access level not being accepted
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.Authentication.ExtendedProtection;
 using System.Security.Cryptography;
 using System.Security.Principal;
@@ -15,8 +16,12 @@ namespace CoDesigner_IDE
     /// <summary>
     /// Manages security for the IDE
     /// </summary>
+    [SupportedOSPlatform("windows")]
     internal static class Security
     {
+        // used tokens
+        private static List<Security.Token> UsedTokens = new List<Security.Token>();
+
         /* valid generator codes
          * Verification method: TOKEN_TS + ANY_APPROVED_CODE == TOKEN_GENERATOR_CODE
         */
@@ -30,9 +35,7 @@ namespace CoDesigner_IDE
         };
         internal const int MIN_EXPIRATION_LIMIT = 60; // the minimum number of seconds from a token's generation until it expires
         internal const int MAX_EXPIRATION_LIMIT = 21600; // the maximum time expiration limit (seconds)
-
-        private static byte[] GEN_KEY; // general enc/dec key
-
+        
         /// <summary>
         /// Contains the result of a token verification process
         /// </summary>
@@ -66,13 +69,16 @@ namespace CoDesigner_IDE
             public int EXPIRATION_LIMIT_SEC = 0; // the number of seconds since the timestamp until the token expires
             public bool VALID { get; } = false;
             public bool EXPIRED { get; } = false;
-
+            public bool USED_TOKEN { get; } = false; // if true, this token was already used in the past and cannot be used again
+            public string TOKEN_STRING { get; } = null; // the initial token string used to create the token
             /// <summary>
             /// Splits the provided token string, decodes and retrieves the field values.
             /// </summary>
             /// <param name="tokenString">The string to be parsed</param>
             public Token(string tokenString)
             {
+                this.TOKEN_STRING = tokenString;
+
                 string[] fields = tokenString.Split(Token.FIELD_SEPARATOR); // get encoded field value
 
                 if(fields.Length < 4) // invalid length
@@ -84,7 +90,16 @@ namespace CoDesigner_IDE
                 // decode fields
                 fields[0] = fields[0].Trim();
                 this.ID = Encoding.UTF8.GetString(Convert.FromBase64String(fields[0]));
-                
+
+                // check if this token was already used
+                foreach (Security.Token usedToken in Security.UsedTokens)
+                {
+                    if (usedToken.ID.Equals(this.ID)) // this token was already used => disregard it
+                    {
+                        this.USED_TOKEN = true;
+                    }
+                }
+
                 fields[1] = fields[1].Trim();
                 string tsFieldStr = Encoding.UTF8.GetString(Convert.FromBase64String(fields[1]));
                 DateTime ts;
@@ -109,11 +124,9 @@ namespace CoDesigner_IDE
                 }
 
                 // check expiration limit
-                bool validTokenTsExp = false;
-
                 if (DateTime.UtcNow.CompareTo(this.TS.AddSeconds(this.EXPIRATION_LIMIT_SEC)) < 0) // token is still valid (not expired)
                 {
-                    validTokenTsExp = true;
+                    this.EXPIRED = false;
 
                 }
                 else // token expired
@@ -136,14 +149,18 @@ namespace CoDesigner_IDE
                     sha256.Clear();
                 }
 
-                this.VALID = validTs && validGenCode && validTokenTsExp && validExp; // check if the token is valid
+                this.VALID = validTs && validGenCode && (!this.EXPIRED) && validExp && (!this.USED_TOKEN); // check if the token is valid
 
                 if(this.VALID == true) //=> valid token
                 {
                     // grant the requested access level
                     this.ACCESS_LEVEL = (Security.AccessLevel)Convert.ToInt32(Enum.Parse(typeof(Security.AccessLevel), accessLevel)); // get security access from the decoded field value
+
+                    // add this token to the list of already used tokens on this machine
+                    Security.AddUsedToken(this);
                 }
                 // else => invalid token, no security access is granted (by default, it is set to NONE)
+
             }
 
             /// <summary>
@@ -220,6 +237,10 @@ namespace CoDesigner_IDE
                 {
                     eventMessage = Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.TOKEN_EXPIRED);
                 }
+                else if(token.USED_TOKEN == true)
+                {
+                    eventMessage = Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ALREADY_USED_TOKEN);
+                }
                 else // other reason for which the token is invalid
                 {
                     eventMessage = Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_TOKEN);
@@ -247,86 +268,101 @@ namespace CoDesigner_IDE
 
             return byteString;
         }
-        
+
         /// <summary>
-        /// Encrypts the given text
+        /// Encrypts the given text for the current user (C# ProtectedData class; Windows only)
         /// </summary>
-        /// <param name="inputText">Text to be encrypted/param>
-        /// <returns>The generated cipher text<</returns>
-        public static string Encrypt(string inputText)
+        /// <param name="plainText">Text to be encrypted</param>
+        /// <returns>The generated cipher text</returns>
+        
+        //[SupportedOSPlatform("windows")]
+        public static string Encrypt(string plainText)
         {
             string cipherText = null;
-
-            using (Aes aes = Aes.Create())
+            try
             {
-                byte[] bytePlainText = Encoding.UTF8.GetBytes(inputText);
-
-                aes.Key = Security.GEN_KEY;
-                aes.GenerateIV();
-
-                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-                
-                using (MemoryStream outputStream = new MemoryStream())
+                // platform handling for possible future extensions
+                switch (System.Environment.OSVersion.Platform) // use different encryption methods or do not encrypt the data at all, depending on the OS
                 {
-                    using (CryptoStream cryptoStream = new CryptoStream(outputStream, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
+                    case PlatformID.Win32NT: // windows
                         {
-                            streamWriter.Write(bytePlainText);
+                            byte[] bytePlainText = Encoding.UTF8.GetBytes(plainText);
+
+                            cipherText = Convert.ToBase64String(ProtectedData.Protect(bytePlainText, Encoding.UTF8.GetBytes(Utility.GetHashedUuid()), DataProtectionScope.CurrentUser));
+                            break;
                         }
-                    }
-
-                    cipherText = Encoding.UTF8.GetString(outputStream.ToArray());
+                    default: // log event and do not encrypt data
+                        {
+                            cipherText = plainText;
+                            Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ENC_ERROR_UNSUPPORTED_OS);
+                            break;
+                        }
                 }
-
+            }
+            catch (Exception ex) // error encrypting data -> return null
+            {
+                cipherText = null; // just in case
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ENC_ERROR, ex.Message);
             }
 
             return cipherText;
         }
 
         /// <summary>
-        /// Decrypts the provided text
+        /// Decrypts the provided text (C# ProtectedData class; Windows only)
         /// </summary>
         /// <param name="cipherText">Text to be decrypted</param>
         /// <returns>The plain text representation of the provided cipher-text</returns>
+        
+        //[SupportedOSPlatform("windows")]
         internal static string Decrypt(string cipherText)
         {
             string plainText = null;
 
-            using (Aes aes = Aes.Create())
+            try
             {
-                byte[] byteCipherText = Encoding.UTF8.GetBytes(cipherText);
-
-                aes.Key = Security.GEN_KEY;
-                aes.GenerateIV();
-
-                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-
-                using (MemoryStream outputStream = new MemoryStream(byteCipherText))
+                // platform handling for possible future extensions
+                switch (System.Environment.OSVersion.Platform) // use different encryption methods or do not encrypt the data at all, depending on the OS
                 {
-                    using (CryptoStream cryptoStream = new CryptoStream(outputStream, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader streamReader = new StreamReader(cryptoStream))
+                    case PlatformID.Win32NT: // windows
                         {
-                            plainText = streamReader.ReadToEnd();
-                        }
-                    }
-                }
+                            plainText = Encoding.UTF8.GetString(ProtectedData.Unprotect(Convert.FromBase64String(cipherText), Encoding.UTF8.GetBytes(Utility.GetHashedUuid()), DataProtectionScope.CurrentUser));
 
+                            break;
+                        }
+                    default: // log event and return null
+                        {
+                            plainText = null;
+                            Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.DEC_ERROR_UNSUPPORTED_OS);
+                            break;
+                        }
+                }
+            }
+            catch (Exception ex) // error encrypting data -> return null
+            {
+                plainText = null; // just in case
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.DEC_ERROR, ex.Message);
             }
 
             return plainText;
         }
         
-        #region utility
         /// <summary>
-        /// Set the general-purpose enc/dec key
+        /// Adds the token string provided token to a list of used tokens
         /// </summary>
-        public static void SetGenKey()
+        /// <param name="token">Used token</param>
+        public static void AddUsedToken(Security.Token token)
         {
-
+            Security.UsedTokens.Add(token);
         }
 
-        #endregion
+        /// <summary>
+        /// Returns an array containing the security tokens used in this session
+        /// </summary>
+        /// <returns></returns>
+        public static Security.Token[] GetUsedTokens()
+        {
+            return Security.UsedTokens.ToArray();
+        }
     }
 }

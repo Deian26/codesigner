@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using static CoDesigner_IDE.Diagnostics;
 
 namespace CoDesigner_IDE
 {
+    [SupportedOSPlatform("windows")]
     public partial class D0_MainDiagnosticsForm : Form
     {
         private string D0_TreeViewNodeTitle_COMPONENTS = "ComponentFactory";
@@ -32,7 +34,13 @@ namespace CoDesigner_IDE
         private const string D0_TreeViewNodeThemeTag = "Theme";
         
         #region delegates
+        /// <summary>
+        /// Delegate type used to update the diagnostic log from a different thread
+        /// </summary>
         public delegate void DelegateType_UpdateDiagnosticLog();
+        /// <summary>
+        /// Delegate type used to update the diagnostic log from a different thread
+        /// </summary>
         public DelegateType_UpdateDiagnosticLog Delegate_UpdateLoadedElementsDisplay;
         #endregion
 
@@ -41,9 +49,17 @@ namespace CoDesigner_IDE
         // form properties
         private Size NormalSize { get; } // default form size to be used
 
+        /// <summary>
+        /// Provides user access to the diagnostic utility
+        /// </summary>
         public D0_MainDiagnosticsForm()
-        {
+        {            
             InitializeComponent();
+
+            // by default, this form should be invisible
+            this.ShowInTaskbar = false;
+            this.WindowState = FormWindowState.Minimized;
+            this.Visible = false; 
 
             // set initial form properties
             this.NormalSize = this.Size;
@@ -56,8 +72,10 @@ namespace CoDesigner_IDE
         {
             this.SetFormDefaultSize();
         }
-
-        //set minimum and maximum form sizes
+        
+        /// <summary>
+        /// Sets the min/max form sizes
+        /// </summary>
         public void SetFormDefaultSize()
         {
             this.MaximumSize = this.MinimumSize = this.NormalSize;
@@ -70,27 +88,38 @@ namespace CoDesigner_IDE
         /// <returns>true if the diagnostic form can be displayed, based on the access level of the given token; false otherwise</returns>
         internal bool DisplayForm(Security.Token token)
         {
+            bool accessGranted = false;
+
             if (token == null)
             {
-                return Utility.CurrentSecurityProperties.ADMIN_WORKSTATION == true;
+                accessGranted = Utility.CurrentSecurityProperties.ADMIN_WORKSTATION == true;
+            }
+            else
+            {
+                // check security access
+                if (token.VALID == true &&
+                    Enum.IsDefined(typeof(D0_MainDiagnosticsForm.AccessLevelGroup), (int)token.ACCESS_LEVEL) == true)
+                {
+                    // if this token is used to activate an admin workstation, store this property in a local file
+                    if (token.ACCESS_LEVEL == Security.AccessLevel.ADMIN_WORKSTATION)
+                    {
+                        Utility.StoreSecurityProperties(
+                            true
+                            );
+                        
+                    }
+
+                    accessGranted = true;
+                }
             }
 
-            bool accessGranted = false;
-            // check security access
-            if (token.VALID == true && 
-                Enum.IsDefined(typeof(D0_MainDiagnosticsForm.AccessLevelGroup), (int)token.ACCESS_LEVEL) == true)
-            {
-                // store this property in a local file
-                if (token.ACCESS_LEVEL == Security.AccessLevel.ADMIN_WORKSTATION)
-                { 
-                    Utility.StoreSecurityProperties(
-                        true
-                        );
-                }
 
+            if(accessGranted == true)
+            {
                 this.SetFormDefaultSize();
                 this.Visible = true;
                 this.WindowState = FormWindowState.Normal;
+                this.ShowInTaskbar = true;
                 accessGranted = true;
             }
 
@@ -341,12 +370,18 @@ namespace CoDesigner_IDE
             //TODO: Implement customization utility form
         }
         
+        /// <summary>
+        /// Handles form closing actions for the D0 form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void D0_MainDiagnosticsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
 
             if (e.CloseReason != CloseReason.ApplicationExitCall) //=> only the form is closing cancel form closing and hide it instead
             {
                 this.Hide();
+                //this.ShowInTaskbar = false;
                 e.Cancel = true;
             }// else => the application is being closed
         }

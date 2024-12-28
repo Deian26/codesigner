@@ -35,11 +35,11 @@
 		<EN message="Could not load GUI default messages! "/>
 	</event>
 
-	<event code="6" origin="0" severity="3">
+	<event code="6" origin="0" severity="2">
 		<EN message="Could not load a GUI default message translation for the current language. "/>
 	</event>
 
-	<event code="7" origin="0" severity="3">
+	<event code="7" origin="0" severity="2">
 		<EN message="Could not load project from file. The file does not exist or has an invalid format! "/>
 	</event>
 	
@@ -56,7 +56,7 @@
 		<EN message="Could not load program items due to invalid files or file formats (including components)! "/>
 	</event>
 
-	<event code="11" origin="0" severity="3">
+	<event code="11" origin="0" severity="2">
 		<EN message="Could not load versions! "/>
 	</event>
 
@@ -88,11 +88,11 @@
 		<EN message="Unsupported concrete simulation element type. "/>
 	</event>
 
-	<event code="19" origin="3" severity="3">
+	<event code="19" origin="3" severity="2">
 		<EN message="Could not create the project. "/>
 	</event>
 
-	<event code="20" origin="3" severity="3">
+	<event code="20" origin="3" severity="2">
 		<EN message="Could not retrieve project item details. Check if the file / directory still exists. "/>
 	</event>
 
@@ -100,28 +100,56 @@
 		<EN message="Could not generate the signature. "/>
 	</event>
 
-	<event code="22" origin="1" severity="3">
+	<event code="22" origin="1" severity="2">
 		<EN message="Could not load security properties. "/>
 	</event>
 
-	<event code="23" origin="1" severity="3">
+	<event code="23" origin="1" severity="2">
 		<EN message="Invalid token."/>
 	</event>
 
-	<event code="24" origin="1" severity="3">
-		<EN message="Invalid token length."/>
+	<event code="24" origin="1" severity="2">
+		<EN message="Invalid token string format."/>
 	</event>
 
-	<event code="25" origin="1" severity="3">
+	<event code="25" origin="1" severity="2">
 		<EN message="Token expired."/>
 	</event>
 
-	<event code="26" origin="1" severity="3">
+	<event code="26" origin="1" severity="2">
 		<EN message="The provided token does not grant a sufficient access level for this operation."/>
 	</event>
 
-	<event code="27" origin="1" severity="3">
+	<event code="27" origin="1" severity="2">
 		<EN message="Could not store the new security properties."/>
+	</event>
+
+	<event code="28" origin="1" severity="3">
+		<EN message="Error encrypting data."/>
+	</event>
+
+	<event code="29" origin="1" severity="3">
+		<EN message="Error decrypting data."/>
+	</event>
+
+	<event code="30" origin="1" severity="3">
+		<EN message="Error encrypting data: unsupported OS. Data was not encrypted!"/>
+	</event>
+
+	<event code="31" origin="1" severity="3">
+		<EN message="Error decrypting data: unsupported OS. Data was not decrypted!"/>
+	</event>
+
+	<event code="32" origin="1" severity="2">
+		<EN message="Error storing application exit data."/>
+	</event>
+
+	<event code="33" origin="1" severity="4">
+		<EN message="Error loading used tokens."/>
+	</event>
+
+	<event code="34" origin="1" severity="2">
+		<EN message="This token was already used and cannot be used again."/>
 	</event>
 	
 </events>

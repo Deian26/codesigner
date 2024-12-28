@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -12,8 +14,18 @@ namespace CoDesigner_IDE
     /// <summary>
     /// Handles utility actions
     /// </summary>
+    [SupportedOSPlatform("windows")]
     internal static class Utility
     {
+        private static string HASHED_UUID = null;
+        
+        #region colours
+        public static Color BACKCOLOUR_ERROR { get; } = Color.Salmon;
+        public static Color BACKCOLOUR_DEFAULT_CONTROL { get; } = Color.White;
+        #endregion
+
+        private static FileStream SEC_USED_TOKENS_FILESTREAM = null; 
+
         /// <summary>
         /// Defines the status of security properties
         /// </summary>
@@ -32,7 +44,7 @@ namespace CoDesigner_IDE
         /// <summary>
         /// Loads local properties from the disk
         /// </summary>
-        public static void LoadProperties()
+        public static void LoadSecurityProperties()
         {
             if (Utility.CurrentSecurityPropertiesLoaded == false)
             {
@@ -40,10 +52,10 @@ namespace CoDesigner_IDE
 
                 try
                 {
-                    Security.Decrypt(GeneralPaths.SEC_PROPERTIES_FILE_PATH);
+                    string plainText = Security.Decrypt(File.ReadAllText(GeneralPaths.SEC_PROPERTIES_FILE_PATH));
 
                     XmlDocument xml = new XmlDocument();
-                    xml.Load(GeneralPaths.SEC_PROPERTIES_FILE_PATH);
+                    xml.LoadXml(plainText);
                     XmlNode root = xml.DocumentElement;
 
                     // load security properties (only valid for the current machine)
@@ -55,7 +67,7 @@ namespace CoDesigner_IDE
                                 {
                                     if (Utility.GetHashedUuid().Equals(node.Attributes["id"].Value) == true)
                                     {
-                                        adminWorkstation = true;
+                                        adminWorkstation = Convert.ToBoolean(node.Attributes["value"].Value.ToString());
                                     }
                                     break;
                                 }
@@ -64,7 +76,7 @@ namespace CoDesigner_IDE
                         }
                     }
 
-                    Security.Encrypt(GeneralPaths.SEC_PROPERTIES_FILE_PATH);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -85,21 +97,26 @@ namespace CoDesigner_IDE
         /// <returns>The hashed ID or null (if an error occurs)</returns>
         public static string GetHashedUuid()
         {
-            string id = null;
-            ManagementClass mng = new ManagementClass("Win32_ComputerSystemProduct");
-
-            foreach (ManagementObject obj in mng.GetInstances())
+            if (Utility.HASHED_UUID == null) // hashed ID not previously obtained
             {
-                id = obj.Properties["UUID"].Value.ToString(); //=> get the machine UUID
+                string id = null;
+                ManagementClass mng = new ManagementClass("Win32_ComputerSystemProduct");
 
-                id = id.Replace("-", ""); //=> remove separators
+                foreach (ManagementObject obj in mng.GetInstances())
+                {
+                    id = obj.Properties["UUID"].Value.ToString(); //=> get the machine UUID
+
+                    id = id.Replace("-", ""); //=> remove separators
+                }
+
+                // hash ID
+                if (id != null)
+                    id = Security.GenerateHash(id);
+
+                Utility.HASHED_UUID = id; // store hashed id
             }
 
-            // hash ID
-            if(id!=null)
-                id = Security.GenerateHash(id);
-
-            return id;
+            return Utility.HASHED_UUID;
         }
     
         /// <summary>
@@ -126,7 +143,7 @@ namespace CoDesigner_IDE
                 xmlWriterSettings.Indent = true;
                 xmlWriterSettings.Encoding = Encoding.UTF8;
                 xmlWriterSettings.IndentChars = "\t";
-                xmlWriterSettings.NewLineChars = "\n";
+                xmlWriterSettings.NewLineChars = "\r\n";
                 StringBuilder xmlText = new StringBuilder();
 
                 XmlWriter xmlWriter = XmlWriter.Create(xmlText,xmlWriterSettings);
@@ -138,6 +155,7 @@ namespace CoDesigner_IDE
                 //==// admin workstation
                 xmlWriter.WriteStartElement("ADMIN-WORKSTATION");
 
+                xmlWriter.WriteAttributeString("id", Utility.GetHashedUuid());
                 xmlWriter.WriteAttributeString("value",newSecurityProperties.ADMIN_WORKSTATION.ToString());
                 
                 xmlWriter.WriteEndElement();
@@ -149,7 +167,7 @@ namespace CoDesigner_IDE
 
                 string enc = Security.Encrypt(xmlText.ToString());
                 File.WriteAllText(GeneralPaths.SEC_PROPERTIES_FILE_PATH, enc); //locally encrypt the file
-                Security.Decrypt(enc);
+                
             }
             catch (Exception ex)
             {
@@ -157,5 +175,110 @@ namespace CoDesigner_IDE
             }
         }
         
+        /// <summary>
+        /// Loads into memory the tokens used so far, accross different sessions
+        /// </summary>
+        public static void LoadUsedSecurityTokens()
+        {
+            try
+            {
+                // read the file, if it exists
+                string usedTokensPlainText = null;
+                if (File.Exists(GeneralPaths.SEC_USED_TOKENS_FILE_PATH) == true)
+                {
+                    usedTokensPlainText = Security.Decrypt(File.ReadAllText(GeneralPaths.SEC_USED_TOKENS_FILE_PATH)); // load already used tokens in memory
+                    
+                    XmlDocument xml = new XmlDocument();
+                    xml.LoadXml(usedTokensPlainText);
+                    XmlNode root = xml.DocumentElement;
+
+                    foreach(XmlNode usedToken in root.ChildNodes)
+                    {
+                        switch(usedToken.Name)
+                        {
+                            case "USED-TOKEN":
+                                {
+                                    // verify machine id
+                                    if (usedToken.Attributes["machine-id"].Value.Equals(Utility.GetHashedUuid()) == true)
+                                    {
+                                        // create a Token object and add it to the list of used tokens
+                                        Security.AddUsedToken(new Security.Token(usedToken.Attributes["token-string"].Value));
+                                    }
+                                    break;
+                                }
+                            default: // unrecognized node => ignore it
+                                {
+                                    break;
+                                }
+                        }
+                    }
+                }
+                else // error: the used tokens file was deleted => stop application
+                {
+                    Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_LOADING_USED_SEC_TOKENS);
+                }
+
+                // lock file; this will be closed when the application is closed
+                Utility.SEC_USED_TOKENS_FILESTREAM = File.Open(GeneralPaths.SEC_USED_TOKENS_FILE_PATH,FileMode.Open);
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_LOADING_USED_SEC_TOKENS, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Perform any non-critical actions before the application is closed
+        /// </summary>
+        public static void ApplicationExitActions()
+        {
+            try
+            {
+                // store tokens (used accross all sessions so far)
+                if (File.Exists(GeneralPaths.SEC_USED_TOKENS_FILE_PATH) == false) //=> overwrite/create file 
+                {
+                    File.Create(GeneralPaths.SEC_USED_TOKENS_FILE_PATH).Close();
+                }
+
+                // parse XML file
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+                xmlWriterSettings.Indent = true;
+                xmlWriterSettings.Encoding = Encoding.UTF8;
+                xmlWriterSettings.IndentChars = "\t";
+                xmlWriterSettings.NewLineChars = "\r\n";
+                StringBuilder xmlText = new StringBuilder();
+
+                XmlWriter xmlWriter = XmlWriter.Create(xmlText, xmlWriterSettings);
+
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("USED-TOKENS");
+
+                foreach (Security.Token usedToken in Security.GetUsedTokens())
+                {
+                    xmlWriter.WriteStartElement("USED-TOKEN");
+
+                    xmlWriter.WriteAttributeString("machine-id",Utility.GetHashedUuid());
+                    xmlWriter.WriteAttributeString("token-string",usedToken.TOKEN_STRING);
+
+                    xmlWriter.WriteEndElement();
+                }
+
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+                xmlWriter.Close();
+
+                // unlock the file
+                Utility.SEC_USED_TOKENS_FILESTREAM.Close();
+
+                // write details on the disk
+                File.WriteAllText(GeneralPaths.SEC_USED_TOKENS_FILE_PATH,Security.Encrypt(xmlText.ToString()));
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_STORING_APP_EXIT_DATA, ex.Message);
+            }
+
+
+        }
     }
 }

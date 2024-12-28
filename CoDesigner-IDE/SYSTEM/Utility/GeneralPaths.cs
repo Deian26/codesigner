@@ -14,7 +14,7 @@ namespace CoDesigner_IDE
     {
         #region paths
         //=// Relative path to the top folder
-        public static string TOP_REL_PATH_BIN = Path.Combine(new string[] { "..",".." }); //=> the path from the IDE executable to the top folder of the IDE's folder structure
+        public static string TOP_REL_PATH_BIN = Path.Combine(new string[] { "..","..",".." }); //=> the path from the IDE executable to the top folder of the IDE's folder structure
 
         //=// 1st level directories
         public static string SYSTEM = Path.Combine(GeneralPaths.TOP_REL_PATH_BIN,"SYSTEM");
@@ -36,7 +36,7 @@ namespace CoDesigner_IDE
         
         //====// Storage sub-directories and files
         public static string SEC_PROPERTIES_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_PROPERTIES.xml" }); // data used by the application
-        
+        public static string SEC_USED_TOKENS_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_USED_TOKENS.xml" }); // valid tokens used accross sessions
 
         //===// Paths to the project structure images
         public struct ProjectStructure{

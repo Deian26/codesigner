@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -13,6 +14,7 @@ namespace CoDesigner_IDE
     /// <summary>
     /// Defines a project
     /// </summary>
+    [SupportedOSPlatform("windows")]
     public class Project
     {
         /// <summary>
@@ -20,11 +22,21 @@ namespace CoDesigner_IDE
         /// </summary>
         public dynamic Component { get; }
 
+        /// <summary>
+        /// Project name
+        /// </summary>
         public string Name { get; }
+        /// <summary>
+        /// Project description
+        /// </summary>
         public string Description { get; }
-
+        /// <summary>
+        /// Project location on the disk
+        /// </summary>
         public string Location { get; } //directory location
-
+        /// <summary>
+        /// Project creation timestamp
+        /// </summary>
         public DateTime DateCreated { get; }
 
         public string ProjectFilePath { get; } = null;

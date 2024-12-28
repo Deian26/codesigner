@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,6 +13,7 @@ namespace CoDesigner_IDE
     /// <summary>
     /// Each object of this class defines an event to be logged
     /// </summary>
+    [SupportedOSPlatform("windows")]
     internal class LogEvent
     {
         Diagnostics.EVENT_ORIGIN origin { get; }

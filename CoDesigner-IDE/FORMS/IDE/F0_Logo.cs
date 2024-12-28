@@ -11,14 +11,22 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static CoDesigner_IDE.Diagnostics;
 using System.Xml;
+using System.Runtime.Versioning;
 
 namespace CoDesigner_IDE
 {
+    /// <summary>
+    /// Handles component loading and displays the progress, as well as the IDE logo
+    /// </summary>
+    [SupportedOSPlatform("windows")]
     public partial class F0_Logo : Form
     {
         private int delayTimerIntervalMs = 500;
         private int cancelLoadingTimerFactor = 2000; //factor by which to multiply the number of elements to be loaded, which will then be used as a maximum amount of time to wait for them to be loaded
 
+        /// <summary>
+        /// Creates a new logo form
+        /// </summary>
         public F0_Logo()
         {
             InitializeComponent();
@@ -40,6 +48,7 @@ namespace CoDesigner_IDE
             XmlDocument defaultMessages = new XmlDocument();
             XmlDocument versions = new XmlDocument();
             
+            // load events, messages and other application details and configurations
             try
             {
                 eventsFile.Load(GeneralPaths.DEFAULT_EVENTS_FILEPATH);
@@ -215,9 +224,6 @@ namespace CoDesigner_IDE
                 this.F0_listBox_LoadingElements.Items.Add("Loaded default messages.");
             }
 
-            // load general enc/dec key
-            Security.SetGenKey();
-
             //load active projects
             bool allActiveProjectsLoaded = true;
             try
@@ -345,6 +351,10 @@ namespace CoDesigner_IDE
                 ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_PROJECT_SEL_IMGKEY,
                 Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_PROJECT_SEL_IMAGE_FILEPATH));
 
+            // load security details
+            Utility.LoadSecurityProperties();
+            Utility.LoadUsedSecurityTokens();
+            
 
             //close form
             if (this.F0_progressBar_IdeLoading.Value == this.F0_progressBar_IdeLoading.Maximum)

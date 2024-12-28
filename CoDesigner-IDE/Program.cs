@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CoDesigner_IDE
 {
-
+    [SupportedOSPlatform("windows")]
     internal static class Program
     {
         //forms
@@ -37,13 +38,13 @@ namespace CoDesigner_IDE
         private static void startDiagnostics()
         {
             Program.D0 = new D0_MainDiagnosticsForm();
-            Program.D0.Visible = false;
-            
             Application.Run(Program.D0);
         }
 
         public static void StopAll()
         {
+            Utility.ApplicationExitActions();// perform any non-critical, cleanup actions
+
             Application.Exit(); // stop the other segments of the application
         }
 

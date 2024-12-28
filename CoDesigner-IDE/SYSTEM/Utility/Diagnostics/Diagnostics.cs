@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +15,7 @@ namespace CoDesigner_IDE
     /// <summary>
     /// Handles IDE diagnosticsThread
     /// </summary>
+    [SupportedOSPlatform("windows")]
     internal static class Diagnostics
     {
         #region logging
@@ -99,10 +101,17 @@ namespace CoDesigner_IDE
             public const int ERROR_GENERATING_SIGNATURE                     = 21;
             public const int ERROR_LOADING_SECURITY_PROPERTIES              = 22;
             public const int INVALID_TOKEN                                  = 23;
-            public const int INVALID_TOKEN_LENGTH                           = 24;
+            public const int INVALID_TOKEN_STRING_FORMAT                           = 24;
             public const int TOKEN_EXPIRED                                  = 25;
             public const int INSUFFICIENT_TOKEN_ACCESS_LEVEL                = 26;
             public const int ERROR_STORING_SECURITY_PROPERTIES              = 27;
+            public const int ENC_ERROR                                      = 28;
+            public const int DEC_ERROR                                      = 29;
+            public const int ENC_ERROR_UNSUPPORTED_OS                       = 30;
+            public const int DEC_ERROR_UNSUPPORTED_OS                       = 31;
+            public const int ERR_STORING_APP_EXIT_DATA                      = 32;
+            public const int ERR_LOADING_USED_SEC_TOKENS                    = 33;
+            public const int ALREADY_USED_TOKEN                             = 34;
         }
 
         /// <summary>
