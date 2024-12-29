@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
@@ -18,7 +19,7 @@ namespace CoDesigner_IDE
     public static class ProjectManagement
     {
         /// <summary>
-        /// List of actively; project filepath, Project object loaded projects
+        /// List of projects loaded into memory
         /// </summary>
         public static Dictionary<string,Project> Projects = new Dictionary<string, Project>();
         
@@ -141,6 +142,47 @@ namespace CoDesigner_IDE
             Image.FromFile(GeneralPaths.ProjectStructure.LOAD_CODE_IMG_FILEPATH),
             Image.FromFile(GeneralPaths.ProjectStructure.CODE_INFO_IMG_FILEPATH)
         };
+
+        /// <summary>
+        /// Stores the list of current projects (loaded into memory) in a local file.
+        /// The projects from this file are loaded into memory when the application starts.
+        /// </summary>
+        public static void StoreActiveProjects()
+        {
+            try
+            {
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+                xmlWriterSettings.Indent = true;
+                xmlWriterSettings.Encoding = Encoding.UTF8;
+                xmlWriterSettings.IndentChars = "\t";
+                xmlWriterSettings.NewLineChars = "\r\n";
+
+                StringBuilder activeProjectsString = new StringBuilder();
+                XmlWriter xmlWriter = XmlWriter.Create(activeProjectsString,xmlWriterSettings);
+
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("projects");
+
+                foreach (string projectName in ProjectManagement.Projects.Keys)
+                {
+                    xmlWriter.WriteStartElement("project");
+
+                    xmlWriter.WriteString(ProjectManagement.Projects[projectName].ToString());
+
+                    xmlWriter.WriteEndElement();
+                }
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+
+                xmlWriter.Close();
+
+                File.WriteAllText(GeneralPaths.ACTIVE_PROJECTS_FILEPATH,Security.Encrypt(activeProjectsString.ToString()));
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_LOADING_ACTIVE_PROJECTS, ex.Message);
+            }
+        }
 
     }
 }

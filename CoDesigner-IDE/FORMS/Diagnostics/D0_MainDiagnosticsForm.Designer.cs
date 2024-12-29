@@ -28,18 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             D0_listBox_DiagnosticLog = new System.Windows.Forms.ListBox();
             D0_groupBox_DiagnosticLog = new System.Windows.Forms.GroupBox();
             D0_button_ExportLog = new System.Windows.Forms.Button();
             D0_button_OpenLogsFolder = new System.Windows.Forms.Button();
             D0_groupBox_Status = new System.Windows.Forms.GroupBox();
+            D0_treeView_DefaultElementsVersions = new System.Windows.Forms.TreeView();
             D0_richTextBox_UserStatus = new System.Windows.Forms.RichTextBox();
             D0_label_UserStatusLabel = new System.Windows.Forms.Label();
             D0_label_StatusVersions = new System.Windows.Forms.Label();
-            D0_richTextBox_StatusVersions = new System.Windows.Forms.RichTextBox();
             D0_groupBox_Actions = new System.Windows.Forms.GroupBox();
             D0_groupBox_Diagnostics = new System.Windows.Forms.GroupBox();
-            D0_button_GenerateDiagnosticReport = new System.Windows.Forms.Button();
+            D0_button_AddApprovedGeneratorId = new System.Windows.Forms.Button();
+            D0_button_GenerateDiagnosticStatusReport = new System.Windows.Forms.Button();
             D0_groupBox_PerformanceOptions = new System.Windows.Forms.GroupBox();
             D0_button_SimPerformanceCheck = new System.Windows.Forms.Button();
             D0_groupBox_Customization = new System.Windows.Forms.GroupBox();
@@ -47,12 +49,15 @@
             D0_groupBox_Security = new System.Windows.Forms.GroupBox();
             D0_button_Actions_CheckLocalFiles = new System.Windows.Forms.Button();
             D0_checkBox_AllowThirdPartyComponents = new System.Windows.Forms.CheckBox();
-            D0_textBox_SelectedControlActions = new System.Windows.Forms.TextBox();
+            D0_textBox_ActionDetailsTitle = new System.Windows.Forms.TextBox();
             D0_groupBox_Elements = new System.Windows.Forms.GroupBox();
             D0_treeView_LoadedElements = new System.Windows.Forms.TreeView();
-            D0_richTextBox_DetailsAboutSelectedElement = new System.Windows.Forms.RichTextBox();
             D0_groupBox_ElementDetails = new System.Windows.Forms.GroupBox();
+            D0_button_ExportActionResults = new System.Windows.Forms.Button();
+            D0_treeView_ActionDetails = new System.Windows.Forms.TreeView();
             D0_saveFileDialog_ExportLog = new System.Windows.Forms.SaveFileDialog();
+            D0_saveFileDialog_SaveActionReport = new System.Windows.Forms.SaveFileDialog();
+            D0_errorProvider_DiagnosticsActionsErrors = new System.Windows.Forms.ErrorProvider(components);
             D0_groupBox_DiagnosticLog.SuspendLayout();
             D0_groupBox_Status.SuspendLayout();
             D0_groupBox_Actions.SuspendLayout();
@@ -62,6 +67,7 @@
             D0_groupBox_Security.SuspendLayout();
             D0_groupBox_Elements.SuspendLayout();
             D0_groupBox_ElementDetails.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)D0_errorProvider_DiagnosticsActionsErrors).BeginInit();
             SuspendLayout();
             // 
             // D0_listBox_DiagnosticLog
@@ -110,10 +116,10 @@
             // 
             // D0_groupBox_Status
             // 
+            D0_groupBox_Status.Controls.Add(D0_treeView_DefaultElementsVersions);
             D0_groupBox_Status.Controls.Add(D0_richTextBox_UserStatus);
             D0_groupBox_Status.Controls.Add(D0_label_UserStatusLabel);
             D0_groupBox_Status.Controls.Add(D0_label_StatusVersions);
-            D0_groupBox_Status.Controls.Add(D0_richTextBox_StatusVersions);
             D0_groupBox_Status.Location = new System.Drawing.Point(19, 20);
             D0_groupBox_Status.Margin = new System.Windows.Forms.Padding(4);
             D0_groupBox_Status.Name = "D0_groupBox_Status";
@@ -122,6 +128,18 @@
             D0_groupBox_Status.TabIndex = 2;
             D0_groupBox_Status.TabStop = false;
             D0_groupBox_Status.Text = "Status";
+            // 
+            // D0_treeView_DefaultElementsVersions
+            // 
+            D0_treeView_DefaultElementsVersions.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 238);
+            D0_treeView_DefaultElementsVersions.FullRowSelect = true;
+            D0_treeView_DefaultElementsVersions.HideSelection = false;
+            D0_treeView_DefaultElementsVersions.Location = new System.Drawing.Point(10, 164);
+            D0_treeView_DefaultElementsVersions.Margin = new System.Windows.Forms.Padding(4);
+            D0_treeView_DefaultElementsVersions.Name = "D0_treeView_DefaultElementsVersions";
+            D0_treeView_DefaultElementsVersions.ShowNodeToolTips = true;
+            D0_treeView_DefaultElementsVersions.Size = new System.Drawing.Size(230, 149);
+            D0_treeView_DefaultElementsVersions.TabIndex = 1;
             // 
             // D0_richTextBox_UserStatus
             // 
@@ -150,15 +168,6 @@
             D0_label_StatusVersions.TabIndex = 4;
             D0_label_StatusVersions.Text = "Versions:";
             // 
-            // D0_richTextBox_StatusVersions
-            // 
-            D0_richTextBox_StatusVersions.Location = new System.Drawing.Point(7, 170);
-            D0_richTextBox_StatusVersions.Name = "D0_richTextBox_StatusVersions";
-            D0_richTextBox_StatusVersions.ReadOnly = true;
-            D0_richTextBox_StatusVersions.Size = new System.Drawing.Size(233, 144);
-            D0_richTextBox_StatusVersions.TabIndex = 3;
-            D0_richTextBox_StatusVersions.Text = "";
-            // 
             // D0_groupBox_Actions
             // 
             D0_groupBox_Actions.Controls.Add(D0_groupBox_Diagnostics);
@@ -176,7 +185,8 @@
             // 
             // D0_groupBox_Diagnostics
             // 
-            D0_groupBox_Diagnostics.Controls.Add(D0_button_GenerateDiagnosticReport);
+            D0_groupBox_Diagnostics.Controls.Add(D0_button_AddApprovedGeneratorId);
+            D0_groupBox_Diagnostics.Controls.Add(D0_button_GenerateDiagnosticStatusReport);
             D0_groupBox_Diagnostics.Location = new System.Drawing.Point(7, 129);
             D0_groupBox_Diagnostics.Name = "D0_groupBox_Diagnostics";
             D0_groupBox_Diagnostics.Size = new System.Drawing.Size(413, 82);
@@ -184,14 +194,25 @@
             D0_groupBox_Diagnostics.TabStop = false;
             D0_groupBox_Diagnostics.Text = "Diagnostics";
             // 
-            // D0_button_GenerateDiagnosticReport
+            // D0_button_AddApprovedGeneratorId
             // 
-            D0_button_GenerateDiagnosticReport.Location = new System.Drawing.Point(6, 22);
-            D0_button_GenerateDiagnosticReport.Name = "D0_button_GenerateDiagnosticReport";
-            D0_button_GenerateDiagnosticReport.Size = new System.Drawing.Size(105, 50);
-            D0_button_GenerateDiagnosticReport.TabIndex = 2;
-            D0_button_GenerateDiagnosticReport.Text = "Generate Report";
-            D0_button_GenerateDiagnosticReport.UseVisualStyleBackColor = true;
+            D0_button_AddApprovedGeneratorId.Location = new System.Drawing.Point(145, 22);
+            D0_button_AddApprovedGeneratorId.Name = "D0_button_AddApprovedGeneratorId";
+            D0_button_AddApprovedGeneratorId.Size = new System.Drawing.Size(133, 50);
+            D0_button_AddApprovedGeneratorId.TabIndex = 3;
+            D0_button_AddApprovedGeneratorId.Text = "Add Generator ID";
+            D0_button_AddApprovedGeneratorId.UseVisualStyleBackColor = true;
+            D0_button_AddApprovedGeneratorId.Click += D0_button_AddApprovedGeneratorId_Click;
+            // 
+            // D0_button_GenerateDiagnosticStatusReport
+            // 
+            D0_button_GenerateDiagnosticStatusReport.Location = new System.Drawing.Point(6, 22);
+            D0_button_GenerateDiagnosticStatusReport.Name = "D0_button_GenerateDiagnosticStatusReport";
+            D0_button_GenerateDiagnosticStatusReport.Size = new System.Drawing.Size(133, 50);
+            D0_button_GenerateDiagnosticStatusReport.TabIndex = 2;
+            D0_button_GenerateDiagnosticStatusReport.Text = "Generate Status Report";
+            D0_button_GenerateDiagnosticStatusReport.UseVisualStyleBackColor = true;
+            D0_button_GenerateDiagnosticStatusReport.Click += D0_button_GenerateDiagnosticStatusReport_Click;
             // 
             // D0_groupBox_PerformanceOptions
             // 
@@ -267,13 +288,13 @@
             D0_checkBox_AllowThirdPartyComponents.UseVisualStyleBackColor = true;
             D0_checkBox_AllowThirdPartyComponents.CheckedChanged += D0_checkBox_AllowThirdPartyComponents_CheckedChanged;
             // 
-            // D0_textBox_SelectedControlActions
+            // D0_textBox_ActionDetailsTitle
             // 
-            D0_textBox_SelectedControlActions.Location = new System.Drawing.Point(6, 31);
-            D0_textBox_SelectedControlActions.Name = "D0_textBox_SelectedControlActions";
-            D0_textBox_SelectedControlActions.ReadOnly = true;
-            D0_textBox_SelectedControlActions.Size = new System.Drawing.Size(370, 23);
-            D0_textBox_SelectedControlActions.TabIndex = 1;
+            D0_textBox_ActionDetailsTitle.Location = new System.Drawing.Point(6, 31);
+            D0_textBox_ActionDetailsTitle.Name = "D0_textBox_ActionDetailsTitle";
+            D0_textBox_ActionDetailsTitle.ReadOnly = true;
+            D0_textBox_ActionDetailsTitle.Size = new System.Drawing.Size(266, 23);
+            D0_textBox_ActionDetailsTitle.TabIndex = 1;
             // 
             // D0_groupBox_Elements
             // 
@@ -300,25 +321,43 @@
             D0_treeView_LoadedElements.TabIndex = 0;
             D0_treeView_LoadedElements.NodeMouseDoubleClick += D0_treeView_LoadedElements_NodeMouseDoubleClick;
             // 
-            // D0_richTextBox_DetailsAboutSelectedElement
-            // 
-            D0_richTextBox_DetailsAboutSelectedElement.Location = new System.Drawing.Point(6, 64);
-            D0_richTextBox_DetailsAboutSelectedElement.Name = "D0_richTextBox_DetailsAboutSelectedElement";
-            D0_richTextBox_DetailsAboutSelectedElement.ReadOnly = true;
-            D0_richTextBox_DetailsAboutSelectedElement.Size = new System.Drawing.Size(370, 239);
-            D0_richTextBox_DetailsAboutSelectedElement.TabIndex = 2;
-            D0_richTextBox_DetailsAboutSelectedElement.Text = "";
-            // 
             // D0_groupBox_ElementDetails
             // 
-            D0_groupBox_ElementDetails.Controls.Add(D0_textBox_SelectedControlActions);
-            D0_groupBox_ElementDetails.Controls.Add(D0_richTextBox_DetailsAboutSelectedElement);
+            D0_groupBox_ElementDetails.Controls.Add(D0_button_ExportActionResults);
+            D0_groupBox_ElementDetails.Controls.Add(D0_treeView_ActionDetails);
+            D0_groupBox_ElementDetails.Controls.Add(D0_textBox_ActionDetailsTitle);
             D0_groupBox_ElementDetails.Location = new System.Drawing.Point(709, 349);
             D0_groupBox_ElementDetails.Name = "D0_groupBox_ElementDetails";
             D0_groupBox_ElementDetails.Size = new System.Drawing.Size(384, 312);
             D0_groupBox_ElementDetails.TabIndex = 5;
             D0_groupBox_ElementDetails.TabStop = false;
-            D0_groupBox_ElementDetails.Text = "Details";
+            D0_groupBox_ElementDetails.Text = "Action details";
+            // 
+            // D0_button_ExportActionResults
+            // 
+            D0_button_ExportActionResults.Location = new System.Drawing.Point(278, 24);
+            D0_button_ExportActionResults.Name = "D0_button_ExportActionResults";
+            D0_button_ExportActionResults.Size = new System.Drawing.Size(75, 30);
+            D0_button_ExportActionResults.TabIndex = 2;
+            D0_button_ExportActionResults.Text = "Export";
+            D0_button_ExportActionResults.UseVisualStyleBackColor = true;
+            D0_button_ExportActionResults.Click += D0_button_ExportActionResults_Click;
+            // 
+            // D0_treeView_ActionDetails
+            // 
+            D0_treeView_ActionDetails.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 238);
+            D0_treeView_ActionDetails.FullRowSelect = true;
+            D0_treeView_ActionDetails.HideSelection = false;
+            D0_treeView_ActionDetails.Location = new System.Drawing.Point(6, 61);
+            D0_treeView_ActionDetails.Margin = new System.Windows.Forms.Padding(4);
+            D0_treeView_ActionDetails.Name = "D0_treeView_ActionDetails";
+            D0_treeView_ActionDetails.ShowNodeToolTips = true;
+            D0_treeView_ActionDetails.Size = new System.Drawing.Size(369, 242);
+            D0_treeView_ActionDetails.TabIndex = 1;
+            // 
+            // D0_errorProvider_DiagnosticsActionsErrors
+            // 
+            D0_errorProvider_DiagnosticsActionsErrors.ContainerControl = this;
             // 
             // D0_MainDiagnosticsForm
             // 
@@ -349,6 +388,7 @@
             D0_groupBox_Elements.ResumeLayout(false);
             D0_groupBox_ElementDetails.ResumeLayout(false);
             D0_groupBox_ElementDetails.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)D0_errorProvider_DiagnosticsActionsErrors).EndInit();
             ResumeLayout(false);
         }
 
@@ -360,12 +400,10 @@
         private System.Windows.Forms.GroupBox D0_groupBox_Actions;
         private System.Windows.Forms.GroupBox D0_groupBox_Elements;
         private System.Windows.Forms.TreeView D0_treeView_LoadedElements;
-        private System.Windows.Forms.TextBox D0_textBox_SelectedControlActions;
-        private System.Windows.Forms.RichTextBox D0_richTextBox_DetailsAboutSelectedElement;
+        private System.Windows.Forms.TextBox D0_textBox_ActionDetailsTitle;
         private System.Windows.Forms.GroupBox D0_groupBox_ElementDetails;
         private System.Windows.Forms.Button D0_button_Actions_CheckLocalFiles;
         private System.Windows.Forms.CheckBox D0_checkBox_AllowThirdPartyComponents;
-        private System.Windows.Forms.RichTextBox D0_richTextBox_StatusVersions;
         private System.Windows.Forms.Label D0_label_StatusVersions;
         private System.Windows.Forms.Button D0_button_ExportLog;
         private System.Windows.Forms.Button D0_button_OpenLogsFolder;
@@ -378,6 +416,12 @@
         private System.Windows.Forms.RichTextBox D0_richTextBox_UserStatus;
         private System.Windows.Forms.Label D0_label_UserStatusLabel;
         private System.Windows.Forms.GroupBox D0_groupBox_Diagnostics;
-        private System.Windows.Forms.Button D0_button_GenerateDiagnosticReport;
+        private System.Windows.Forms.Button D0_button_GenerateDiagnosticStatusReport;
+        private System.Windows.Forms.TreeView D0_treeView_DefaultElementsVersions;
+        private System.Windows.Forms.TreeView D0_treeView_ActionDetails;
+        private System.Windows.Forms.Button D0_button_ExportActionResults;
+        private System.Windows.Forms.SaveFileDialog D0_saveFileDialog_SaveActionReport;
+        private System.Windows.Forms.ErrorProvider D0_errorProvider_DiagnosticsActionsErrors;
+        private System.Windows.Forms.Button D0_button_AddApprovedGeneratorId;
     }
 }

@@ -17,6 +17,11 @@ namespace CoDesigner_IDE
     public class PromptMessage
     {
         /// <summary>
+        /// Message identifier
+        /// </summary>
+        public int Code { get; }
+
+        /// <summary>
         /// Text to display in the title bar
         /// </summary>
         public string Caption { get; }
@@ -35,25 +40,27 @@ namespace CoDesigner_IDE
         /// Message box icon
         /// </summary>
         public MessageBoxIcon Icon { get; }
-        
+
         /// <summary>
         /// Create a new prompt details object
         /// </summary>
-        /// <param name="Caption"></param>
-        /// <param name="Text"></param>
-        /// <param name="Buttons"></param>
-        /// <param name="Icon"></param>
-        public PromptMessage(string Caption, string Text, int Buttons, int Icon)
+        /// <param name="Code">Message identifier</param>
+        /// <param name="Caption">Title</param>
+        /// <param name="Text">Text</param>
+        /// <param name="Buttons">Buttons for the message box, if shown (MessageBoxButtons string field name)</param>
+        /// <param name="Icon">Icon for the message box, if shown (MessageBoxIcon string field name)</param>
+        public PromptMessage(int Code, string Caption, string Text, string Buttons, string Icon)
         {
+            this.Code = Code;
             this.Caption = Caption;
             this.Text = Text;
 
             try
             {
-                this.Buttons = (MessageBoxButtons)Buttons;
-                this.Icon = (MessageBoxIcon)Icon;
-
-            }catch(Exception ex) 
+                if (Buttons != string.Empty) this.Buttons = (MessageBoxButtons)Enum.Parse(typeof(MessageBoxButtons),Buttons);
+                if (Icon != string.Empty)  this.Icon = (MessageBoxIcon)Enum.Parse(typeof(MessageBoxIcon), Icon);
+            }
+            catch(Exception ex) 
             {
                 Diagnostics.LogEvent(DefaultEventCodes.INVALID_MSGBOX_BUTONS_OR_ICON_CODE, ex.Message); //error creating a prompt
             }
@@ -100,11 +107,19 @@ namespace CoDesigner_IDE
             /// <summary>
             /// Merge existing project folder with the new one being created
             /// </summary>
-            public const int MERGE_PROJ_FOLDER              = 1;
+            public const int MERGE_PROJ_FOLDER                                           = 1;
             /// <summary>
             /// Invalid project path
             /// </summary>
-            public const int INVALID_PROJ_ITEMPATH_OR_TYPE  = 2;
+            public const int INVALID_PROJ_ITEMPATH_OR_TYPE                               = 2;
+
+            public const int DIAGNOSTICS_ELEMENT_DETAILS_TOOLTIP_VERSION                 = 3;
+            public const int DIAGNOSTICS_ELEMENT_DETAILS_TOOLTIP_ORIGIN                  = 4;
+            public const int DIAGNOSTICS_CHECK_FILES_ACTION_TITLE                        = 5;
+            public const int DIAGNOSTICS_CHECK_FILES_INVALID_FILE_TOOLTIP                = 6;
+            public const int DIAGNOSTICS_ERR_MESSAGE_NO_DIAGNOSTIC_ACTION_SELECTED       = 7;
+            public const int ERROR_ACTIVATING_PROGRAM_NO_KEY_PROVIDED                    = 8;
+            public const int ERROR_ACTIVATING_PROGRAM_INVALID_PROVIDED                   = 9;
         }
 
         /// <summary>
@@ -139,6 +154,26 @@ namespace CoDesigner_IDE
                 Prompts.Messages[code].Buttons,
                 Prompts.Messages[code].Icon
                 );
+        }
+    
+        /// <summary>
+        /// Returns the message associated with the given origin and message codes
+        /// </summary>
+        /// <param name="originCode">Origin ID</param>
+        /// <param name="messageCode">Message ID</param>
+        /// <returns>The text of the requested message, if found; an empty stirng otherwise</returns>
+        public static string GetMessageText(int originCode, int messageCode)
+        {
+            int code = originCode << 16 | messageCode;
+            
+            if(Prompts.Messages.ContainsKey(code) == true)
+            {
+                return Prompts.Messages[code].Text;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }

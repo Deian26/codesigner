@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Versioning;
-using System.Security.Authentication.ExtendedProtection;
 using System.Security.Cryptography;
-using System.Security.Principal;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace CoDesigner_IDE
@@ -19,23 +14,38 @@ namespace CoDesigner_IDE
     [SupportedOSPlatform("windows")]
     internal static class Security
     {
+        // RSA enc/dec key
+        private static byte[] RSA_PUBLIC_KEY { get; } = { 0x20, 0x07, 0x52, 0x11, 0x17, 0x45, 0x52, 0x40, 0x19, 0x02, 0x57, 0x51, 0x07, 0x22, 0x76, 0x92 };
+        
         // used tokens
         private static List<Security.Token> UsedTokens = new List<Security.Token>();
+        private static FileStream SEC_USED_TOKENS_FILESTREAM = null;
+
+        /// <summary>
+        /// Defines the status of security properties
+        /// </summary>
+        public struct SecurityProperties
+        {
+            public bool ADMIN_WORKSTATION { get; }
+
+            public SecurityProperties(bool ADMIN_WORKSTATION)
+            {
+                this.ADMIN_WORKSTATION = ADMIN_WORKSTATION;
+            }
+        }
+
+        internal static SecurityProperties CurrentSecurityProperties { get; set; }
+        private static bool CurrentSecurityPropertiesLoaded = false; // if true, new security properties cannot be loaded (reset when the program is started)
 
         /* valid generator codes
          * Verification method: TOKEN_TS + ANY_APPROVED_CODE == TOKEN_GENERATOR_CODE
         */
-        private static string[] APPROVED_BASE_GEN_CODES =
-        {
-            //=// Hard-coded generator base IDs
-#if DEBUG
-            "130581651526017622911618924812547681191644922684442223615389774992131705524310" // development-only base generator ID; disabled in the release version
-#endif
-            
-        };
+        private static List<string> APPROVED_BASE_GEN_CODES = new List<string>();
+
         internal const int MIN_EXPIRATION_LIMIT = 60; // the minimum number of seconds from a token's generation until it expires
         internal const int MAX_EXPIRATION_LIMIT = 21600; // the maximum time expiration limit (seconds)
-        
+
+        #region statis-structs
         /// <summary>
         /// Contains the result of a token verification process
         /// </summary>
@@ -51,6 +61,23 @@ namespace CoDesigner_IDE
             }
         }
 
+        /// <summary>
+        /// Stores details about the verification of a given file
+        /// </summary>
+        public struct FileCheckResults
+        {
+            public string filePath { get; } = null;
+            public bool recognized { get; } = false; // true if the file is recognized for security check, false otherwise; note that checking an unrecognized file will result in 'validFile' to be false, but this flag will also be false
+            public bool validFile { get; } = false; // result of the check operation (true = valid file, false = invalid file)
+        
+            public FileCheckResults(string filePath, bool recognized, bool validFile)
+            {
+                this.filePath = filePath;
+                this.recognized = recognized;
+                this.validFile = validFile;
+            }
+        }
+        #endregion
         /// <summary>
         /// Defines a token; fields are separeted by 'Token.FIELD_SEPARATOR'
         /// </summary>
@@ -210,14 +237,16 @@ namespace CoDesigner_IDE
         /// <summary>
         /// Computes the plainText over the provided input text and compares it to the provided plainText
         /// </summary>
-        /// <param name="inputText">The signed text</param>
         /// <param name="inputSignature">The plainText to be verified (generated for inputText)</param>
+        /// <param name="inputText">The signed text</param>
         /// <returns>true if the provided plainText matches the computed one</returns>
-        public static bool VerifySignature(string inputText, string inputSignature)
+        public static bool VerifySignature(string inputSignature, string inputText)
         {
+#if DEBUG //TODO: Remove this dev bypass
+            return true; // bypass check for development
+#endif
             string computedSignature = GenerateHash(inputText); // compute plainText
-
-            return inputSignature.Equals(computedSignature); // compare signatures and return the result
+            return inputSignature.Trim().Equals(computedSignature); // compare signatures and return the result
         }
 
         /// <summary>
@@ -263,10 +292,31 @@ namespace CoDesigner_IDE
 
             foreach (byte b in bytes)
             {
-                byteString += b.ToString();
+                byteString += b.ToString().PadLeft(2, '0');
             }
 
             return byteString;
+        }
+
+        /// <summary>
+        /// Determines if the given input is a a valid hexadecimal string
+        /// </summary>
+        /// <param name="input">Text to be checked</param>
+        /// <returns>true, if the string is a valid hexadecimal string, false otherwise</returns>
+        public static bool IsByteString(string input)
+        {
+            for(int i = 0; i<input.Length; i+=2)
+            {
+                try
+                {
+                    Convert.ToByte(input[i] + input[i + 1]);
+                } catch (Exception ex) // invalid string
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -274,7 +324,7 @@ namespace CoDesigner_IDE
         /// </summary>
         /// <param name="plainText">Text to be encrypted</param>
         /// <returns>The generated cipher text</returns>
-        
+
         //[SupportedOSPlatform("windows")]
         public static string Encrypt(string plainText)
         {
@@ -363,6 +413,336 @@ namespace CoDesigner_IDE
         public static Security.Token[] GetUsedTokens()
         {
             return Security.UsedTokens.ToArray();
+        }
+
+
+        /// <summary>
+        /// Checks the given file, if its extension is recognized for this
+        /// </summary>
+        /// <param name="filePath">Path to the file to be checked</param>
+        /// <returns>A struct conaining the file check results</returns>
+        public static Security.FileCheckResults CheckFileIntegrity(string filePath)
+        {
+            bool valid = false, recognized = true;
+            try
+            {
+                string[] filePathSegments = filePath.Split(".");
+
+                switch (filePathSegments[filePathSegments.Length-1])
+                {
+                    case "appconfig": // configuration file (the useful data is in XML format)
+                        {
+                            // get file segments
+                            Dictionary<string, string> fileSegments = Utility.GetConfigFileSegments(filePath);
+
+                            // check file signature
+                            if (Security.VerifySignature(fileSegments[Utility.ConfigFileSegmentHeaders.SIGNATURE], fileSegments[Utility.ConfigFileSegmentHeaders.XML_DATA]))
+                            {
+                                valid = true;
+                            }
+
+                            break;
+                        }
+
+                    default: // unrecognized => ignore file and a failure result
+                        {
+                            recognized = false;
+                            break;
+                        }
+                }
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_INAUTHENTIC_FILE, ex.Message);
+            }
+
+            return new Security.FileCheckResults(
+                filePath,
+                recognized, // recognized file
+                valid // valid file
+                );
+        }
+
+        /// <summary>
+        /// Encrypts the given text for storing it in a diagnostic report
+        /// </summary>
+        /// <param name="plainText">Text to be encrypted</param>
+        /// <returns>Encrypted text (string) or null if an error occurred</returns>
+        public static string DiagnosisEncrypt(string plainText)
+        {
+            string cipherText = null;
+
+            try
+            {
+                byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+
+                using (RSA rsa = RSA.Create())
+                {
+                    // encrypt
+                    cipherText = Convert.ToBase64String(rsa.Encrypt(Encoding.UTF8.GetBytes(plainText), RSAEncryptionPadding.Pkcs1));
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_ENCRYPTING_DIAGNOSTIC_REPORT, ex.Message);
+            }
+
+            return cipherText;
+        }
+
+        /// <summary>
+        /// Stores the currently approved generator IDs on the disk
+        /// </summary>
+        public static void StoreGeneratorIds()
+        {
+            try
+            {
+                if (Security.APPROVED_BASE_GEN_CODES.Count == 0) return; // if there are no memorized gen IDs, exit the method
+
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+                xmlWriterSettings.Indent = true;
+                xmlWriterSettings.Encoding = Encoding.UTF8;
+                xmlWriterSettings.IndentChars = "\t";
+                xmlWriterSettings.NewLineChars = "\r\n";
+
+                StringBuilder xmlText = new StringBuilder();
+                XmlWriter xmlWriter = XmlWriter.Create(xmlText, xmlWriterSettings);
+
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("gen-ids");
+
+                foreach(string approvedGenId in Security.APPROVED_BASE_GEN_CODES)
+                {
+                    xmlWriter.WriteStartElement("gen-id");
+                        
+                    xmlWriter.WriteAttributeString("id",approvedGenId);
+
+                    xmlWriter.WriteEndElement();
+                }
+
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+
+                xmlWriter.Close();
+
+                File.WriteAllText(GeneralPaths.SEC_GEN_IDS_FILE_PATH,Security.Encrypt(xmlText.ToString())); //create the file anew, with the currently memorized, approved generator IDs
+                
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.GENERAL_FATAL_SECURITY_ERROR, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Stores the given generator ID into memory, in the list of approved generator IDs
+        /// </summary>
+        /// <param name="genId">Gen ID to be saved</param>
+        public static void MemorizeGeneratorId(string genId)
+        {
+            if(!genId.Equals(null) && !genId.Equals(string.Empty))
+            {
+                Security.APPROVED_BASE_GEN_CODES.Add(genId);
+            }
+        }
+    
+        /// <summary>
+        /// Loads the list of approved generator IDs from the disk
+        /// </summary>
+        /// <returns>true if the file exists, false if the file does not exist or an error occurred trying to parse it</returns>
+        public static bool LoadApprovedGeneratorId()
+        {
+            bool validFile = false;
+
+            try
+            {
+                if (File.Exists(GeneralPaths.SEC_GEN_IDS_FILE_PATH) == false) throw new Exception("Missing generator IDs file."); // the file could not be found => no data can be read
+
+                string genIds = Security.Decrypt(File.ReadAllText(GeneralPaths.SEC_GEN_IDS_FILE_PATH));
+
+                XmlDocument xml = new XmlDocument();
+                xml.LoadXml(genIds);
+                XmlNode root = xml.DocumentElement;
+
+                // parse generator IDs
+                foreach (XmlNode node in root.ChildNodes)
+                {
+                    switch(node.Name)
+                    {
+                        case "gen-id":
+                            {
+                                Security.APPROVED_BASE_GEN_CODES.Add(node.Attributes["id"].Value.ToString()); // get ID and add it to the list of approvd IDs
+                                validFile = true;
+                                break;
+                            }
+                        default: // unrecognized node => ignore it
+                            {
+                                break;
+                            }
+                    }
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.GENERAL_FATAL_SECURITY_ERROR, ex.Message);
+            }
+
+            return validFile;
+        }
+
+        /// <summary>
+        /// Stores the tokens used in this session, together with the ones stored so far, in a local file
+        /// </summary>
+        /// <param name="createFile">If the file does not exist, and this variable is true, it is created</param>
+        public static void StoreUsedTokens(bool createFile)
+        {
+            try
+            {
+                // store tokens (used across all sessions so far)
+                if (File.Exists(GeneralPaths.SEC_USED_TOKENS_FILE_PATH) == false && createFile == false) return; //=> do not create file (security)
+
+                // parse XML file
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+                xmlWriterSettings.Indent = true;
+                xmlWriterSettings.Encoding = Encoding.UTF8;
+                xmlWriterSettings.IndentChars = "\t";
+                xmlWriterSettings.NewLineChars = "\r\n";
+                StringBuilder xmlText = new StringBuilder();
+
+                XmlWriter xmlWriter = XmlWriter.Create(xmlText, xmlWriterSettings);
+
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("USED-TOKENS");
+
+                foreach (Security.Token usedToken in Security.GetUsedTokens())
+                {
+                    xmlWriter.WriteStartElement("USED-TOKEN");
+
+                    xmlWriter.WriteAttributeString("machine-id", Utility.GetHashedUuid());
+                    xmlWriter.WriteAttributeString("token-string", usedToken.TOKEN_STRING);
+
+                    xmlWriter.WriteEndElement();
+                }
+
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+                xmlWriter.Close();
+
+                // unlock the file
+                if (Security.SEC_USED_TOKENS_FILESTREAM != null) Security.SEC_USED_TOKENS_FILESTREAM.Close();
+
+                // write details on the disk
+                File.WriteAllText(GeneralPaths.SEC_USED_TOKENS_FILE_PATH, Security.Encrypt(xmlText.ToString()));
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_STORING_APP_EXIT_DATA, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Loads into memory the tokens used so far, accross different sessions
+        /// </summary>
+        public static void LoadUsedSecurityTokens()
+        {
+            try
+            {
+                // read the file, if it exists
+                string usedTokensPlainText = null;
+                if (File.Exists(GeneralPaths.SEC_USED_TOKENS_FILE_PATH) == true)
+                {
+                    usedTokensPlainText = Security.Decrypt(File.ReadAllText(GeneralPaths.SEC_USED_TOKENS_FILE_PATH)); // load already used tokens in memory
+
+                    XmlDocument xml = new XmlDocument();
+                    xml.LoadXml(usedTokensPlainText);
+                    XmlNode root = xml.DocumentElement;
+
+                    foreach (XmlNode usedToken in root.ChildNodes)
+                    {
+                        switch (usedToken.Name)
+                        {
+                            case "USED-TOKEN":
+                                {
+                                    // verify machine id
+                                    if (usedToken.Attributes["machine-id"].Value.Equals(Utility.GetHashedUuid()) == true)
+                                    {
+                                        // create a Token object and add it to the list of used tokens
+                                        Security.AddUsedToken(new Security.Token(usedToken.Attributes["token-string"].Value));
+                                    }
+                                    break;
+                                }
+                            default: // unrecognized node => ignore it
+                                {
+                                    break;
+                                }
+                        }
+                    }
+                }
+                else // error: the used tokens file was deleted => stop application
+                {
+                    Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_LOADING_USED_SEC_TOKENS);
+                }
+
+                // lock file; this will be closed when the application is closed
+                Security.SEC_USED_TOKENS_FILESTREAM = File.Open(GeneralPaths.SEC_USED_TOKENS_FILE_PATH, FileMode.Open);
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_LOADING_USED_SEC_TOKENS, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Loads local properties from the disk
+        /// </summary>
+        public static void LoadSecurityProperties()
+        {
+            if (Security.CurrentSecurityPropertiesLoaded == false)
+            {
+                bool adminWorkstation = false;
+
+                try
+                {
+                    string plainText = Security.Decrypt(File.ReadAllText(GeneralPaths.SEC_PROPERTIES_FILE_PATH));
+
+                    XmlDocument xml = new XmlDocument();
+                    xml.LoadXml(plainText);
+                    XmlNode root = xml.DocumentElement;
+
+                    // load security properties (only valid for the current machine)
+                    foreach (XmlNode node in root.ChildNodes)
+                    {
+                        switch (node.Name)
+                        {
+                            case "ADMIN-WORKSTATION":
+                                {
+                                    if (Utility.GetHashedUuid().Equals(node.Attributes["id"].Value) == true)
+                                    {
+                                        adminWorkstation = Convert.ToBoolean(node.Attributes["value"].Value.ToString());
+                                    }
+                                    break;
+                                }
+                            default: // unknown property => ignore it
+                                break;
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERROR_LOADING_SECURITY_PROPERTIES, ex.Message);
+                }
+
+                Security.CurrentSecurityProperties = new Security.SecurityProperties(
+                    adminWorkstation);
+                Security.CurrentSecurityPropertiesLoaded = true;
+
+            }
+
         }
     }
 }

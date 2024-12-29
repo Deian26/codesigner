@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoDesigner_IDE.FORMS.IDE;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,6 +12,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using static CoDesigner_IDE.Diagnostics;
 
 namespace CoDesigner_IDE
@@ -32,7 +34,7 @@ namespace CoDesigner_IDE
         private const string D0_TreeViewNodePromptTag = "Prompt";
         private const string D0_TreeViewNodeLanguageTag = "Language";
         private const string D0_TreeViewNodeThemeTag = "Theme";
-        
+
         #region delegates
         /// <summary>
         /// Delegate type used to update the diagnostic log from a different thread
@@ -53,13 +55,13 @@ namespace CoDesigner_IDE
         /// Provides user access to the diagnostic utility
         /// </summary>
         public D0_MainDiagnosticsForm()
-        {            
+        {
             InitializeComponent();
 
             // by default, this form should be invisible
             this.ShowInTaskbar = false;
             this.WindowState = FormWindowState.Minimized;
-            this.Visible = false; 
+            this.Visible = false;
 
             // set initial form properties
             this.NormalSize = this.Size;
@@ -72,7 +74,7 @@ namespace CoDesigner_IDE
         {
             this.SetFormDefaultSize();
         }
-        
+
         /// <summary>
         /// Sets the min/max form sizes
         /// </summary>
@@ -92,7 +94,7 @@ namespace CoDesigner_IDE
 
             if (token == null)
             {
-                accessGranted = Utility.CurrentSecurityProperties.ADMIN_WORKSTATION == true;
+                accessGranted = Security.CurrentSecurityProperties.ADMIN_WORKSTATION == true;
             }
             else
             {
@@ -106,7 +108,7 @@ namespace CoDesigner_IDE
                         Utility.StoreSecurityProperties(
                             true
                             );
-                        
+
                     }
 
                     accessGranted = true;
@@ -114,7 +116,7 @@ namespace CoDesigner_IDE
             }
 
 
-            if(accessGranted == true)
+            if (accessGranted == true)
             {
                 this.SetFormDefaultSize();
                 this.Visible = true;
@@ -239,10 +241,24 @@ namespace CoDesigner_IDE
             //TODO: Add theme loading first, then display the loaded themes here
 
             //  versions
-            this.D0_richTextBox_StatusVersions.Text = "";
+            this.D0_treeView_DefaultElementsVersions.Nodes.Clear();
             foreach (string name in Diagnostics.DefaultVersions.Keys)
             {
-                this.D0_richTextBox_StatusVersions.Text += ( name + " : " + Diagnostics.DefaultVersions[name] + "\n") ;
+                /* Format:
+                 * elements name
+                 * |- version
+                 * ... other details
+                 */
+
+                TreeNode elementDetailsNode = this.D0_treeView_DefaultElementsVersions.Nodes.Add(name, name);
+
+                //=// Version
+                TreeNode versionSubNode = elementDetailsNode.Nodes.Add(Diagnostics.DEFAULT_ELEMENT_DETAILS_VERSION_KEY, Diagnostics.DefaultVersions[name]);
+                versionSubNode.ToolTipText = Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_ELEMENT_DETAILS_TOOLTIP_VERSION); // extra details (visible when the mouse is hovering over the node)
+
+                //=// Origin
+                TreeNode originSubNode = elementDetailsNode.Nodes.Add(Diagnostics.DEFAULT_ELEMENT_DETAILS_ORIGIN_KEY, Diagnostics.DEFAULY_ELEMENT_DETAILS_ORIGIN_DEFAULT); // origin = Default, for the default elements
+                originSubNode.ToolTipText = Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_ELEMENT_DETAILS_TOOLTIP_ORIGIN); ; // extra details (visible when the mouse is hovering over the node)
             }
 
         }
@@ -256,18 +272,19 @@ namespace CoDesigner_IDE
         private void D0_treeView_LoadedElements_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             //if this is an element (not a title node), load data about the element in the corresponding 'About' control
-            if(e.Node.Tag == null || e.Node.Tag.Equals(D0_TreeViewNodeTitleTag) == false)
+            if (e.Node.Tag == null || e.Node.Tag.Equals(D0_TreeViewNodeTitleTag) == false)
             {
                 string details;
                 details = ""; //element details to display
 
-                this.D0_richTextBox_DetailsAboutSelectedElement.Clear();
-                this.D0_textBox_SelectedControlActions.Text = e.Node.Text; //display selected element
+                this.D0_treeView_ActionDetails.Nodes.Clear();
+                this.D0_textBox_ActionDetailsTitle.Text = e.Node.Text; //display selected element
 
+                //TODO: Implement tree-view report for element loading
                 //load details about the selected element, based on the tag
                 switch (e.Node.Tag)
                 {
-                    case D0_TreeViewNodeComponentTag: 
+                    case D0_TreeViewNodeComponentTag:
                         {
                             details += ComponentFactory.LoadedComponents[e.Node.Name].ToString();
                             break;
@@ -310,9 +327,6 @@ namespace CoDesigner_IDE
                         }
                 }
 
-                //display element details
-                this.D0_richTextBox_DetailsAboutSelectedElement.Text = details;
-
             }
         }
 
@@ -323,7 +337,42 @@ namespace CoDesigner_IDE
         /// <param name="e"></param>
         private void D0_button_Actions_CheckLocalFiles_Click(object sender, EventArgs e)
         {
-            //TODO: Implement file signatures first
+            // reset display controls
+            this.D0_textBox_ActionDetailsTitle.Text = Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_CHECK_FILES_ACTION_TITLE);
+            this.D0_treeView_ActionDetails.Nodes.Clear();
+
+            // set the tag for the actions report tree view control
+            this.D0_treeView_ActionDetails.Tag = Diagnostics.ACTON_REPORT_TAG_CHECK_FILES;
+
+            try
+            {
+                // recursively parse program files for files to be checked
+                string[] filePaths = Directory.EnumerateFiles(GeneralPaths.TOP_REL_PATH_BIN, "", SearchOption.AllDirectories).ToArray();
+
+                foreach (string filePath in filePaths)
+                {
+                    Security.FileCheckResults fileCheckResults = Security.CheckFileIntegrity(filePath);
+
+                    if (fileCheckResults.recognized == true && fileCheckResults.validFile == false) // invalid, but recognized file
+                    {
+                        string[] filePathSegments = filePath.Split(".");
+
+                        /* Format:
+                         * filename (key = full path)
+                         * |- full path
+                         * |- check timestamp
+                         */
+                        TreeNode invalidFileNode = this.D0_treeView_ActionDetails.Nodes.Add(filePath, filePathSegments[filePathSegments.Length - 1]);
+                        invalidFileNode.ToolTipText = Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_CHECK_FILES_INVALID_FILE_TOOLTIP);
+                        invalidFileNode.Nodes.Add(filePath); // full path
+                        invalidFileNode.Nodes.Add(DateTime.UtcNow.ToString()); // UTC timestamp for when the file was checked (now)
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_INAUTHENTIC_FILE, ex.Message);
+            }
         }
 
         //if checked, allows the loading of third-party components
@@ -356,7 +405,7 @@ namespace CoDesigner_IDE
                 }
 
                 // create / overwrite file
-                File.AppendAllText(this.D0_saveFileDialog_ExportLog.FileName,logText);
+                File.AppendAllText(this.D0_saveFileDialog_ExportLog.FileName, logText);
             }
         }
 
@@ -369,7 +418,7 @@ namespace CoDesigner_IDE
         {
             //TODO: Implement customization utility form
         }
-        
+
         /// <summary>
         /// Handles form closing actions for the D0 form
         /// </summary>
@@ -384,6 +433,104 @@ namespace CoDesigner_IDE
                 //this.ShowInTaskbar = false;
                 e.Cancel = true;
             }// else => the application is being closed
+        }
+
+        // Export the report generated by a diagnostic action
+        private void D0_button_ExportActionResults_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.D0_errorProvider_DiagnosticsActionsErrors.Clear();
+
+                // check if the action report tag is set
+                if (this.D0_treeView_ActionDetails.Tag == null)
+                {
+                    string errorMessage = Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_ERR_MESSAGE_NO_DIAGNOSTIC_ACTION_SELECTED);
+
+                    if (errorMessage == null || errorMessage == string.Empty) // set default error message
+                    {
+                        errorMessage = "Error";
+                    }
+
+                    this.D0_errorProvider_DiagnosticsActionsErrors.SetError(
+                        this.D0_button_ExportActionResults,
+                        errorMessage);
+
+                    return; // stop generating the report
+                }
+
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+                xmlWriterSettings.Indent = true;
+                xmlWriterSettings.Encoding = Encoding.UTF8;
+                xmlWriterSettings.IndentChars = "\t";
+                xmlWriterSettings.NewLineChars = "\r\n";
+
+                StringBuilder xmlText = new StringBuilder();
+                XmlWriter xmlWriter = XmlWriter.Create(xmlText, xmlWriterSettings);
+
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("report");
+
+                // generate a report based on the tree view control's contents
+                switch (this.D0_treeView_ActionDetails.Tag)
+                {
+                    case Diagnostics.ACTON_REPORT_TAG_CHECK_FILES: // check files action report
+                        {
+                            foreach (XmlNode invalidFileNode in this.D0_treeView_ActionDetails.Nodes)
+                            {
+                                // each node contains the details of a file marked as invalid
+                                xmlWriter.WriteStartElement("invalid-file");
+
+                                xmlWriter.WriteAttributeString("file-path", invalidFileNode.ChildNodes[0].Value);
+                                xmlWriter.WriteAttributeString("check-timestamp", invalidFileNode.ChildNodes[1].Value);
+
+                                xmlWriter.WriteEndElement();
+                            }
+
+                            break;
+                        }
+                    default: // unrecognized tag => ignore control
+                        {
+                            break;
+                        }
+                }
+
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+
+                xmlWriter.Close();
+
+                // prompt the user for a path to save the report at
+                this.D0_saveFileDialog_SaveActionReport.FileName = $"Report_{this.D0_treeView_ActionDetails.Tag}.xml";
+                this.D0_saveFileDialog_SaveActionReport.DefaultExt = "xml";
+                this.D0_saveFileDialog_SaveActionReport.Filter = "Report (*.xml)|*.xml";
+                DialogResult saveReportDialogResult = this.D0_saveFileDialog_SaveActionReport.ShowDialog();
+
+                if (saveReportDialogResult == DialogResult.OK)
+                {
+                    File.WriteAllText(this.D0_saveFileDialog_SaveActionReport.FileName, Security.DiagnosisEncrypt(xmlText.ToString()));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_GENERATING_ACTION_REPORT, ex.Message);
+            }
+        }
+
+        private void D0_button_AddApprovedGeneratorId_Click(object sender, EventArgs e)
+        {
+            // adds a new generator ID to the list of approved generator IDs
+            F4_RegisterGenId f4_AddGenId = new F4_RegisterGenId(false); //=> do not create the used tokens local file
+            if (f4_AddGenId.ShowDialog() != DialogResult.OK)
+            {
+                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.SEC_ERROR_ADDING_GEN_ID);
+            }
+        }
+
+        private void D0_button_GenerateDiagnosticStatusReport_Click(object sender, EventArgs e)
+        {
+            //TODO: Implement status report generation
         }
     }
 }

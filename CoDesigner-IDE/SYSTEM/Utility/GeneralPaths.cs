@@ -27,17 +27,17 @@ namespace CoDesigner_IDE
         public static string STORAGE = Path.Combine(GeneralPaths.SYSTEM, "Storage");
 
         //===// Resource sub-directories and files
-        public static string DEFAULT_EVENTS_FILEPATH = Path.Combine(new string[] { GeneralPaths.RESOURCES, "Diagnostics", "EVENTS.xml" }); //default events
-        public static string DEFAULT_MESSAGES_FILEPATH = Path.Combine(new string[] { GeneralPaths.RESOURCES, "GUI", "MESSAGES.xml" }); //default messages
+        public static string DEFAULT_EVENTS_FILEPATH = Path.Combine(new string[] { GeneralPaths.RESOURCES, "Diagnostics", "EVENTS.appconfig" }); //default events
+        public static string DEFAULT_MESSAGES_FILEPATH = Path.Combine(new string[] { GeneralPaths.RESOURCES, "GUI", "MESSAGES.appconfig" }); //default messages
         public static string ACTIVE_PROJECTS_FILEPATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Projects", "ActiveProjects.xml" });
-        public static string VERSIONS_FILEPATH = Path.Combine(new string[] { GeneralPaths.RESOURCES, "Diagnostics", "VERSIONS.xml" }); //program element versions
+        public static string VERSIONS_FILEPATH = Path.Combine(new string[] { GeneralPaths.RESOURCES, "Diagnostics", "VERSIONS.appconfig" }); //program element versions
         public static string LOG_FOLDER_PATH = Path.Combine(new string[] { GeneralPaths.SYSTEM, "Utility", "Diagnostics", "Logs" }); //logs stored on the disk; the file sizes are limited to the value defined in 'LOG_FILE_MAXSIZE'
         public static string LOG_FILE_PATH = Path.Combine(GeneralPaths.LOG_FOLDER_PATH, "Events.log"); // automatically filled log file path
         
         //====// Storage sub-directories and files
-        public static string SEC_PROPERTIES_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_PROPERTIES.xml" }); // data used by the application
-        public static string SEC_USED_TOKENS_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_USED_TOKENS.xml" }); // valid tokens used accross sessions
-
+        public static string SEC_PROPERTIES_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_PROPERTIES.sec" }); // data used by the application
+        public static string SEC_USED_TOKENS_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_USED_TOKENS.sec" }); // valid tokens used accross sessions
+        public static string SEC_GEN_IDS_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_GEN_IDS.sec" }); // approved generator IDs file (encrypted)
         //===// Paths to the project structure images
         public struct ProjectStructure{
             //=// Tree node

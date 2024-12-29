@@ -1,0 +1,4 @@
+#> Logfile created at  12/29/2024 11:40:07 PM
+
+[12/29/2024 11:40:07 PM] > General fatal security error.Missing generator IDs file.
+[12/29/2024 11:40:16 PM] > Could not load security properties. Could not find file 'D:\CoDesigner-IDE\CoDesigner-IDE\SYSTEM\Storage\Data\Security\SEC_PROPERTIES.sec'.

@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "ezWnFHuE8N0=",
+  "dgSpecHash": "jR+ZfhfM6VE=",
   "success": true,
   "projectFilePath": "D:\\CoDesigner-IDE\\Admin-Utility\\Admin-Utility.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\deian\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\deian\\.nuget\\packages\\system.codedom\\9.0.0\\system.codedom.9.0.0.nupkg.sha512",
     "C:\\Users\\deian\\.nuget\\packages\\system.data.datasetextensions\\4.5.0\\system.data.datasetextensions.4.5.0.nupkg.sha512",
-    "C:\\Users\\deian\\.nuget\\packages\\system.management\\9.0.0\\system.management.9.0.0.nupkg.sha512"
+    "C:\\Users\\deian\\.nuget\\packages\\system.management\\9.0.0\\system.management.9.0.0.nupkg.sha512",
+    "C:\\Users\\deian\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.26100.54\\microsoft.windows.sdk.net.ref.10.0.26100.54.nupkg.sha512"
   ],
   "logs": []
 }

@@ -60,7 +60,6 @@
     <Content Include="SYSTEM\Storage\Projects\ActiveProjects.xml" />
     <Content Include="SYSTEM\Resources\Diagnostics\EVENTS.xml" />
     <Content Include="SYSTEM\Resources\Diagnostics\VERSIONS.xml" />
-    <Content Include="SYSTEM\Resources\GUI\MESSAGES.xml" />
     <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\SelProjectImg.bmp" />
     <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\SelDirectoryImg.bmp" />
     <Content Include="SYSTEM\Resources\GUI\ProjectStructureImg\UnselProjectImg.bmp" />

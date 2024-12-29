@@ -29,7 +29,7 @@ namespace CoDesigner_IDE.FORMS.IDE
             InitializeComponent();
 
             // if this is a admin-workstation, skip token verification for the diagnostic utility
-            if(Utility.CurrentSecurityProperties.ADMIN_WORKSTATION==true)
+            if(Security.CurrentSecurityProperties.ADMIN_WORKSTATION==true)
             {
                 // change how the controls are displayed
                 this.setAdminWorkstation();

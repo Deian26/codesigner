@@ -17,6 +17,9 @@
     <Compile Update="FORMS\IDE\F0_Logo.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="FORMS\IDE\F4_ProgramActivation.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="FORMS\IDE\Projects\F1_Projects.cs">
       <SubType>Form</SubType>
     </Compile>

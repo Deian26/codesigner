@@ -1,8 +1,10 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.Versioning;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,8 @@ namespace Admin_Utility
     /// </summary>
     internal static class Security
     {
+        // AES enc/dec key
+        private static byte[] AES_KEY { get; } = { 0x20, 0x07, 0x52, 0x11, 0x17, 0x45, 0x52, 0x40, 0x19, 0x02, 0x57, 0x51, 0x07, 0x22, 0x76, 0x92 };
         private static string GeneratorId { get; set; } = null;
 
         internal enum AccessLevel { NONE = 0, ADMIN = 1, USER = 2 , ADMIN_WORKSTATION = 3};
@@ -107,6 +111,7 @@ namespace Admin_Utility
         /// </summary>
         /// <param name="input">Text to be hashed</param>
         /// <returns>Hashed text or null</returns>
+        [SupportedOSPlatform("windows")]
         internal static string GenerateHash(string input)
         {
             string cipherText = null;
@@ -125,12 +130,13 @@ namespace Admin_Utility
 
             return cipherText;
         }
-        
+
         /// <summary>
         /// Generates the machine's generator base ID
         /// </summary>
         /// <param name="developmentToken">if true, the development generator id will be used</param>
         /// <returns>The machine's generator ID</returns>
+        [SupportedOSPlatform("windows")]
         internal static string GetGeneratorId(bool developmentToken)
         {
             //=// Generate ID
@@ -170,7 +176,7 @@ namespace Admin_Utility
             
             foreach (byte b in bytes)
             {
-                byteString += b.ToString();
+                byteString += b.ToString().PadLeft(2,'0');
             }
 
             return byteString;
@@ -198,7 +204,7 @@ namespace Admin_Utility
 
             Token token = new Token(accessLevel, intExpirationLimitSec); //=> generate new token
 
-            // store the token generation detailsin the database
+            // store the token generation details in the database
             //TODO: Implement security database tables
 
             // return token string
@@ -211,6 +217,45 @@ namespace Admin_Utility
                 return null;
             }
             
+        }
+
+        /// <summary>
+        /// Decrypts the provided AES-encrypted cipher text
+        /// </summary>
+        /// <param name="cipherText">Encrypted data</param>
+        /// <returns>The decrypted data, as a string</returns>
+        public static string AesDecrypt(string cipherText)
+        {
+            string plainText = null;
+
+            try
+            {
+                byte[] cipherTextBytes = Encoding.UTF8.GetBytes(cipherText);
+
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Mode = CipherMode.CBC;
+                    aes.GenerateIV();
+                    aes.Key = Security.AES_KEY;
+
+                    using (MemoryStream outputStream = new MemoryStream())
+                    {
+                        using (CryptoStream aesDecryptionStream = new CryptoStream(outputStream, aes.CreateDecryptor(), CryptoStreamMode.Write))
+                        {
+                            using (StreamReader streamReader = new StreamReader(aesDecryptionStream))
+                            {
+                                plainText = streamReader.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not decrypt the AES-encrypted data. Details: {ex.Message}","ERROR Decrypting AES data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return plainText;
         }
         
 

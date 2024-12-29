@@ -57,13 +57,29 @@ namespace CoDesigner_IDE
         public static Dictionary<string, string> DefaultVersions = new Dictionary<string, string>(); // list of default item versions
 
         /// <summary>
+        /// Key for the version sub-node of the element versions tree (D0 form)
+        /// </summary>
+        public const string DEFAULT_ELEMENT_DETAILS_VERSION_KEY = "Version";
+        /// <summary>
+        /// Key for the origin sub-node of the element versions tree (D0 form)
+        /// </summary>
+        public const string DEFAULT_ELEMENT_DETAILS_ORIGIN_KEY = "Origin";
+        /// <summary>
+        /// The current element is provided by default, with the IDE
+        /// </summary>
+        public const string DEFAULY_ELEMENT_DETAILS_ORIGIN_DEFAULT = "Default";
+        /// <summary>
+        /// Used for selecting the format report, when exporting the tree view node report
+        /// </summary>
+        public const string ACTON_REPORT_TAG_CHECK_FILES = "CheckFiles";
+        /// <summary>
         /// Logged event severity; does not include the user program
         /// </summary>
         public enum EVENT_SEVERITY { Info = 0, Debug = 1, Warning = 2, Error = 3, Fatal = 4 };
         /// <summary>
         /// Logged event origin; does not include the errors within the user's program(s) (only indicates whether the program caused an error outside itself)
         /// </summary>
-        public enum EVENT_ORIGIN { Undefined = -1, IDE = 0, Component = 1, UserProgram = 2};
+        public enum EVENT_ORIGIN { Undefined = 0, IDE = 1, Component = 2, UserProgram = 3};
 
         public const string LOGFILE_HEADER_PREFIX = "#> Logfile created at ";
         public const string DEFAULT_LOGFILE_EXT = ".log";
@@ -75,6 +91,8 @@ namespace CoDesigner_IDE
         public const short DEFAULT_UNDEFINED_ORIGIN_CODE = 0x0000;
         public const short DEFAULT_IDE_ORIGIN_CODE = 0x0001;
         public const short DEFAULT_COMPONENT_ORIGIN_CODE = 0x0002;
+
+        public const short DEFAULT_UNDEFINED_EVENT_CODE = 0x0000; // no events are defined for this error
 
         public static class DefaultEventCodes
         {
@@ -101,7 +119,7 @@ namespace CoDesigner_IDE
             public const int ERROR_GENERATING_SIGNATURE                     = 21;
             public const int ERROR_LOADING_SECURITY_PROPERTIES              = 22;
             public const int INVALID_TOKEN                                  = 23;
-            public const int INVALID_TOKEN_STRING_FORMAT                           = 24;
+            public const int INVALID_TOKEN_STRING_FORMAT                    = 24;
             public const int TOKEN_EXPIRED                                  = 25;
             public const int INSUFFICIENT_TOKEN_ACCESS_LEVEL                = 26;
             public const int ERROR_STORING_SECURITY_PROPERTIES              = 27;
@@ -112,6 +130,13 @@ namespace CoDesigner_IDE
             public const int ERR_STORING_APP_EXIT_DATA                      = 32;
             public const int ERR_LOADING_USED_SEC_TOKENS                    = 33;
             public const int ALREADY_USED_TOKEN                             = 34;
+            public const int ERR_PARSING_CONFIG_FILES                       = 35;
+            public const int ERR_INAUTHENTIC_FILE                           = 36;
+            public const int ERR_GENERATING_ACTION_REPORT                   = 37;
+            public const int ERR_ENCRYPTING_DIAGNOSTIC_REPORT               = 38;
+            public const int GENERAL_FATAL_SECURITY_ERROR                   = 39;
+            public const int ERROR_ACTIVATING_PROGRAM                       = 40;
+            public const int SEC_ERROR_ADDING_GEN_ID                        = 41;
         }
 
         /// <summary>
@@ -366,6 +391,64 @@ namespace CoDesigner_IDE
             }
 
             return _message;
+        }
+
+        /// <summary>
+        /// Logs an anonymous event with the given detiails, without looking it up in the events list
+        /// </summary>
+        /// <param name="originCode"></param>
+        /// <param name="eventCode"></param>
+        /// <param name="eventSeverity"></param>
+        /// <param name="message"></param>
+        /// <returns>For uniformity with the other logger methods, the message is returned</returns>
+        public static string LogDirectSilentEvent(int originCode, int eventCode, EVENT_SEVERITY eventSeverity, string message)
+        {
+            try
+            {
+                Diagnostics.EventLog.Add(new LogEvent(
+                    (EVENT_ORIGIN)originCode,
+                    (EVENT_SEVERITY)eventSeverity,
+                    eventCode,
+                    message,
+                    false
+                    ));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error logging an event. Details: {ex.Message}", "LOGGING ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return message;
+        }
+
+        /// <summary>
+        /// Logs an anonymous event with the given detiails, without looking it up in the events list and opens a message box for it
+        /// </summary>
+        /// <param name="originCode"></param>
+        /// <param name="eventCode"></param>
+        /// <param name="eventSeverity"></param>
+        /// <param name="message"></param>
+        /// <param name="silentMessage">Message to be logged, but not displayed to the user</param>
+        /// <returns>For uniformity with the other logger methods, the message is returned</returns>
+        public static string LogDirectEvent(int originCode, int eventCode, EVENT_SEVERITY eventSeverity, string message, string silentMessage)
+        {
+            try
+            {
+                Diagnostics.EventLog.Add(new LogEvent(
+                    (EVENT_ORIGIN)originCode,
+                    (EVENT_SEVERITY)eventSeverity,
+                    eventCode,
+                    message,
+                    true,
+                    silentMessage
+                    ));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error logging an event. Details: {ex.Message}", "LOGGING ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return message;
         }
 
         #endregion

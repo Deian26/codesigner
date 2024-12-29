@@ -1,0 +1,49 @@
+﻿#S\@2356713049110446141842081531051581681352152101851963861233224136320016221742414204
+#X\@
+<messages>
+	<!-- 
+	- The code must be unique in the default files (for components, the code must unique in the component);
+	  The code from each message will be 'prepended' by a 2-byte value, which marks the origin of the message (defined in the program code)
+	- The dialog buttons must have one of the values defined in the 'MessageBoxButtons' enum (string - names) or "" if the item will only represent a simple string
+	- The dialog icon must have one of the values defined in the 'MessageBoxIcon' enum or "" if the item will only represent a simple string
+	- The caption, dialog_buttons, dialog_icon attributes are ignored if the message is to be assigned to a simple string element (in this case, the attribute values should be set to "")
+	-->	
+	<message code="1" description="Overwrite project directory confirmation dialog; YesNo, Question" dialog_buttons ="YesNo" dialog_icon="Question">
+		<EN caption="Overwrite" text="A directory. with files and/or subfolders, with the same name alreayd exists at this location. Do you want to create the project in it?"/>
+	</message>
+
+	<message code="2" description="Project item invalid path or type" dialog_buttons ="OK" dialog_icon="Error">
+		<EN caption="Invalid item" text="The path to the item is invalid or is of an unsupported type."/>
+	</message>
+
+	<message code="3" description="Diagnostics - element details version tooltip text" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="Version"/>
+	</message>
+
+	<message code="4" description="Diagnostics - element details origin tooltip text" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="Origin"/>
+	</message>
+
+	<message code="5" description="Diagnostics - check files action" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="Check files results"/>
+	</message>
+
+	<message code="6" description="Diagnostics - check files action, invalif file tooltip text" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="Invalid file"/>
+	</message>
+
+	<message code="7" description="Diagnostics - error message: no actions selected" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="No diagnostic action selected"/>
+	</message>
+
+	<message code="8" description="Utility - error activating program: no key provided" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="No key provided"/>
+	</message>
+
+	<message code="9" description="Utility - error activating program: invalid key provided" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="Invalid key provided"/>
+	</message>
+	
+	
+
+</messages>
