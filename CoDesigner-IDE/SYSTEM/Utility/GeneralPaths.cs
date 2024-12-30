@@ -36,8 +36,10 @@ namespace CoDesigner_IDE
         
         //====// Storage sub-directories and files
         public static string SEC_PROPERTIES_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_PROPERTIES.sec" }); // data used by the application
-        public static string SEC_USED_TOKENS_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_USED_TOKENS.sec" }); // valid tokens used accross sessions
+        public static string SEC_USED_TOKENS_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_USED_TOKENS.sec" }); // valid tokens used across sessions
         public static string SEC_GEN_IDS_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_GEN_IDS.sec" }); // approved generator IDs file (encrypted)
+        public static string SEC_PUBLIC_REPORT_ENC_KEY = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_PUBLIC_REPORT_ENC_KEY.sec" }); // public key used to encrypt data before being sent for analysis
+        
         //===// Paths to the project structure images
         public struct ProjectStructure{
             //=// Tree node

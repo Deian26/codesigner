@@ -1,5 +1,4 @@
-﻿using CoDesigner_IDE.FORMS.IDE.Projects.ProjectEditor.MdiWindows;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CoDesigner_IDE.FORMS.IDE.Projects
+namespace CoDesigner_IDE
 {
     public partial class F3_MainEditor : Form
     {

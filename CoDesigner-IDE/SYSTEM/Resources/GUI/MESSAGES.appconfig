@@ -43,6 +43,14 @@
 	<message code="9" description="Utility - error activating program: invalid key provided" dialog_buttons ="" dialog_icon="">
 		<EN caption="" text="Invalid key provided"/>
 	</message>
+
+	<message code="10" description="Diagnostics - access level" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="Level: "/>
+	</message>
+
+	<message code="11" description="Diagnostics - token generation timestamp" dialog_buttons ="" dialog_icon="">
+		<EN caption="" text="Timestamp: "/>
+	</message>
 	
 	
 

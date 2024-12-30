@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,9 +17,11 @@ namespace CoDesigner_IDE
     /// Handles IDE diagnosticsThread
     /// </summary>
     [SupportedOSPlatform("windows")]
-    internal static class Diagnostics
+    public static class Diagnostics
     {
         #region logging
+
+        #region events
         public struct Event
         {
             public Diagnostics.EVENT_ORIGIN origin;
@@ -55,7 +58,98 @@ namespace CoDesigner_IDE
         public static Dictionary<int,Event> PossibleEvents = new Dictionary<int,Event>(); //format: code,event
 
         public static Dictionary<string, string> DefaultVersions = new Dictionary<string, string>(); // list of default item versions
+        public enum EVENT_SEVERITY { Info = 0, Debug = 1, Warning = 2, Error = 3, Fatal = 4 };
+        /// <summary>
+        /// Logged event origin; does not include the errors within the user's program(s) (only indicates whether the program caused an error outside itself)
+        /// </summary>
+        public enum EVENT_ORIGIN { 
+            /// <summary>
+            /// Unknown / unspecified event origin
+            /// </summary>
+            Undefined = 0, 
+            /// <summary>
+            /// The event originates from the IDE
+            /// </summary>
+            IDE = 1, 
+            /// <summary>
+            /// The event originates from a component
+            /// </summary>
+            Component = 2, 
+            /// <summary>
+            /// The event originates from a segment of code written by the user
+            /// </summary>
+            UserProgram = 3 };
+        
+        /// <summary>
+        /// Codes used to identify diagnostic actions
+        /// </summary>
+        public enum ActionId
+        {
+            /// <summary>
+            /// No action selected
+            /// </summary>
+            NONE = 0,
 
+            /// <summary>
+            /// Check specific files
+            /// </summary>
+            CHECK_FILES = 1
+        }
+
+        /// <summary>
+        /// Stores the details of a diagnostic action report
+        /// </summary>
+        public struct DiagActionResults
+        {
+            /// <summary>
+            /// The result of the action: true, if it was successful, false otherwise; the definition of success depends on the action
+            /// </summary>
+            public bool result { get; } = false; // init value
+
+            /// <summary>
+            /// The name of the action for which the report was generated
+            /// </summary>
+            public string actionName { get; } = null;
+
+            /// <summary>
+            /// ID used to identify the action
+            /// </summary>
+            public Diagnostics.ActionId actionId { get; } = Diagnostics.ActionId.NONE;
+            /// <summary>
+            /// Optional message to accompany the results
+            /// </summary>
+            public string message { get; } = null;
+
+            /// <summary>
+            /// The timestamp of this instance's creation, in UTC
+            /// </summary>
+            public DateTime timeStampUtc { get; } = DateTime.MaxValue;
+
+            /// <summary>
+            /// The timestamp of this instance's creation, in the local time of the machine that created the report 
+            /// </summary>
+            public DateTime timeStampLocal { get; } = DateTime.MaxValue;
+
+            /// <summary>
+            /// Constructs a struct containing information about a diagnostic action results
+            /// </summary>
+            /// <param name="result">Action result</param>
+            /// <param name="actionName">Action name</param>
+            /// <param name="actionId">Action key</param>
+            /// <param name="message">Optional message</param>
+            public DiagActionResults(bool result, string actionName, Diagnostics.ActionId actionId, string message)
+            {
+                this.result = result;
+                this.actionName = actionName;
+                this.actionId = actionId;
+                this.message = message;
+                this.timeStampUtc = DateTime.UtcNow;
+                this.timeStampLocal = DateTime.Now;
+            }
+        }
+        #endregion
+
+        #region keys
         /// <summary>
         /// Key for the version sub-node of the element versions tree (D0 form)
         /// </summary>
@@ -69,31 +163,45 @@ namespace CoDesigner_IDE
         /// </summary>
         public const string DEFAULY_ELEMENT_DETAILS_ORIGIN_DEFAULT = "Default";
         /// <summary>
-        /// Used for selecting the format report, when exporting the tree view node report
-        /// </summary>
-        public const string ACTON_REPORT_TAG_CHECK_FILES = "CheckFiles";
-        /// <summary>
         /// Logged event severity; does not include the user program
         /// </summary>
-        public enum EVENT_SEVERITY { Info = 0, Debug = 1, Warning = 2, Error = 3, Fatal = 4 };
-        /// <summary>
-        /// Logged event origin; does not include the errors within the user's program(s) (only indicates whether the program caused an error outside itself)
-        /// </summary>
-        public enum EVENT_ORIGIN { Undefined = 0, IDE = 1, Component = 2, UserProgram = 3};
+        #endregion
 
+        #region predefined-values
         public const string LOGFILE_HEADER_PREFIX = "#> Logfile created at ";
         public const string DEFAULT_LOGFILE_EXT = ".log";
         public static List<LogEvent> EventLog = new  List<LogEvent>(); //list of logged events
+        #endregion
 
+        #region codes
         public static short UNDEFINED_ERROR_CODE = 0x0000;
         public static short UNDEFINED_FATAL_ERROR_CODE = 0x00FF;
 
-        public const short DEFAULT_UNDEFINED_ORIGIN_CODE = 0x0000;
-        public const short DEFAULT_IDE_ORIGIN_CODE = 0x0001;
-        public const short DEFAULT_COMPONENT_ORIGIN_CODE = 0x0002;
+        /// <summary>
+        /// The code for an event without a specified origin
+        /// </summary>
+        public static short DEFAULT_UNDEFINED_ORIGIN_CODE = (int)Diagnostics.EVENT_ORIGIN.Undefined;
+        /// <summary>
+        /// The code for an event originating from the IDE
+        /// </summary>
+        public static short DEFAULT_IDE_ORIGIN_CODE = (int)Diagnostics.EVENT_ORIGIN.IDE;
+        /// <summary>
+        /// The code for an event originating from a component
+        /// </summary>
+        public static short DEFAULT_COMPONENT_ORIGIN_CODE = (int)Diagnostics.EVENT_ORIGIN.Component;
+        /// <summary>
+        /// The code for an event originating from user-defined code or similar element
+        /// </summary>
+        public static short DEFAULT_USER_PROGRAM_ORIGIN_CODE = (int)Diagnostics.EVENT_ORIGIN.UserProgram;
+        
+        /// <summary>
+        /// No events are defined for this error
+        /// </summary>
+        public static short DEFAULT_UNDEFINED_EVENT_CODE = 0x0000;
 
-        public const short DEFAULT_UNDEFINED_EVENT_CODE = 0x0000; // no events are defined for this error
-
+        /// <summary>
+        /// Diagnostic event codes
+        /// </summary>
         public static class DefaultEventCodes
         {
             public const int UNSUPPORTED_COMPONENT                          = 1;
@@ -137,7 +245,10 @@ namespace CoDesigner_IDE
             public const int GENERAL_FATAL_SECURITY_ERROR                   = 39;
             public const int ERROR_ACTIVATING_PROGRAM                       = 40;
             public const int SEC_ERROR_ADDING_GEN_ID                        = 41;
+            public const int SEC_ERROR_LOADING_REPORT_ENC_KEY               = 42;
+            public const int DIAG_ERROR_LOADING_LOG                         = 43;
         }
+        #endregion
 
         /// <summary>
         /// Deletes old log files
@@ -151,7 +262,6 @@ namespace CoDesigner_IDE
                 if(log.EndsWith(".log") == true) File.Delete(log);
             }
         }
-
         /// <summary>
         /// Logs an event based on the given code (the event details must be defined in one of the loaded components' configuration files)
         /// </summary>

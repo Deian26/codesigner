@@ -14,13 +14,22 @@ namespace CoDesigner_IDE
     /// Each object of this class defines an event to be logged
     /// </summary>
     [SupportedOSPlatform("windows")]
-    internal class LogEvent
+    public class LogEvent
     {
-        Diagnostics.EVENT_ORIGIN origin { get; }
-        Diagnostics.EVENT_SEVERITY severity { get; }
-        int code { get; }
-        string message { get; }
+        
+        #region static
+        public static ImageList eventImageList = new ImageList
+        {
+           
+        };
+        #endregion
 
+        public Diagnostics.EVENT_ORIGIN origin { get; }
+        public Diagnostics.EVENT_SEVERITY severity { get; }
+        public int code { get; }
+        public string message { get; }
+        public int fullCode { get; } // origin and event code (origin << 16 | code)
+        public DateTime timestamp { get; }
 
         /// <summary>
         /// Logs an event
@@ -35,20 +44,23 @@ namespace CoDesigner_IDE
             this.origin = origin;
             this.severity = severity;
             this.code = code;
+            this.fullCode = (int)this.origin << 16 | this.code;
             this.message = message;
 
+            string text = $"[{timestamp.ToString()}] > {message}\n"; // text to append to the log file
             // log the event to the log file
             if (File.Exists(GeneralPaths.LOG_FILE_PATH) == false) //=> create file
             {
-                StreamWriter logFile = File.CreateText(GeneralPaths.LOG_FILE_PATH);
+                text = $"{Diagnostics.LOGFILE_HEADER_PREFIX} {DateTime.Now.ToString()}\n" + text;
 
-                logFile.WriteLine($"{Diagnostics.LOGFILE_HEADER_PREFIX} {DateTime.Now.ToString()}\n");
-
-                logFile.Close();
+                File.WriteAllText(GeneralPaths.LOG_FILE_PATH, Security.Encrypt(text));
             }
-
-            File.AppendAllText(GeneralPaths.LOG_FILE_PATH, $"[{DateTime.Now.ToString()}] > {message}\n");
-
+            else
+            {
+                text = Security.Decrypt(File.ReadAllText(GeneralPaths.LOG_FILE_PATH)) + text;
+                File.AppendAllText(GeneralPaths.LOG_FILE_PATH, Security.Encrypt(text));
+            }
+            
             // show a message box and stop applicationThread, depending on the options
             switch (severity)
             {
@@ -88,6 +100,8 @@ namespace CoDesigner_IDE
                     }
             }
 
+            Program.D0.BeginInvoke(Program.D0.LogEvent, this); // log event in the diagnostic form
+
         }
 
         /// <summary>
@@ -104,19 +118,23 @@ namespace CoDesigner_IDE
             this.origin = origin;
             this.severity = severity;
             this.code = code;
+            this.fullCode = (int)this.origin << 16 | this.code;
             this.message = message + ":" +silentMessage;
+            this.timestamp = DateTime.Now;
 
+            string text = $"[{timestamp.ToString()}] > {message}\n"; // text to append to the log file
             // log the event to the log file
             if (File.Exists(GeneralPaths.LOG_FILE_PATH) == false) //=> create file
             {
-                StreamWriter logFile = File.CreateText(GeneralPaths.LOG_FILE_PATH);
+                text = $"{Diagnostics.LOGFILE_HEADER_PREFIX} {DateTime.Now.ToString()}\n" + text;
 
-                logFile.WriteLine($"{Diagnostics.LOGFILE_HEADER_PREFIX} {DateTime.Now.ToString()}\n");
-
-                logFile.Close();
+                File.WriteAllText(GeneralPaths.LOG_FILE_PATH, Security.Encrypt(text));
             }
-
-            File.AppendAllText(GeneralPaths.LOG_FILE_PATH,$"[{DateTime.Now.ToString()}] > {message}\n");
+            else
+            {
+                text = Security.Decrypt(File.ReadAllText(GeneralPaths.LOG_FILE_PATH)) + text;
+                File.AppendAllText(GeneralPaths.LOG_FILE_PATH, Security.Encrypt(text));
+            }
 
             // show a message box and stop applicationThread, depending on the options
             switch (severity)
@@ -155,9 +173,22 @@ namespace CoDesigner_IDE
                         break;
                     }
             }
+            Program.D0.BeginInvoke(Program.D0.LogEvent, this); // log event in the diagnostic form
 
         }
 
+        /// <summary>
+        /// Returns the current log event's string representation
+        /// </summary>
+        /// <returns>Details about the current event as a string</returns>
+        public new string ToString()
+        {
+            string eventText = "";
 
+            eventText += $"[{this.timestamp.ToString()}][{this.severity}][{this.fullCode}] > {this.message}";
+                
+
+            return eventText;
+        }
     }
 }

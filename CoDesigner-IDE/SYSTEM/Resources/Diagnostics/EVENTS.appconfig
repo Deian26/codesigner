@@ -181,5 +181,13 @@
 	<event code="41" origin="1" severity="2">
 		<EN message="Could not add generator ID."/>
 	</event>
+
+	<event code="42" origin="1" severity="2">
+		<EN message="Could not load the public report encryption key."/>
+	</event>
+
+	<event code="43" origin="1" severity="2">
+		<EN message="Could not load the selected log."/>
+	</event>
 	
 </events>

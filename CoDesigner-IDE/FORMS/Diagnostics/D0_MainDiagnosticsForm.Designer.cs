@@ -29,24 +29,24 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            D0_listBox_DiagnosticLog = new System.Windows.Forms.ListBox();
             D0_groupBox_DiagnosticLog = new System.Windows.Forms.GroupBox();
+            D0_treeView_DiagnosticEventLog = new System.Windows.Forms.TreeView();
             D0_button_ExportLog = new System.Windows.Forms.Button();
-            D0_button_OpenLogsFolder = new System.Windows.Forms.Button();
+            D0_button_OpenLog = new System.Windows.Forms.Button();
             D0_groupBox_Status = new System.Windows.Forms.GroupBox();
             D0_treeView_DefaultElementsVersions = new System.Windows.Forms.TreeView();
-            D0_richTextBox_UserStatus = new System.Windows.Forms.RichTextBox();
-            D0_label_UserStatusLabel = new System.Windows.Forms.Label();
+            D0_richTextBox_AccessDetails = new System.Windows.Forms.RichTextBox();
+            D0_label_AccessDetailsLabel = new System.Windows.Forms.Label();
             D0_label_StatusVersions = new System.Windows.Forms.Label();
             D0_groupBox_Actions = new System.Windows.Forms.GroupBox();
             D0_groupBox_Diagnostics = new System.Windows.Forms.GroupBox();
-            D0_button_AddApprovedGeneratorId = new System.Windows.Forms.Button();
             D0_button_GenerateDiagnosticStatusReport = new System.Windows.Forms.Button();
             D0_groupBox_PerformanceOptions = new System.Windows.Forms.GroupBox();
             D0_button_SimPerformanceCheck = new System.Windows.Forms.Button();
             D0_groupBox_Customization = new System.Windows.Forms.GroupBox();
             D0_button_OpenCustomizationUtility = new System.Windows.Forms.Button();
             D0_groupBox_Security = new System.Windows.Forms.GroupBox();
+            D0_button_AddApprovedGeneratorId = new System.Windows.Forms.Button();
             D0_button_Actions_CheckLocalFiles = new System.Windows.Forms.Button();
             D0_checkBox_AllowThirdPartyComponents = new System.Windows.Forms.CheckBox();
             D0_textBox_ActionDetailsTitle = new System.Windows.Forms.TextBox();
@@ -58,6 +58,7 @@
             D0_saveFileDialog_ExportLog = new System.Windows.Forms.SaveFileDialog();
             D0_saveFileDialog_SaveActionReport = new System.Windows.Forms.SaveFileDialog();
             D0_errorProvider_DiagnosticsActionsErrors = new System.Windows.Forms.ErrorProvider(components);
+            D0_openFileDialog_LoadLog = new System.Windows.Forms.OpenFileDialog();
             D0_groupBox_DiagnosticLog.SuspendLayout();
             D0_groupBox_Status.SuspendLayout();
             D0_groupBox_Actions.SuspendLayout();
@@ -70,21 +71,11 @@
             ((System.ComponentModel.ISupportInitialize)D0_errorProvider_DiagnosticsActionsErrors).BeginInit();
             SuspendLayout();
             // 
-            // D0_listBox_DiagnosticLog
-            // 
-            D0_listBox_DiagnosticLog.FormattingEnabled = true;
-            D0_listBox_DiagnosticLog.ItemHeight = 18;
-            D0_listBox_DiagnosticLog.Location = new System.Drawing.Point(9, 24);
-            D0_listBox_DiagnosticLog.Margin = new System.Windows.Forms.Padding(4);
-            D0_listBox_DiagnosticLog.Name = "D0_listBox_DiagnosticLog";
-            D0_listBox_DiagnosticLog.Size = new System.Drawing.Size(664, 238);
-            D0_listBox_DiagnosticLog.TabIndex = 0;
-            // 
             // D0_groupBox_DiagnosticLog
             // 
+            D0_groupBox_DiagnosticLog.Controls.Add(D0_treeView_DiagnosticEventLog);
             D0_groupBox_DiagnosticLog.Controls.Add(D0_button_ExportLog);
-            D0_groupBox_DiagnosticLog.Controls.Add(D0_button_OpenLogsFolder);
-            D0_groupBox_DiagnosticLog.Controls.Add(D0_listBox_DiagnosticLog);
+            D0_groupBox_DiagnosticLog.Controls.Add(D0_button_OpenLog);
             D0_groupBox_DiagnosticLog.Location = new System.Drawing.Point(20, 349);
             D0_groupBox_DiagnosticLog.Margin = new System.Windows.Forms.Padding(4);
             D0_groupBox_DiagnosticLog.Name = "D0_groupBox_DiagnosticLog";
@@ -94,9 +85,22 @@
             D0_groupBox_DiagnosticLog.TabStop = false;
             D0_groupBox_DiagnosticLog.Text = "Log";
             // 
+            // D0_treeView_DiagnosticEventLog
+            // 
+            D0_treeView_DiagnosticEventLog.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 238);
+            D0_treeView_DiagnosticEventLog.FullRowSelect = true;
+            D0_treeView_DiagnosticEventLog.HideSelection = false;
+            D0_treeView_DiagnosticEventLog.Location = new System.Drawing.Point(9, 24);
+            D0_treeView_DiagnosticEventLog.Margin = new System.Windows.Forms.Padding(4);
+            D0_treeView_DiagnosticEventLog.Name = "D0_treeView_DiagnosticEventLog";
+            D0_treeView_DiagnosticEventLog.ShowNodeToolTips = true;
+            D0_treeView_DiagnosticEventLog.Size = new System.Drawing.Size(658, 235);
+            D0_treeView_DiagnosticEventLog.TabIndex = 1;
+            D0_treeView_DiagnosticEventLog.NodeMouseClick += D0_treeView_DiagnosticEventLog_NodeMouseClick;
+            // 
             // D0_button_ExportLog
             // 
-            D0_button_ExportLog.Location = new System.Drawing.Point(521, 269);
+            D0_button_ExportLog.Location = new System.Drawing.Point(514, 269);
             D0_button_ExportLog.Name = "D0_button_ExportLog";
             D0_button_ExportLog.Size = new System.Drawing.Size(153, 34);
             D0_button_ExportLog.TabIndex = 3;
@@ -104,21 +108,21 @@
             D0_button_ExportLog.UseVisualStyleBackColor = true;
             D0_button_ExportLog.Click += D0_button_ExportLog_Click;
             // 
-            // D0_button_OpenLogsFolder
+            // D0_button_OpenLog
             // 
-            D0_button_OpenLogsFolder.Location = new System.Drawing.Point(9, 269);
-            D0_button_OpenLogsFolder.Name = "D0_button_OpenLogsFolder";
-            D0_button_OpenLogsFolder.Size = new System.Drawing.Size(153, 34);
-            D0_button_OpenLogsFolder.TabIndex = 2;
-            D0_button_OpenLogsFolder.Text = "Open logs folder";
-            D0_button_OpenLogsFolder.UseVisualStyleBackColor = true;
-            D0_button_OpenLogsFolder.Click += D0_button_OpenLogsFolder_Click;
+            D0_button_OpenLog.Location = new System.Drawing.Point(9, 269);
+            D0_button_OpenLog.Name = "D0_button_OpenLog";
+            D0_button_OpenLog.Size = new System.Drawing.Size(153, 34);
+            D0_button_OpenLog.TabIndex = 2;
+            D0_button_OpenLog.Text = "Open log";
+            D0_button_OpenLog.UseVisualStyleBackColor = true;
+            D0_button_OpenLog.Click += D0_button_OpenLog_Click;
             // 
             // D0_groupBox_Status
             // 
             D0_groupBox_Status.Controls.Add(D0_treeView_DefaultElementsVersions);
-            D0_groupBox_Status.Controls.Add(D0_richTextBox_UserStatus);
-            D0_groupBox_Status.Controls.Add(D0_label_UserStatusLabel);
+            D0_groupBox_Status.Controls.Add(D0_richTextBox_AccessDetails);
+            D0_groupBox_Status.Controls.Add(D0_label_AccessDetailsLabel);
             D0_groupBox_Status.Controls.Add(D0_label_StatusVersions);
             D0_groupBox_Status.Location = new System.Drawing.Point(19, 20);
             D0_groupBox_Status.Margin = new System.Windows.Forms.Padding(4);
@@ -134,35 +138,35 @@
             D0_treeView_DefaultElementsVersions.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 238);
             D0_treeView_DefaultElementsVersions.FullRowSelect = true;
             D0_treeView_DefaultElementsVersions.HideSelection = false;
-            D0_treeView_DefaultElementsVersions.Location = new System.Drawing.Point(10, 164);
+            D0_treeView_DefaultElementsVersions.Location = new System.Drawing.Point(10, 151);
             D0_treeView_DefaultElementsVersions.Margin = new System.Windows.Forms.Padding(4);
             D0_treeView_DefaultElementsVersions.Name = "D0_treeView_DefaultElementsVersions";
             D0_treeView_DefaultElementsVersions.ShowNodeToolTips = true;
-            D0_treeView_DefaultElementsVersions.Size = new System.Drawing.Size(230, 149);
+            D0_treeView_DefaultElementsVersions.Size = new System.Drawing.Size(230, 162);
             D0_treeView_DefaultElementsVersions.TabIndex = 1;
             // 
-            // D0_richTextBox_UserStatus
+            // D0_richTextBox_AccessDetails
             // 
-            D0_richTextBox_UserStatus.Location = new System.Drawing.Point(7, 44);
-            D0_richTextBox_UserStatus.Name = "D0_richTextBox_UserStatus";
-            D0_richTextBox_UserStatus.ReadOnly = true;
-            D0_richTextBox_UserStatus.Size = new System.Drawing.Size(233, 94);
-            D0_richTextBox_UserStatus.TabIndex = 7;
-            D0_richTextBox_UserStatus.Text = "";
+            D0_richTextBox_AccessDetails.Location = new System.Drawing.Point(7, 44);
+            D0_richTextBox_AccessDetails.Name = "D0_richTextBox_AccessDetails";
+            D0_richTextBox_AccessDetails.ReadOnly = true;
+            D0_richTextBox_AccessDetails.Size = new System.Drawing.Size(233, 63);
+            D0_richTextBox_AccessDetails.TabIndex = 7;
+            D0_richTextBox_AccessDetails.Text = "";
             // 
-            // D0_label_UserStatusLabel
+            // D0_label_AccessDetailsLabel
             // 
-            D0_label_UserStatusLabel.AutoSize = true;
-            D0_label_UserStatusLabel.Location = new System.Drawing.Point(10, 23);
-            D0_label_UserStatusLabel.Name = "D0_label_UserStatusLabel";
-            D0_label_UserStatusLabel.Size = new System.Drawing.Size(48, 18);
-            D0_label_UserStatusLabel.TabIndex = 6;
-            D0_label_UserStatusLabel.Text = "User:";
+            D0_label_AccessDetailsLabel.AutoSize = true;
+            D0_label_AccessDetailsLabel.Location = new System.Drawing.Point(10, 23);
+            D0_label_AccessDetailsLabel.Name = "D0_label_AccessDetailsLabel";
+            D0_label_AccessDetailsLabel.Size = new System.Drawing.Size(64, 18);
+            D0_label_AccessDetailsLabel.TabIndex = 6;
+            D0_label_AccessDetailsLabel.Text = "Access:";
             // 
             // D0_label_StatusVersions
             // 
             D0_label_StatusVersions.AutoSize = true;
-            D0_label_StatusVersions.Location = new System.Drawing.Point(7, 142);
+            D0_label_StatusVersions.Location = new System.Drawing.Point(7, 129);
             D0_label_StatusVersions.Name = "D0_label_StatusVersions";
             D0_label_StatusVersions.Size = new System.Drawing.Size(80, 18);
             D0_label_StatusVersions.TabIndex = 4;
@@ -178,31 +182,20 @@
             D0_groupBox_Actions.Margin = new System.Windows.Forms.Padding(4);
             D0_groupBox_Actions.Name = "D0_groupBox_Actions";
             D0_groupBox_Actions.Padding = new System.Windows.Forms.Padding(4);
-            D0_groupBox_Actions.Size = new System.Drawing.Size(427, 321);
+            D0_groupBox_Actions.Size = new System.Drawing.Size(446, 321);
             D0_groupBox_Actions.TabIndex = 3;
             D0_groupBox_Actions.TabStop = false;
             D0_groupBox_Actions.Text = "Actions";
             // 
             // D0_groupBox_Diagnostics
             // 
-            D0_groupBox_Diagnostics.Controls.Add(D0_button_AddApprovedGeneratorId);
             D0_groupBox_Diagnostics.Controls.Add(D0_button_GenerateDiagnosticStatusReport);
             D0_groupBox_Diagnostics.Location = new System.Drawing.Point(7, 129);
             D0_groupBox_Diagnostics.Name = "D0_groupBox_Diagnostics";
-            D0_groupBox_Diagnostics.Size = new System.Drawing.Size(413, 82);
+            D0_groupBox_Diagnostics.Size = new System.Drawing.Size(432, 82);
             D0_groupBox_Diagnostics.TabIndex = 5;
             D0_groupBox_Diagnostics.TabStop = false;
             D0_groupBox_Diagnostics.Text = "Diagnostics";
-            // 
-            // D0_button_AddApprovedGeneratorId
-            // 
-            D0_button_AddApprovedGeneratorId.Location = new System.Drawing.Point(145, 22);
-            D0_button_AddApprovedGeneratorId.Name = "D0_button_AddApprovedGeneratorId";
-            D0_button_AddApprovedGeneratorId.Size = new System.Drawing.Size(133, 50);
-            D0_button_AddApprovedGeneratorId.TabIndex = 3;
-            D0_button_AddApprovedGeneratorId.Text = "Add Generator ID";
-            D0_button_AddApprovedGeneratorId.UseVisualStyleBackColor = true;
-            D0_button_AddApprovedGeneratorId.Click += D0_button_AddApprovedGeneratorId_Click;
             // 
             // D0_button_GenerateDiagnosticStatusReport
             // 
@@ -219,14 +212,14 @@
             D0_groupBox_PerformanceOptions.Controls.Add(D0_button_SimPerformanceCheck);
             D0_groupBox_PerformanceOptions.Location = new System.Drawing.Point(7, 217);
             D0_groupBox_PerformanceOptions.Name = "D0_groupBox_PerformanceOptions";
-            D0_groupBox_PerformanceOptions.Size = new System.Drawing.Size(200, 82);
+            D0_groupBox_PerformanceOptions.Size = new System.Drawing.Size(219, 82);
             D0_groupBox_PerformanceOptions.TabIndex = 5;
             D0_groupBox_PerformanceOptions.TabStop = false;
             D0_groupBox_PerformanceOptions.Text = "Performance";
             // 
             // D0_button_SimPerformanceCheck
             // 
-            D0_button_SimPerformanceCheck.Location = new System.Drawing.Point(6, 22);
+            D0_button_SimPerformanceCheck.Location = new System.Drawing.Point(21, 22);
             D0_button_SimPerformanceCheck.Name = "D0_button_SimPerformanceCheck";
             D0_button_SimPerformanceCheck.Size = new System.Drawing.Size(180, 50);
             D0_button_SimPerformanceCheck.TabIndex = 2;
@@ -237,16 +230,16 @@
             // D0_groupBox_Customization
             // 
             D0_groupBox_Customization.Controls.Add(D0_button_OpenCustomizationUtility);
-            D0_groupBox_Customization.Location = new System.Drawing.Point(213, 217);
+            D0_groupBox_Customization.Location = new System.Drawing.Point(232, 217);
             D0_groupBox_Customization.Name = "D0_groupBox_Customization";
-            D0_groupBox_Customization.Size = new System.Drawing.Size(200, 82);
+            D0_groupBox_Customization.Size = new System.Drawing.Size(207, 82);
             D0_groupBox_Customization.TabIndex = 4;
             D0_groupBox_Customization.TabStop = false;
             D0_groupBox_Customization.Text = "Customization";
             // 
             // D0_button_OpenCustomizationUtility
             // 
-            D0_button_OpenCustomizationUtility.Location = new System.Drawing.Point(6, 22);
+            D0_button_OpenCustomizationUtility.Location = new System.Drawing.Point(15, 22);
             D0_button_OpenCustomizationUtility.Name = "D0_button_OpenCustomizationUtility";
             D0_button_OpenCustomizationUtility.Size = new System.Drawing.Size(180, 50);
             D0_button_OpenCustomizationUtility.TabIndex = 2;
@@ -256,20 +249,31 @@
             // 
             // D0_groupBox_Security
             // 
+            D0_groupBox_Security.Controls.Add(D0_button_AddApprovedGeneratorId);
             D0_groupBox_Security.Controls.Add(D0_button_Actions_CheckLocalFiles);
             D0_groupBox_Security.Controls.Add(D0_checkBox_AllowThirdPartyComponents);
             D0_groupBox_Security.Location = new System.Drawing.Point(7, 23);
             D0_groupBox_Security.Name = "D0_groupBox_Security";
-            D0_groupBox_Security.Size = new System.Drawing.Size(413, 100);
+            D0_groupBox_Security.Size = new System.Drawing.Size(432, 100);
             D0_groupBox_Security.TabIndex = 3;
             D0_groupBox_Security.TabStop = false;
             D0_groupBox_Security.Text = "Security";
+            // 
+            // D0_button_AddApprovedGeneratorId
+            // 
+            D0_button_AddApprovedGeneratorId.Location = new System.Drawing.Point(6, 62);
+            D0_button_AddApprovedGeneratorId.Name = "D0_button_AddApprovedGeneratorId";
+            D0_button_AddApprovedGeneratorId.Size = new System.Drawing.Size(144, 32);
+            D0_button_AddApprovedGeneratorId.TabIndex = 3;
+            D0_button_AddApprovedGeneratorId.Text = "Add Generator ID";
+            D0_button_AddApprovedGeneratorId.UseVisualStyleBackColor = true;
+            D0_button_AddApprovedGeneratorId.Click += D0_button_AddApprovedGeneratorId_Click;
             // 
             // D0_button_Actions_CheckLocalFiles
             // 
             D0_button_Actions_CheckLocalFiles.Location = new System.Drawing.Point(6, 22);
             D0_button_Actions_CheckLocalFiles.Name = "D0_button_Actions_CheckLocalFiles";
-            D0_button_Actions_CheckLocalFiles.Size = new System.Drawing.Size(180, 34);
+            D0_button_Actions_CheckLocalFiles.Size = new System.Drawing.Size(144, 34);
             D0_button_Actions_CheckLocalFiles.TabIndex = 0;
             D0_button_Actions_CheckLocalFiles.Text = "Check files";
             D0_button_Actions_CheckLocalFiles.UseVisualStyleBackColor = true;
@@ -280,7 +284,7 @@
             D0_checkBox_AllowThirdPartyComponents.AutoSize = true;
             D0_checkBox_AllowThirdPartyComponents.Checked = true;
             D0_checkBox_AllowThirdPartyComponents.CheckState = System.Windows.Forms.CheckState.Checked;
-            D0_checkBox_AllowThirdPartyComponents.Location = new System.Drawing.Point(6, 62);
+            D0_checkBox_AllowThirdPartyComponents.Location = new System.Drawing.Point(156, 23);
             D0_checkBox_AllowThirdPartyComponents.Name = "D0_checkBox_AllowThirdPartyComponents";
             D0_checkBox_AllowThirdPartyComponents.Size = new System.Drawing.Size(251, 22);
             D0_checkBox_AllowThirdPartyComponents.TabIndex = 1;
@@ -299,11 +303,11 @@
             // D0_groupBox_Elements
             // 
             D0_groupBox_Elements.Controls.Add(D0_treeView_LoadedElements);
-            D0_groupBox_Elements.Location = new System.Drawing.Point(709, 20);
+            D0_groupBox_Elements.Location = new System.Drawing.Point(728, 20);
             D0_groupBox_Elements.Margin = new System.Windows.Forms.Padding(4);
             D0_groupBox_Elements.Name = "D0_groupBox_Elements";
             D0_groupBox_Elements.Padding = new System.Windows.Forms.Padding(4);
-            D0_groupBox_Elements.Size = new System.Drawing.Size(383, 321);
+            D0_groupBox_Elements.Size = new System.Drawing.Size(364, 321);
             D0_groupBox_Elements.TabIndex = 4;
             D0_groupBox_Elements.TabStop = false;
             D0_groupBox_Elements.Text = "Elements";
@@ -313,11 +317,11 @@
             D0_treeView_LoadedElements.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 238);
             D0_treeView_LoadedElements.FullRowSelect = true;
             D0_treeView_LoadedElements.HideSelection = false;
-            D0_treeView_LoadedElements.Location = new System.Drawing.Point(10, 31);
+            D0_treeView_LoadedElements.Location = new System.Drawing.Point(11, 31);
             D0_treeView_LoadedElements.Margin = new System.Windows.Forms.Padding(4);
             D0_treeView_LoadedElements.Name = "D0_treeView_LoadedElements";
             D0_treeView_LoadedElements.ShowNodeToolTips = true;
-            D0_treeView_LoadedElements.Size = new System.Drawing.Size(365, 282);
+            D0_treeView_LoadedElements.Size = new System.Drawing.Size(345, 282);
             D0_treeView_LoadedElements.TabIndex = 0;
             D0_treeView_LoadedElements.NodeMouseDoubleClick += D0_treeView_LoadedElements_NodeMouseDoubleClick;
             // 
@@ -354,6 +358,10 @@
             D0_treeView_ActionDetails.ShowNodeToolTips = true;
             D0_treeView_ActionDetails.Size = new System.Drawing.Size(369, 242);
             D0_treeView_ActionDetails.TabIndex = 1;
+            // 
+            // D0_saveFileDialog_ExportLog
+            // 
+            D0_saveFileDialog_ExportLog.FileName = "Log";
             // 
             // D0_errorProvider_DiagnosticsActionsErrors
             // 
@@ -393,8 +401,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox D0_listBox_DiagnosticLog;
         private System.Windows.Forms.GroupBox D0_groupBox_DiagnosticLog;
         private System.Windows.Forms.GroupBox D0_groupBox_Status;
         private System.Windows.Forms.GroupBox D0_groupBox_Actions;
@@ -406,15 +412,15 @@
         private System.Windows.Forms.CheckBox D0_checkBox_AllowThirdPartyComponents;
         private System.Windows.Forms.Label D0_label_StatusVersions;
         private System.Windows.Forms.Button D0_button_ExportLog;
-        private System.Windows.Forms.Button D0_button_OpenLogsFolder;
+        private System.Windows.Forms.Button D0_button_OpenLog;
         private System.Windows.Forms.SaveFileDialog D0_saveFileDialog_ExportLog;
         private System.Windows.Forms.Button D0_button_OpenCustomizationUtility;
         private System.Windows.Forms.GroupBox D0_groupBox_Customization;
         private System.Windows.Forms.GroupBox D0_groupBox_Security;
         private System.Windows.Forms.GroupBox D0_groupBox_PerformanceOptions;
         private System.Windows.Forms.Button D0_button_SimPerformanceCheck;
-        private System.Windows.Forms.RichTextBox D0_richTextBox_UserStatus;
-        private System.Windows.Forms.Label D0_label_UserStatusLabel;
+        private System.Windows.Forms.RichTextBox D0_richTextBox_AccessDetails;
+        private System.Windows.Forms.Label D0_label_AccessDetailsLabel;
         private System.Windows.Forms.GroupBox D0_groupBox_Diagnostics;
         private System.Windows.Forms.Button D0_button_GenerateDiagnosticStatusReport;
         private System.Windows.Forms.TreeView D0_treeView_DefaultElementsVersions;
@@ -423,5 +429,7 @@
         private System.Windows.Forms.SaveFileDialog D0_saveFileDialog_SaveActionReport;
         private System.Windows.Forms.ErrorProvider D0_errorProvider_DiagnosticsActionsErrors;
         private System.Windows.Forms.Button D0_button_AddApprovedGeneratorId;
+        private System.Windows.Forms.TreeView D0_treeView_DiagnosticEventLog;
+        private System.Windows.Forms.OpenFileDialog D0_openFileDialog_LoadLog;
     }
 }

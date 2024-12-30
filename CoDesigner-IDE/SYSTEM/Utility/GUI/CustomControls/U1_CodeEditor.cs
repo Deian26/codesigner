@@ -1,5 +1,4 @@
-﻿using CoDesigner_IDE.FORMS.IDE.Projects;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 

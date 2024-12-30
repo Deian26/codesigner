@@ -1,4 +1,4 @@
-﻿namespace CoDesigner_IDE.FORMS.IDE.Projects
+﻿namespace CoDesigner_IDE
 {
     partial class F3_1_TextEditor
     {

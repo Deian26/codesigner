@@ -15,7 +15,7 @@ namespace CoDesigner_IDE
     internal static class Security
     {
         // RSA enc/dec key
-        private static byte[] RSA_PUBLIC_KEY { get; } = { 0x20, 0x07, 0x52, 0x11, 0x17, 0x45, 0x52, 0x40, 0x19, 0x02, 0x57, 0x51, 0x07, 0x22, 0x76, 0x92 };
+        private static byte[] RSA_PUBLIC_KEY { get; set; } = null;
         
         // used tokens
         private static List<Security.Token> UsedTokens = new List<Security.Token>();
@@ -743,6 +743,23 @@ namespace CoDesigner_IDE
 
             }
 
+        }
+
+        /// <summary>
+        /// Loads the public key used to encrypt data before being sent for analysis
+        /// </summary>
+        public static void LoadReportEncKey()
+        {
+            try
+            {
+                string publicKeyString = File.ReadAllText(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY);
+
+                Security.RSA_PUBLIC_KEY = Convert.FromBase64String(publicKeyString);
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.SEC_ERROR_LOADING_REPORT_ENC_KEY, ex.Message);
+            }
         }
     }
 }

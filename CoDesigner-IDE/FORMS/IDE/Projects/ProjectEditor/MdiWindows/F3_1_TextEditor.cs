@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CoDesigner_IDE.FORMS.IDE.Projects
+namespace CoDesigner_IDE
 {
     public partial class F3_1_TextEditor : Form
     {

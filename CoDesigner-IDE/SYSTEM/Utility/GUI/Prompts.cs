@@ -115,11 +115,15 @@ namespace CoDesigner_IDE
 
             public const int DIAGNOSTICS_ELEMENT_DETAILS_TOOLTIP_VERSION                 = 3;
             public const int DIAGNOSTICS_ELEMENT_DETAILS_TOOLTIP_ORIGIN                  = 4;
-            public const int DIAGNOSTICS_CHECK_FILES_ACTION_TITLE                        = 5;
+            public const int DIAGNOSTICS_CHECK_FILES_ACTION_NAME                         = 5;
             public const int DIAGNOSTICS_CHECK_FILES_INVALID_FILE_TOOLTIP                = 6;
             public const int DIAGNOSTICS_ERR_MESSAGE_NO_DIAGNOSTIC_ACTION_SELECTED       = 7;
             public const int ERROR_ACTIVATING_PROGRAM_NO_KEY_PROVIDED                    = 8;
             public const int ERROR_ACTIVATING_PROGRAM_INVALID_PROVIDED                   = 9;
+            public const int DIAGNOSTICS_USER_STATUS_ACCESS_LEVEL                        = 10;
+            public const int DIAGNOSTICS_USER_STATUS_TOKEN_TS                            = 11;
+            public const int DIAGNOSTICS_ACTION_REPORT_SUCCESS                           = 12;
+            public const int DIAGNOSTICS_ACTION_REPORT_FAILURE                           = 13;
         }
 
         /// <summary>

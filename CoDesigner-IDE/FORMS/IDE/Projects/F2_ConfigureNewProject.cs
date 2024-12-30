@@ -9,9 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using static CoDesigner_IDE.Diagnostics;
 
-namespace CoDesigner_IDE.FORMS.IDE.Projects
+namespace CoDesigner_IDE
 {
     public partial class F2_ConfigureNewProject : Form
     {
@@ -109,7 +108,7 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
             //check project name
             if (isValidName(this.F2_textBox_NewProjectName.Text.ToString().Trim()) == false)
             {
-                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.INVALID_PROJECT_NAME);
+                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_PROJECT_NAME);
                 return;
             }
 
@@ -133,7 +132,7 @@ namespace CoDesigner_IDE.FORMS.IDE.Projects
                 
             }catch (Exception ex)
             {
-                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.INVALID_PROJECT_FOLDER_LOC, ex.Message); //error creating a folder for the new project
+                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_PROJECT_FOLDER_LOC, ex.Message); //error creating a folder for the new project
                 return;
             }
 

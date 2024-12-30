@@ -1,4 +1,5 @@
 ﻿using CoDesigner_IDE.FORMS.IDE;
+using CoDesigner_IDE.FORMS.IDE.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,7 +28,7 @@ namespace CoDesigner_IDE
         private string D0_TreeViewNodeTitle_DEFAULT_LANGUAGES = "Languages";
         private string D0_TreeViewNodeTitle_DEFAULT_THEMES = "Themes";
 
-        //node tags
+        // node tags
         private const string D0_TreeViewNodeTitleTag = "Title";
         private const string D0_TreeViewNodeComponentTag = "Component";
         private const string D0_TreeViewNodeEventTag = "Event";
@@ -46,7 +47,7 @@ namespace CoDesigner_IDE
         public DelegateType_UpdateDiagnosticLog Delegate_UpdateLoadedElementsDisplay;
         #endregion
 
-        private enum AccessLevelGroup { ADMIN = 1, ADMIN_WORKSTATION = 3 } // access levels with permision to access this form
+        private enum AccessLevelGroup { ADMIN = 1, ADMIN_WORKSTATION = 3 } // access levels with permission to access this form
 
         // form properties
         private Size NormalSize { get; } // default form size to be used
@@ -68,6 +69,18 @@ namespace CoDesigner_IDE
 
             // instantiate delegates
             this.Delegate_UpdateLoadedElementsDisplay = UpdateLoadedElementsDisplay;
+
+            // set properties for controls
+            // load default log event images from default system icons
+            this.D0_treeView_DiagnosticEventLog.ImageList = new ImageList();
+            this.D0_treeView_DiagnosticEventLog.ImageKey = null;
+
+            this.D0_treeView_DiagnosticEventLog.ImageList.Images.Add(null, SystemIcons.Information);
+            this.D0_treeView_DiagnosticEventLog.ImageList.Images.Add(Enum.GetName(Diagnostics.EVENT_SEVERITY.Fatal), SystemIcons.Error);
+            this.D0_treeView_DiagnosticEventLog.ImageList.Images.Add(Enum.GetName(Diagnostics.EVENT_SEVERITY.Error), SystemIcons.Error);
+            this.D0_treeView_DiagnosticEventLog.ImageList.Images.Add(Enum.GetName(Diagnostics.EVENT_SEVERITY.Warning), SystemIcons.Warning);
+            this.D0_treeView_DiagnosticEventLog.ImageList.Images.Add(Enum.GetName(Diagnostics.EVENT_SEVERITY.Debug), SystemIcons.Question);
+            this.D0_treeView_DiagnosticEventLog.ImageList.Images.Add(Enum.GetName(Diagnostics.EVENT_SEVERITY.Info), SystemIcons.Information);
         }
 
         private void D0_MainDiagnosticsPanel_Load(object sender, EventArgs e)
@@ -91,10 +104,13 @@ namespace CoDesigner_IDE
         internal bool DisplayForm(Security.Token token)
         {
             bool accessGranted = false;
+            string tokenTsStr = null, tokenAccessLevelStr = null;
 
             if (token == null)
             {
                 accessGranted = Security.CurrentSecurityProperties.ADMIN_WORKSTATION == true;
+                tokenAccessLevelStr = Enum.GetName(Security.AccessLevel.ADMIN_WORKSTATION);
+                tokenTsStr = "N/A";
             }
             else
             {
@@ -108,9 +124,9 @@ namespace CoDesigner_IDE
                         Utility.StoreSecurityProperties(
                             true
                             );
-
                     }
-
+                    tokenAccessLevelStr = Enum.GetName(token.ACCESS_LEVEL);
+                    tokenTsStr = token.TS.ToString();
                     accessGranted = true;
                 }
             }
@@ -118,6 +134,11 @@ namespace CoDesigner_IDE
 
             if (accessGranted == true)
             {
+                // display current user status
+                this.D0_richTextBox_AccessDetails.Text = ""; // reset text box
+                this.D0_richTextBox_AccessDetails.Text += (Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_USER_STATUS_ACCESS_LEVEL) + tokenAccessLevelStr + "\n");
+                this.D0_richTextBox_AccessDetails.Text += (Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_USER_STATUS_TOKEN_TS) + tokenTsStr + "\n");
+
                 this.SetFormDefaultSize();
                 this.Visible = true;
                 this.WindowState = FormWindowState.Normal;
@@ -338,16 +359,14 @@ namespace CoDesigner_IDE
         private void D0_button_Actions_CheckLocalFiles_Click(object sender, EventArgs e)
         {
             // reset display controls
-            this.D0_textBox_ActionDetailsTitle.Text = Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_CHECK_FILES_ACTION_TITLE);
+            this.D0_textBox_ActionDetailsTitle.Text = Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_CHECK_FILES_ACTION_NAME);
             this.D0_treeView_ActionDetails.Nodes.Clear();
-
-            // set the tag for the actions report tree view control
-            this.D0_treeView_ActionDetails.Tag = Diagnostics.ACTON_REPORT_TAG_CHECK_FILES;
 
             try
             {
                 // recursively parse program files for files to be checked
                 string[] filePaths = Directory.EnumerateFiles(GeneralPaths.TOP_REL_PATH_BIN, "", SearchOption.AllDirectories).ToArray();
+                bool checkResult = true; // true if all files are valid, false otherwise
 
                 foreach (string filePath in filePaths)
                 {
@@ -356,7 +375,7 @@ namespace CoDesigner_IDE
                     if (fileCheckResults.recognized == true && fileCheckResults.validFile == false) // invalid, but recognized file
                     {
                         string[] filePathSegments = filePath.Split(".");
-
+                        checkResult = false;
                         /* Format:
                          * filename (key = full path)
                          * |- full path
@@ -368,6 +387,19 @@ namespace CoDesigner_IDE
                         invalidFileNode.Nodes.Add(DateTime.UtcNow.ToString()); // UTC timestamp for when the file was checked (now)
                     }
                 }
+
+                string[] resultMessages =
+                {
+                    Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE,Prompts.PromptMessageCodes.DIAGNOSTICS_ACTION_REPORT_FAILURE),
+                    Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE,Prompts.PromptMessageCodes.DIAGNOSTICS_ACTION_REPORT_SUCCESS)
+                };
+
+                this.D0_treeView_ActionDetails.Tag = new Diagnostics.DiagActionResults( // store a summary of the results
+                        checkResult,
+                        Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_CHECK_FILES_ACTION_NAME),
+                        Diagnostics.ActionId.CHECK_FILES,
+                        resultMessages[Convert.ToInt32(checkResult)]
+                    );
             }
             catch (Exception ex)
             {
@@ -379,12 +411,6 @@ namespace CoDesigner_IDE
         private void D0_checkBox_AllowThirdPartyComponents_CheckedChanged(object sender, EventArgs e)
         {
             ComponentFactory.FLAG_AllowThirdPartyComponents = this.D0_checkBox_AllowThirdPartyComponents.Checked;
-        }
-
-        private void D0_button_OpenLogsFolder_Click(object sender, EventArgs e)
-        {
-            // open the logs folder
-            Process.Start("explorer.exe", Path.GetFullPath(GeneralPaths.LOG_FOLDER_PATH));
         }
 
         private void D0_button_ExportLog_Click(object sender, EventArgs e)
@@ -399,9 +425,9 @@ namespace CoDesigner_IDE
                 // export the log to a new file
                 string logText = $"{Diagnostics.LOGFILE_HEADER_PREFIX} {DateTime.Now.ToString()}\n\n";
 
-                foreach (string line in this.D0_listBox_DiagnosticLog.Items)
+                foreach (LogEvent line in Diagnostics.EventLog)
                 {
-                    logText += line + "\n";
+                    logText += line.ToString() + "\n";
                 }
 
                 // create / overwrite file
@@ -440,6 +466,7 @@ namespace CoDesigner_IDE
         {
             try
             {
+                // clear report items
                 this.D0_errorProvider_DiagnosticsActionsErrors.Clear();
 
                 // check if the action report tag is set
@@ -472,9 +499,9 @@ namespace CoDesigner_IDE
                 xmlWriter.WriteStartElement("report");
 
                 // generate a report based on the tree view control's contents
-                switch (this.D0_treeView_ActionDetails.Tag)
+                switch (((Diagnostics.DiagActionResults)this.D0_treeView_ActionDetails.Tag).actionId)
                 {
-                    case Diagnostics.ACTON_REPORT_TAG_CHECK_FILES: // check files action report
+                    case Diagnostics.ActionId.CHECK_FILES: // check files action report
                         {
                             foreach (XmlNode invalidFileNode in this.D0_treeView_ActionDetails.Nodes)
                             {
@@ -516,6 +543,9 @@ namespace CoDesigner_IDE
             {
                 Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_GENERATING_ACTION_REPORT, ex.Message);
             }
+
+            // reset tag
+            this.D0_treeView_ActionDetails.Tag = null;
         }
 
         private void D0_button_AddApprovedGeneratorId_Click(object sender, EventArgs e)
@@ -531,6 +561,53 @@ namespace CoDesigner_IDE
         private void D0_button_GenerateDiagnosticStatusReport_Click(object sender, EventArgs e)
         {
             //TODO: Implement status report generation
+        }
+
+        /// <summary>
+        /// Logs an event into the log control
+        /// </summary>
+        /// <param name="_event">Event details</param>
+        public void LogEvent(LogEvent _event)
+        {
+            TreeNode eventNode = this.D0_treeView_DiagnosticEventLog.Nodes.Add(_event.fullCode.ToString(), _event.message, Enum.GetName(_event.severity), Enum.GetName(_event.severity));
+
+            // add event details in sub-nodes of this node
+            eventNode.Nodes.Add("fullCode", $"0x{_event.fullCode:X4}"); // hex-format, 4 bytes
+            eventNode.Nodes.Add("origin", Enum.GetName(_event.origin));
+            eventNode.Nodes.Add("severity", Enum.GetName(_event.severity));
+            eventNode.Nodes.Add("timeStamp", _event.timestamp.ToString());
+        }
+
+        private void D0_treeView_DiagnosticEventLog_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+
+        }
+
+        private void D0_button_OpenLog_Click(object sender, EventArgs e)
+        {
+            // select a log
+            try
+            {
+                this.D0_openFileDialog_LoadLog.InitialDirectory = Directory.GetParent(GeneralPaths.LOG_FILE_PATH).FullName;
+
+                DialogResult openLogResult = this.D0_openFileDialog_LoadLog.ShowDialog();
+
+                if(openLogResult == DialogResult.OK)
+                {
+                    // decrypt and display log
+                    F5_DisplayText f5_DisplayLog = new F5_DisplayText(
+                        Security.Decrypt(File.ReadAllText(this.D0_openFileDialog_LoadLog.FileName)),
+                        this.D0_openFileDialog_LoadLog.FileName
+                        );
+
+                    f5_DisplayLog.ShowDialog();
+                    f5_DisplayLog.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.DIAG_ERROR_LOADING_LOG, ex.Message);
+            }
         }
     }
 }

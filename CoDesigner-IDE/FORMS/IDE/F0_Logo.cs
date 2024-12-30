@@ -394,7 +394,8 @@ namespace CoDesigner_IDE
                 Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_DIRECTORY_SEL_IMAGE_FILEPATH));
 
 
-            //=// Project images
+            //=// Images
+            // project images
             ProjectManagement.ProjectStructureImages.Images.Add(
                 ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_PROJECT_UNSEL_IMGKEY,
                 Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_PROJECT_UNSEL_IMAGE_FILEPATH));
@@ -403,6 +404,7 @@ namespace CoDesigner_IDE
                 ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_PROJECT_SEL_IMGKEY,
                 Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_PROJECT_SEL_IMAGE_FILEPATH));
 
+            //=// Security
             // load security details
             bool validGenIdsFile = Security.LoadApprovedGeneratorId();
             // check if this instance was activated and if not, request activation with an admin-utility
@@ -426,7 +428,7 @@ namespace CoDesigner_IDE
             }
 
             Security.LoadSecurityProperties();
-            
+            Security.LoadReportEncKey();
 
             //close form
             if (this.F0_progressBar_IdeLoading.Value == this.F0_progressBar_IdeLoading.Maximum)

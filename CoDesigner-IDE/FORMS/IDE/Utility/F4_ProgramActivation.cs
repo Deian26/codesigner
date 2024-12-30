@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CoDesigner_IDE.FORMS.IDE
+namespace CoDesigner_IDE
 {
     /// <summary>
     /// Defines a form for program activation (storing an initial, approved generator ID)
@@ -45,7 +45,7 @@ namespace CoDesigner_IDE.FORMS.IDE
                     Utility.PROGRAM_ACTIVATED = true;
 
                     // create a used tokens file with no tokens
-                    if(this.createUsedTokensFile == true) Security.StoreUsedTokens(true); // create the local used tokens file, if it does not exist
+                    if (this.createUsedTokensFile == true) Security.StoreUsedTokens(true); // create the local used tokens file, if it does not exist
                 }
                 else // invalid string format
                 {

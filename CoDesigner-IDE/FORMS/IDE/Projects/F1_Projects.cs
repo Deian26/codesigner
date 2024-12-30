@@ -1,4 +1,4 @@
-﻿using CoDesigner_IDE.FORMS.IDE.Projects;
+﻿using CoDesigner_IDE;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,10 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using static CoDesigner_IDE.Security;
 
-namespace CoDesigner_IDE.FORMS.IDE
+namespace CoDesigner_IDE
 {
+    /// <summary>
+    /// Displays project management options
+    /// </summary>
     [SupportedOSPlatform("windows")]
     public partial class F1_Projects : Form
     {

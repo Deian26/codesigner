@@ -1,4 +1,4 @@
-﻿namespace CoDesigner_IDE.FORMS.IDE
+﻿namespace CoDesigner_IDE
 {
     partial class F1_Projects
     {
