@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Admin_Utility.FORMS.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -44,7 +45,12 @@ namespace Admin_Utility
         private void U0_button_OpenDiagnosticsReport_Click(object sender, EventArgs e)
         {
             // load a diagnostic report into a new Diagnostic Investigator form
-            //TODO: Implement the Diagnostic Investigator utility
+            if(this.U0_openFileDialog_OpenDiagnosticsReport.ShowDialog() == DialogResult.OK)
+            {
+                U1_DiagnosticReportInvestigator u1_DiagReportInvestigator = new U1_DiagnosticReportInvestigator(this.U0_openFileDialog_OpenDiagnosticsReport.FileName);
+                if(u1_DiagReportInvestigator.IsDisposed == false) u1_DiagReportInvestigator.Show();
+                
+            }
         }
 
         private void U0_MainForm_Load(object sender, EventArgs e)

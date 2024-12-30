@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using static CoDesigner_IDE.Diagnostics;
 using System.Xml;
 using System.Runtime.Versioning;
+using System.Security.Cryptography;
 
 namespace CoDesigner_IDE
 {
@@ -428,8 +429,8 @@ namespace CoDesigner_IDE
             }
 
             Security.LoadSecurityProperties();
-            Security.LoadReportEncKey();
-
+            if(File.Exists(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY) == true) Security.LoadReportEncKey(); // should only be done when the program is (re)configured
+            
             //close form
             if (this.F0_progressBar_IdeLoading.Value == this.F0_progressBar_IdeLoading.Maximum)
             {

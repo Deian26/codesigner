@@ -14,9 +14,9 @@ namespace CoDesigner_IDE
     [SupportedOSPlatform("windows")]
     internal static class Security
     {
-        // RSA enc/dec key
-        private static byte[] RSA_PUBLIC_KEY { get; set; } = null;
-        
+        // RSA enc/dec 
+        private static readonly string RSA_KEY_CONTAINER_NAME = "RSA_KEY_CONTAINER";
+
         // used tokens
         private static List<Security.Token> UsedTokens = new List<Security.Token>();
         private static FileStream SEC_USED_TOKENS_FILESTREAM = null;
@@ -474,9 +474,10 @@ namespace CoDesigner_IDE
 
             try
             {
-                byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+                CspParameters cspParms = new CspParameters();
+                cspParms.KeyContainerName = Security.RSA_KEY_CONTAINER_NAME;
 
-                using (RSA rsa = RSA.Create())
+                using (RSA rsa = new RSACryptoServiceProvider(cspParms))
                 {
                     // encrypt
                     cipherText = Convert.ToBase64String(rsa.Encrypt(Encoding.UTF8.GetBytes(plainText), RSAEncryptionPadding.Pkcs1));
@@ -746,15 +747,24 @@ namespace CoDesigner_IDE
         }
 
         /// <summary>
-        /// Loads the public key used to encrypt data before being sent for analysis
+        /// Loads the public key used to encrypt data before being sent for analysis; should only be called on setup
         /// </summary>
         public static void LoadReportEncKey()
         {
             try
             {
-                string publicKeyString = File.ReadAllText(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY);
+                // extract and store the public key
+                byte[] publicKey = Convert.FromBase64String(File.ReadAllText(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY));
 
-                Security.RSA_PUBLIC_KEY = Convert.FromBase64String(publicKeyString);
+                CspParameters rsaCsp = new CspParameters();
+                rsaCsp.KeyContainerName = Security.RSA_KEY_CONTAINER_NAME;
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(rsaCsp);
+
+                rsa.PersistKeyInCsp = true;
+                rsa.ImportRSAPublicKey(publicKey, out _);
+
+                // delete public key file
+                File.Delete(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY);
             }
             catch (Exception ex)
             {

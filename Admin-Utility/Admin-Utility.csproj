@@ -13,8 +13,16 @@
     <ForceDesignerDPIUnaware>true</ForceDesignerDPIUnaware>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="OUTPUT\Configuration\**" />
+    <EmbeddedResource Remove="OUTPUT\Configuration\**" />
+    <None Remove="OUTPUT\Configuration\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Management" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SECURITY\Data\" />
   </ItemGroup>
 </Project>

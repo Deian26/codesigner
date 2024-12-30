@@ -497,6 +497,8 @@ namespace CoDesigner_IDE
 
                 xmlWriter.WriteStartDocument();
                 xmlWriter.WriteStartElement("report");
+                xmlWriter.WriteAttributeString("type",  // report type (name)
+                    Enum.GetName(typeof(Diagnostics.ActionId),((Diagnostics.DiagActionResults)this.D0_treeView_ActionDetails.Tag).actionId)); // write the type of the report
 
                 // generate a report based on the tree view control's contents
                 switch (((Diagnostics.DiagActionResults)this.D0_treeView_ActionDetails.Tag).actionId)
@@ -528,7 +530,7 @@ namespace CoDesigner_IDE
                 xmlWriter.Close();
 
                 // prompt the user for a path to save the report at
-                this.D0_saveFileDialog_SaveActionReport.FileName = $"Report_{this.D0_treeView_ActionDetails.Tag}.xml";
+                this.D0_saveFileDialog_SaveActionReport.FileName = $"Report - {((Diagnostics.DiagActionResults)this.D0_treeView_ActionDetails.Tag).actionName}.xml";
                 this.D0_saveFileDialog_SaveActionReport.DefaultExt = "xml";
                 this.D0_saveFileDialog_SaveActionReport.Filter = "Report (*.xml)|*.xml";
                 DialogResult saveReportDialogResult = this.D0_saveFileDialog_SaveActionReport.ShowDialog();

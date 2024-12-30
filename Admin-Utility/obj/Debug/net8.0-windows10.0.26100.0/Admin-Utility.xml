@@ -4,6 +4,48 @@
         <name>Admin-Utility</name>
     </assembly>
     <members>
+        <member name="T:Admin_Utility.FORMS.Diagnostics.U1_DiagnosticReportInvestigator">
+            <summary>
+            Loads the diagnostics report found at the given path
+            </summary>
+        </member>
+        <member name="M:Admin_Utility.FORMS.Diagnostics.U1_DiagnosticReportInvestigator.#ctor(System.String)">
+            <summary>
+            Creates a new diagnostic report investigator form
+            </summary>
+            <param name="reportPath">The report file path</param>
+        </member>
+        <member name="M:Admin_Utility.FORMS.Diagnostics.U1_DiagnosticReportInvestigator.parseNodes(System.Xml.XmlNode,System.Windows.Forms.TreeNode)">
+            <summary>
+            Recursively parses an XML tree representing a diagnostic report and displays the data contained within, in this form
+            </summary>
+            <param name="root">Tree / sub-tree root</param>
+            <param name="displayRoot">Tree node used to display details about the current XML node (root)</param>
+            <returns>The root of the next sub-tree to parse</returns>
+        </member>
+        <member name="M:Admin_Utility.FORMS.Diagnostics.U1_DiagnosticReportInvestigator.openReport">
+            <summary>
+            Opens the current report file
+            </summary>
+            <returns>true if the report could be opened; false, otherwise</returns>
+        </member>
+        <member name="F:Admin_Utility.FORMS.Diagnostics.U1_DiagnosticReportInvestigator.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Admin_Utility.FORMS.Diagnostics.U1_DiagnosticReportInvestigator.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Admin_Utility.FORMS.Diagnostics.U1_DiagnosticReportInvestigator.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="F:Admin_Utility.U0_MainForm.components">
             <summary>
             Required designer variable.
@@ -70,7 +112,7 @@
             <summary>
             Generates the machine's generator base ID
             </summary>
-            <param name="developmentToken">if true, the development generator id will be used</param>
+            <param name="developmentId">if true, the development generator id will be used</param>
             <returns>The machine's generator ID</returns>
         </member>
         <member name="M:Admin_Utility.Security.ToByteString(System.Byte[])">
@@ -87,12 +129,40 @@
             <param name="accessLevel">Access to be granted</param>
             <returns>The generated token string</returns>
         </member>
-        <member name="M:Admin_Utility.Security.AesDecrypt(System.String)">
+        <member name="M:Admin_Utility.Security.RsaDecrypt(System.String)">
             <summary>
-            Decrypts the provided AES-encrypted cipher text
+            Decrypts the given RSA-encrypted text
             </summary>
-            <param name="cipherText">Encrypted data</param>
-            <returns>The decrypted data, as a string</returns>
+            <param name="cipherText">Text to decrypt</param>
+            <returns>Plain text</returns>
+        </member>
+        <member name="M:Admin_Utility.Security.CreateAndStoreRsaParameters">
+            <summary>
+            Creates and stores a set of RSA parameters used for encrypting communication sent to the Admin-Utility
+            </summary>
+            <return>The RSA public key hexadecimal-string</return>
+        </member>
+        <member name="T:Admin_Utility.UTILITY.GeneralPaths">
+            <summary>
+            Paths and names
+            </summary>
+        </member>
+        <member name="T:Admin_Utility.Utility">
+            <summary>
+            Handles utility functions
+            </summary>
+        </member>
+        <member name="M:Admin_Utility.Utility.ConfigDataExists">
+            <summary>
+            Checks if the setup configuration data archive exists
+            </summary>
+            <returns>true if the data exists, false otherwise</returns>
+        </member>
+        <member name="M:Admin_Utility.Utility.GenerateSetupConfigData">
+            <summary>
+            Checks if the necessary configuration data already exist and if not, this method creates it.
+            </summary>
+            <returns>true if configuration data was generated, false otherwise</returns>
         </member>
     </members>
 </doc>

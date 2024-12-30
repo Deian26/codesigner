@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Admin_Utility.UTILITY;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Windows.Devices.Geolocation;
 using static Admin_Utility.Security;
 
 namespace Admin_Utility
@@ -16,12 +18,12 @@ namespace Admin_Utility
     /// <summary>
     /// Handles security-relevant avtions
     /// </summary>
+    [SupportedOSPlatform("windows")]
     internal static class Security
     {
-        // AES enc/dec key
-        private static byte[] AES_KEY { get; } = { 0x20, 0x07, 0x52, 0x11, 0x17, 0x45, 0x52, 0x40, 0x19, 0x02, 0x57, 0x51, 0x07, 0x22, 0x76, 0x92 };
         private static string GeneratorId { get; set; } = null;
 
+        public static readonly string RSA_KEY_CONTAINER_NAME = "RSA_KEY_CONTAINER";
         internal enum AccessLevel { NONE = 0, ADMIN = 1, USER = 2 , ADMIN_WORKSTATION = 3};
         
         internal static string[] TokenExpirationLimits = // seconds
@@ -111,7 +113,6 @@ namespace Admin_Utility
         /// </summary>
         /// <param name="input">Text to be hashed</param>
         /// <returns>Hashed text or null</returns>
-        [SupportedOSPlatform("windows")]
         internal static string GenerateHash(string input)
         {
             string cipherText = null;
@@ -134,15 +135,14 @@ namespace Admin_Utility
         /// <summary>
         /// Generates the machine's generator base ID
         /// </summary>
-        /// <param name="developmentToken">if true, the development generator id will be used</param>
+        /// <param name="developmentId">if true, the development generator id will be used</param>
         /// <returns>The machine's generator ID</returns>
-        [SupportedOSPlatform("windows")]
-        internal static string GetGeneratorId(bool developmentToken)
+        internal static string GetGeneratorId(bool developmentId)
         {
             //=// Generate ID
             string id = null;
 
-            if (developmentToken == true)
+            if (developmentId == true)
             {
                 id = "DEVELOPMENT";
             }
@@ -220,44 +220,43 @@ namespace Admin_Utility
         }
 
         /// <summary>
-        /// Decrypts the provided AES-encrypted cipher text
+        /// Decrypts the given RSA-encrypted text
         /// </summary>
-        /// <param name="cipherText">Encrypted data</param>
-        /// <returns>The decrypted data, as a string</returns>
-        public static string AesDecrypt(string cipherText)
+        /// <param name="cipherText">Text to decrypt</param>
+        /// <returns>Plain text</returns>
+        internal static string RsaDecrypt(string cipherText)
         {
             string plainText = null;
-
             try
             {
-                byte[] cipherTextBytes = Encoding.UTF8.GetBytes(cipherText);
+                CspParameters cspParms = new CspParameters();
+                cspParms.KeyContainerName = Security.RSA_KEY_CONTAINER_NAME;
 
-                using (Aes aes = Aes.Create())
+                using (RSA rsa = new RSACryptoServiceProvider(cspParms))
                 {
-                    aes.Mode = CipherMode.CBC;
-                    aes.GenerateIV();
-                    aes.Key = Security.AES_KEY;
-
-                    using (MemoryStream outputStream = new MemoryStream())
-                    {
-                        using (CryptoStream aesDecryptionStream = new CryptoStream(outputStream, aes.CreateDecryptor(), CryptoStreamMode.Write))
-                        {
-                            using (StreamReader streamReader = new StreamReader(aesDecryptionStream))
-                            {
-                                plainText = streamReader.ReadToEnd();
-                            }
-                        }
-                    }
+                    plainText = Encoding.UTF8.GetString(rsa.Decrypt(Convert.FromBase64String(cipherText),RSAEncryptionPadding.Pkcs1));
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Could not decrypt the AES-encrypted data. Details: {ex.Message}","ERROR Decrypting AES data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Could not decrypt the RSA-encrypted text: {ex.Message}", "Error Decrypting Text", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return plainText;
         }
-        
+
+        /// <summary>
+        /// Creates and stores a set of RSA parameters used for encrypting communication sent to the Admin-Utility
+        /// </summary>
+        /// <return>The RSA public key hexadecimal-string</return>
+        public static string CreateAndStoreRsaParameters()
+        {
+            CspParameters cspParms = new CspParameters();
+            cspParms.KeyContainerName = Security.RSA_KEY_CONTAINER_NAME;
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(cspParms); // store public key
+            return Convert.ToBase64String(rsa.ExportRSAPublicKey()); // export public encryption key
+
+        }
 
     }
 }
