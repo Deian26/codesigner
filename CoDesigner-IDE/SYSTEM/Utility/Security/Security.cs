@@ -16,6 +16,7 @@ namespace CoDesigner_IDE
     {
         // RSA enc/dec 
         private static readonly string RSA_KEY_CONTAINER_NAME = "RSA_KEY_CONTAINER";
+        private static readonly int AES_KEY_SIZE = 128;
 
         // used tokens
         private static List<Security.Token> UsedTokens = new List<Security.Token>();
@@ -324,8 +325,6 @@ namespace CoDesigner_IDE
         /// </summary>
         /// <param name="plainText">Text to be encrypted</param>
         /// <returns>The generated cipher text</returns>
-
-        //[SupportedOSPlatform("windows")]
         public static string Encrypt(string plainText)
         {
             string cipherText = null;
@@ -420,7 +419,7 @@ namespace CoDesigner_IDE
         /// Checks the given file, if its extension is recognized for this
         /// </summary>
         /// <param name="filePath">Path to the file to be checked</param>
-        /// <returns>A struct conaining the file check results</returns>
+        /// <returns>A struct containing the file check results</returns>
         public static Security.FileCheckResults CheckFileIntegrity(string filePath)
         {
             bool valid = false, recognized = true;
@@ -461,35 +460,6 @@ namespace CoDesigner_IDE
                 recognized, // recognized file
                 valid // valid file
                 );
-        }
-
-        /// <summary>
-        /// Encrypts the given text for storing it in a diagnostic report
-        /// </summary>
-        /// <param name="plainText">Text to be encrypted</param>
-        /// <returns>Encrypted text (string) or null if an error occurred</returns>
-        public static string DiagnosisEncrypt(string plainText)
-        {
-            string cipherText = null;
-
-            try
-            {
-                CspParameters cspParms = new CspParameters();
-                cspParms.KeyContainerName = Security.RSA_KEY_CONTAINER_NAME;
-
-                using (RSA rsa = new RSACryptoServiceProvider(cspParms))
-                {
-                    // encrypt
-                    cipherText = Convert.ToBase64String(rsa.Encrypt(Encoding.UTF8.GetBytes(plainText), RSAEncryptionPadding.Pkcs1));
-                }
-                
-            }
-            catch (Exception ex)
-            {
-                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_ENCRYPTING_DIAGNOSTIC_REPORT, ex.Message);
-            }
-
-            return cipherText;
         }
 
         /// <summary>
@@ -770,6 +740,80 @@ namespace CoDesigner_IDE
             {
                 Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.SEC_ERROR_LOADING_REPORT_ENC_KEY, ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Encrypts the given text using the public RSA key stored when the program was configured
+        /// </summary>
+        /// <param name="plainText">The plain text to be encrypted</param>
+        /// <returns>The cipher text</returns>
+        public static string RsaEncrypt(string plainText)
+        {
+            string cipherText = null;
+
+            try
+            {
+                CspParameters cspRsa = new CspParameters();
+                cspRsa.KeyContainerName = Security.RSA_KEY_CONTAINER_NAME;
+
+                using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(cspRsa))
+                {
+                    cipherText = Convert.ToBase64String(rsa.Encrypt(Convert.FromBase64String(plainText),RSAEncryptionPadding.Pkcs1));
+                }
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.SEC_DIAG_ENC_ERROR, ex.Message);
+            }
+
+            return cipherText;
+        }
+
+        /// <summary>
+        /// Encrypts the specified string using AES and adds the key (RSA-encrypted)
+        /// </summary>
+        /// <param name="plainText">The plain text to be encrypted</param>
+        /// <returns>The AES encrypted cipher text, along with the RSA-encrypted key (1st line)</returns>
+        public static string AesEncrypt(string plainText)
+        {
+            string cipherText = null;
+
+            try
+            {
+                // generate and encrypt AES key
+                using (Aes aes = Aes.Create())
+                {
+                    aes.KeySize = Security.AES_KEY_SIZE;
+                    aes.GenerateKey();
+                    aes.GenerateIV();
+                    
+                    cipherText = Security.RsaEncrypt(Convert.ToBase64String(aes.Key)) + "\r\n"; // key
+                    cipherText += Security.RsaEncrypt(Convert.ToBase64String(aes.IV)) + "\r\n"; // IV
+
+                    // encrypt text
+                    using (MemoryStream outputStream = new MemoryStream())
+                    {
+                        using (CryptoStream cryptoStream = new CryptoStream(outputStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                        {
+                            using (StreamWriter streamWriter = new StreamWriter(cryptoStream))
+                            {
+                                streamWriter.Write(plainText);
+                            }
+                        }
+
+                        cipherText += Convert.ToBase64String(outputStream.ToArray());
+                    }
+
+                    
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.SEC_DIAG_ENC_ERROR, ex.Message);
+            }
+
+            return cipherText;
         }
     }
 }

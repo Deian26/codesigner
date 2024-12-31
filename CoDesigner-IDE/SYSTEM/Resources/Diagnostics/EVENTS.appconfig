@@ -189,5 +189,9 @@
 	<event code="43" origin="1" severity="2">
 		<EN message="Could not load the selected log."/>
 	</event>
+
+	<event code="44" origin="1" severity="3">
+		<EN message="Could not encrypt the diagnostic report."/>
+	</event>
 	
 </events>

@@ -357,7 +357,11 @@ namespace CoDesigner_IDE
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void D0_button_Actions_CheckLocalFiles_Click(object sender, EventArgs e)
+
         {
+            // reset tag
+            this.D0_treeView_ActionDetails.Tag = null;
+
             // reset display controls
             this.D0_textBox_ActionDetailsTitle.Text = Prompts.GetMessageText(Prompts.DEFAULT_MESSAGES_ORIGIN_CODE, Prompts.PromptMessageCodes.DIAGNOSTICS_CHECK_FILES_ACTION_NAME);
             this.D0_treeView_ActionDetails.Nodes.Clear();
@@ -431,7 +435,7 @@ namespace CoDesigner_IDE
                 }
 
                 // create / overwrite file
-                File.AppendAllText(this.D0_saveFileDialog_ExportLog.FileName, logText);
+                File.AppendAllText(this.D0_saveFileDialog_ExportLog.FileName, Security.AesEncrypt(logText));
             }
         }
 
@@ -537,7 +541,7 @@ namespace CoDesigner_IDE
 
                 if (saveReportDialogResult == DialogResult.OK)
                 {
-                    File.WriteAllText(this.D0_saveFileDialog_SaveActionReport.FileName, Security.DiagnosisEncrypt(xmlText.ToString()));
+                    File.WriteAllText(this.D0_saveFileDialog_SaveActionReport.FileName, Security.AesEncrypt(xmlText.ToString()));
                 }
 
             }
@@ -545,9 +549,6 @@ namespace CoDesigner_IDE
             {
                 Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_GENERATING_ACTION_REPORT, ex.Message);
             }
-
-            // reset tag
-            this.D0_treeView_ActionDetails.Tag = null;
         }
 
         private void D0_button_AddApprovedGeneratorId_Click(object sender, EventArgs e)

@@ -79,7 +79,7 @@ namespace Admin_Utility.FORMS.Diagnostics
 
             try
             {
-                string reportPlainText = Security.RsaDecrypt(File.ReadAllText(reportPath));
+                string reportPlainText = Security.AesDecryptFile(reportPath);
 
                 // parse report text
                 XmlDocument xml = new XmlDocument();

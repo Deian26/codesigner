@@ -247,6 +247,7 @@ namespace CoDesigner_IDE
             public const int SEC_ERROR_ADDING_GEN_ID                        = 41;
             public const int SEC_ERROR_LOADING_REPORT_ENC_KEY               = 42;
             public const int DIAG_ERROR_LOADING_LOG                         = 43;
+            public const int SEC_DIAG_ENC_ERROR                             = 44;
         }
         #endregion
 

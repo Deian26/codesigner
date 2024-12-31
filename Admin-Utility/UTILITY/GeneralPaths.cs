@@ -24,10 +24,17 @@ namespace Admin_Utility.UTILITY
         public static readonly string OUTPUT_CONFIG_RSA_PUBLIC_KEY = Path.Combine(new string[] { GeneralPaths.OUTPUT_CONFIG_DIR, "SEC_PUBLIC_REPORT_ENC_KEY.sec" }); // public RSA key
         public static readonly string OUTPUT_CONFIG_CRT_GEN_ID = Path.Combine(new string[] { GeneralPaths.OUTPUT_CONFIG_DIR, "SEC_CONFIG_GEN_ID.sec" }); // this machine's generator ID
 
+        //=// Storage
+        public static readonly string STORAGE = Path.Combine(new string[] { GeneralPaths.TOP_REL_PATH, "STORAGE" }); // local storage folder
+
+        //=// User-specific
+        public static readonly string LOCAL_USERS_STORAGE_DIR = Path.Combine(new string[] {GeneralPaths.STORAGE, "UserData" }); // directory used to store user-specific data
         #endregion
 
         #region names
-
+        //==// Security
+        public static readonly string SEC_GENERATED_TOKENS_SUBDIR_NAME = "GeneratedTokens";
+        public static readonly string GENERATED_TOKEN_FILE_EXT = ".tok"; // the extension used for files storing generated tokens
         #endregion
     }
 }

@@ -12,6 +12,8 @@ namespace Admin_Utility
     [SupportedOSPlatform("windows")]
     internal static class Start
     {
+        public static U0_MainForm U0 = new U0_MainForm();
+
         [STAThread]
         static void Main()
         {
@@ -31,7 +33,7 @@ namespace Admin_Utility
             }
 
             // start application
-            Application.Run(new U0_MainForm());
+            Application.Run(Start.U0);
         }
     }
 }

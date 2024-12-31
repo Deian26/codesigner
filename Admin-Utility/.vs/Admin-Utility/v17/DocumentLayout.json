@@ -3,24 +3,12 @@
   "WorkspaceRootPath": "D:\\CoDesigner-IDE\\Admin-Utility\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\security\\security.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,8 +19,20 @@
       "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:utility\\utility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\utility\\generalpaths.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:utility\\generalpaths.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|D:\\CoDesigner-IDE\\Admin-Utility\\forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -57,95 +57,94 @@
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs [Design]",
               "RelativeToolTip": "FORMS\\U0_MainForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-30T19:48:27.233Z",
+              "WhenOpened": "2024-12-31T15:13:02.418Z",
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "GeneralPaths.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\UTILITY\\GeneralPaths.cs",
               "RelativeDocumentMoniker": "UTILITY\\GeneralPaths.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\UTILITY\\GeneralPaths.cs",
               "RelativeToolTip": "UTILITY\\GeneralPaths.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAcwBUAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAuwAwAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-30T14:31:28.377Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 3,
               "Title": "Utility.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\UTILITY\\Utility.cs",
               "RelativeDocumentMoniker": "UTILITY\\Utility.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\UTILITY\\Utility.cs",
               "RelativeToolTip": "UTILITY\\Utility.cs",
-              "ViewState": "AgIAADQAAAAAAAAAAAArwEQAAABxAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAowDQAAABXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-30T14:19:11.733Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Start.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\Start.cs",
               "RelativeDocumentMoniker": "Start.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\Start.cs",
               "RelativeToolTip": "Start.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAADwvxgAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAwwCMAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-30T14:17:18.077Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "U1_DiagnosticReportInvestigator.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\Diagnostics\\U1_DiagnosticReportInvestigator.cs",
               "RelativeDocumentMoniker": "FORMS\\Diagnostics\\U1_DiagnosticReportInvestigator.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\Diagnostics\\U1_DiagnosticReportInvestigator.cs",
               "RelativeToolTip": "FORMS\\Diagnostics\\U1_DiagnosticReportInvestigator.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAA4wCgAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAIwFEAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-30T13:39:19.566Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "U1_DiagnosticReportInvestigator.cs [Design]",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\Diagnostics\\U1_DiagnosticReportInvestigator.cs",
               "RelativeDocumentMoniker": "FORMS\\Diagnostics\\U1_DiagnosticReportInvestigator.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\Diagnostics\\U1_DiagnosticReportInvestigator.cs [Design]",
               "RelativeToolTip": "FORMS\\Diagnostics\\U1_DiagnosticReportInvestigator.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-30T13:37:58.089Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2024-12-30T13:37:58.089Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "Security.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\SECURITY\\Security.cs",
               "RelativeDocumentMoniker": "SECURITY\\Security.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\SECURITY\\Security.cs",
               "RelativeToolTip": "SECURITY\\Security.cs",
-              "ViewState": "AgIAAOgAAAAAAAAAAAAiwPUAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAgwB4AAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-29T19:41:05.411Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "U0_MainForm.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs",
               "RelativeDocumentMoniker": "FORMS\\U0_MainForm.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs",
               "RelativeToolTip": "FORMS\\U0_MainForm.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAnwDEAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAAC4AAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-29T19:41:00.925Z",
               "EditorCaption": ""
