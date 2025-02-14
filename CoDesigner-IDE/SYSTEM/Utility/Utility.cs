@@ -6,11 +6,12 @@ using System.Linq;
 using System.Management;
 using System.Reflection;
 using System.Runtime.Versioning;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace CoDesigner_IDE
+namespace CoDesigner_IDE.SYSTEM.Utility
 {
     /// <summary>
     /// Handles utility actions
@@ -18,13 +19,12 @@ namespace CoDesigner_IDE
     [SupportedOSPlatform("windows")]
     internal static class Utility
     {
-        private static string HASHED_UUID = null;
         public static bool PROGRAM_ACTIVATED { get; set; } = false; // is set to true when the program is activated using data from an Admin-Utility program
         #region colours
         public static Color BACKCOLOUR_ERROR { get; } = Color.Salmon;
         public static Color BACKCOLOUR_DEFAULT_CONTROL { get; } = Color.White;
         #endregion
-        
+
         /// <summary>
         /// Headers for configuration file segments
         /// </summary>
@@ -34,37 +34,9 @@ namespace CoDesigner_IDE
             public const string XML_DATA = "X";
         }
 
-        private const string CONFIG_FILE_SEGMENT_SEPARATOR = "#"; 
-        private const string CONFIG_FILE_SEGMENT_HEADER_END_MARKER= "\\@";
+        private const string CONFIG_FILE_SEGMENT_SEPARATOR = "#";
+        private const string CONFIG_FILE_SEGMENT_HEADER_END_MARKER = "\\@";
 
-        /// <summary>
-        /// Returns the hashed UUID of this computer
-        /// </summary>
-        /// <returns>The hashed ID or null (if an error occurs)</returns>
-        public static string GetHashedUuid()
-        {
-            if (Utility.HASHED_UUID == null) // hashed ID not previously obtained
-            {
-                string id = null;
-                ManagementClass mng = new ManagementClass("Win32_ComputerSystemProduct");
-
-                foreach (ManagementObject obj in mng.GetInstances())
-                {
-                    id = obj.Properties["UUID"].Value.ToString(); //=> get the machine UUID
-
-                    id = id.Replace("-", ""); //=> remove separators
-                }
-
-                // hash ID
-                if (id != null)
-                    id = Security.GenerateHash(id);
-
-                Utility.HASHED_UUID = id; // store hashed id
-            }
-
-            return Utility.HASHED_UUID;
-        }
-    
         /// <summary>
         /// Sets the security properties that will be used starting with the next application start
         /// </summary>
@@ -73,7 +45,7 @@ namespace CoDesigner_IDE
         {
             try
             {
-                // combine new and currnet security properties
+                // combine new and current security properties
                 Security.SecurityProperties newSecurityProperties = new Security.SecurityProperties(
                     Security.CurrentSecurityProperties.ADMIN_WORKSTATION | adminWorkstation
                     );
@@ -92,8 +64,8 @@ namespace CoDesigner_IDE
                 xmlWriterSettings.NewLineChars = "\r\n";
                 StringBuilder xmlText = new StringBuilder();
 
-                XmlWriter xmlWriter = XmlWriter.Create(xmlText,xmlWriterSettings);
-                
+                XmlWriter xmlWriter = XmlWriter.Create(xmlText, xmlWriterSettings);
+
                 //=// Write properties
                 xmlWriter.WriteStartDocument();
                 xmlWriter.WriteStartElement("SEC-PROPERTIES");
@@ -101,19 +73,19 @@ namespace CoDesigner_IDE
                 //==// admin workstation
                 xmlWriter.WriteStartElement("ADMIN-WORKSTATION");
 
-                xmlWriter.WriteAttributeString("id", Utility.GetHashedUuid());
-                xmlWriter.WriteAttributeString("value",newSecurityProperties.ADMIN_WORKSTATION.ToString());
-                
+                xmlWriter.WriteAttributeString("id", Security.GetHashedGuid());
+                xmlWriter.WriteAttributeString("value", newSecurityProperties.ADMIN_WORKSTATION.ToString());
+
                 xmlWriter.WriteEndElement();
                 //=//
                 xmlWriter.WriteEndElement();
                 xmlWriter.WriteEndDocument();
-                
+
                 xmlWriter.Close();
 
                 string enc = Security.Encrypt(xmlText.ToString());
                 File.WriteAllText(GeneralPaths.SEC_PROPERTIES_FILE_PATH, enc); //locally encrypt the file
-                
+
             }
             catch (Exception ex)
             {
@@ -139,7 +111,7 @@ namespace CoDesigner_IDE
         /// </summary>
         /// <param name="configFilePath">The path to the configuration file to be parsed</param>
         /// <returns>An array containing the configuration file segments found, or null if an error occurs</returns>
-        public static Dictionary<string,string> GetConfigFileSegments(string configFilePath)
+        public static Dictionary<string, string> GetConfigFileSegments(string configFilePath)
         {
             Dictionary<string, string> configFileSegments = new Dictionary<string, string>();
 
@@ -150,25 +122,25 @@ namespace CoDesigner_IDE
                 string[] segmentSubsegments;
 
                 // get segments
-                foreach(string segment in configFileText.Split(Utility.CONFIG_FILE_SEGMENT_SEPARATOR))
-                {                    
+                foreach (string segment in configFileText.Split(CONFIG_FILE_SEGMENT_SEPARATOR))
+                {
                     if (segment.Equals(string.Empty) == true) continue; //=> skip empty strings
 
                     // extract segment details
-                    segmentSubsegments = segment.Split(Utility.CONFIG_FILE_SEGMENT_HEADER_END_MARKER);
+                    segmentSubsegments = segment.Split(CONFIG_FILE_SEGMENT_HEADER_END_MARKER);
 
                     // check signature
                     configFileSegments.Add(segmentSubsegments[0], segmentSubsegments[1]); //=> key = header, value = config data
-                    
+
                 }
             }
             catch (Exception ex)
             {
-                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_PARSING_CONFIG_FILES,ex.Message);
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_PARSING_CONFIG_FILES, ex.Message);
                 configFileSegments = null;
             }
 
-            if(configFileSegments != null) return configFileSegments;
+            if (configFileSegments != null) return configFileSegments;
             else return null;
         }
     }

@@ -13,6 +13,7 @@ using static CoDesigner_IDE.Diagnostics;
 using System.Xml;
 using System.Runtime.Versioning;
 using System.Security.Cryptography;
+using CoDesigner_IDE.SYSTEM.Utility;
 
 namespace CoDesigner_IDE
 {
@@ -87,7 +88,7 @@ namespace CoDesigner_IDE
                     ProjectManagement.StoreActiveProjects();
                 }
                 string activeProjectsEnc = File.ReadAllText(GeneralPaths.ACTIVE_PROJECTS_FILEPATH);
-                activeProjectsFile.LoadXml(Security.Decrypt(activeProjectsEnc));
+                activeProjectsFile.LoadXml(Security.DirectLoggingDecrypt(activeProjectsEnc));
 
 
                 // check values
@@ -429,7 +430,7 @@ namespace CoDesigner_IDE
             }
 
             Security.LoadSecurityProperties();
-            if(File.Exists(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY) == true) Security.LoadReportEncKey(); // should only be done when the program is (re)configured
+            if(File.Exists(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY_FILE_PATH) == true) Security.LoadReportEncKey(); // should only be done when the program is (re)configured
             
             //close form
             if (this.F0_progressBar_IdeLoading.Value == this.F0_progressBar_IdeLoading.Maximum)

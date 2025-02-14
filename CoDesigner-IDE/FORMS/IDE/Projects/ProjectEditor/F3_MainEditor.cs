@@ -4,12 +4,14 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CoDesigner_IDE
 {
+    [SupportedOSPlatform("windows")]
     public partial class F3_MainEditor : Form
     {
         public Dictionary<string,F3_1_TextEditor> TextEditors = new Dictionary<string,F3_1_TextEditor>(); //=> this project's list of text editors

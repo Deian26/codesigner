@@ -80,7 +80,7 @@
             D0_groupBox_DiagnosticLog.Margin = new System.Windows.Forms.Padding(4);
             D0_groupBox_DiagnosticLog.Name = "D0_groupBox_DiagnosticLog";
             D0_groupBox_DiagnosticLog.Padding = new System.Windows.Forms.Padding(4);
-            D0_groupBox_DiagnosticLog.Size = new System.Drawing.Size(681, 311);
+            D0_groupBox_DiagnosticLog.Size = new System.Drawing.Size(700, 311);
             D0_groupBox_DiagnosticLog.TabIndex = 1;
             D0_groupBox_DiagnosticLog.TabStop = false;
             D0_groupBox_DiagnosticLog.Text = "Log";
@@ -94,13 +94,13 @@
             D0_treeView_DiagnosticEventLog.Margin = new System.Windows.Forms.Padding(4);
             D0_treeView_DiagnosticEventLog.Name = "D0_treeView_DiagnosticEventLog";
             D0_treeView_DiagnosticEventLog.ShowNodeToolTips = true;
-            D0_treeView_DiagnosticEventLog.Size = new System.Drawing.Size(658, 235);
+            D0_treeView_DiagnosticEventLog.Size = new System.Drawing.Size(684, 235);
             D0_treeView_DiagnosticEventLog.TabIndex = 1;
             D0_treeView_DiagnosticEventLog.NodeMouseClick += D0_treeView_DiagnosticEventLog_NodeMouseClick;
             // 
             // D0_button_ExportLog
             // 
-            D0_button_ExportLog.Location = new System.Drawing.Point(514, 269);
+            D0_button_ExportLog.Location = new System.Drawing.Point(540, 269);
             D0_button_ExportLog.Name = "D0_button_ExportLog";
             D0_button_ExportLog.Size = new System.Drawing.Size(153, 34);
             D0_button_ExportLog.TabIndex = 3;
@@ -294,10 +294,10 @@
             // 
             // D0_textBox_ActionDetailsTitle
             // 
-            D0_textBox_ActionDetailsTitle.Location = new System.Drawing.Point(6, 31);
+            D0_textBox_ActionDetailsTitle.Location = new System.Drawing.Point(11, 29);
             D0_textBox_ActionDetailsTitle.Name = "D0_textBox_ActionDetailsTitle";
             D0_textBox_ActionDetailsTitle.ReadOnly = true;
-            D0_textBox_ActionDetailsTitle.Size = new System.Drawing.Size(266, 23);
+            D0_textBox_ActionDetailsTitle.Size = new System.Drawing.Size(250, 23);
             D0_textBox_ActionDetailsTitle.TabIndex = 1;
             // 
             // D0_groupBox_Elements
@@ -330,16 +330,16 @@
             D0_groupBox_ElementDetails.Controls.Add(D0_button_ExportActionResults);
             D0_groupBox_ElementDetails.Controls.Add(D0_treeView_ActionDetails);
             D0_groupBox_ElementDetails.Controls.Add(D0_textBox_ActionDetailsTitle);
-            D0_groupBox_ElementDetails.Location = new System.Drawing.Point(709, 349);
+            D0_groupBox_ElementDetails.Location = new System.Drawing.Point(728, 349);
             D0_groupBox_ElementDetails.Name = "D0_groupBox_ElementDetails";
-            D0_groupBox_ElementDetails.Size = new System.Drawing.Size(384, 312);
+            D0_groupBox_ElementDetails.Size = new System.Drawing.Size(365, 312);
             D0_groupBox_ElementDetails.TabIndex = 5;
             D0_groupBox_ElementDetails.TabStop = false;
             D0_groupBox_ElementDetails.Text = "Action details";
             // 
             // D0_button_ExportActionResults
             // 
-            D0_button_ExportActionResults.Location = new System.Drawing.Point(278, 24);
+            D0_button_ExportActionResults.Location = new System.Drawing.Point(267, 24);
             D0_button_ExportActionResults.Name = "D0_button_ExportActionResults";
             D0_button_ExportActionResults.Size = new System.Drawing.Size(75, 30);
             D0_button_ExportActionResults.TabIndex = 2;
@@ -352,11 +352,11 @@
             D0_treeView_ActionDetails.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 238);
             D0_treeView_ActionDetails.FullRowSelect = true;
             D0_treeView_ActionDetails.HideSelection = false;
-            D0_treeView_ActionDetails.Location = new System.Drawing.Point(6, 61);
+            D0_treeView_ActionDetails.Location = new System.Drawing.Point(11, 63);
             D0_treeView_ActionDetails.Margin = new System.Windows.Forms.Padding(4);
             D0_treeView_ActionDetails.Name = "D0_treeView_ActionDetails";
             D0_treeView_ActionDetails.ShowNodeToolTips = true;
-            D0_treeView_ActionDetails.Size = new System.Drawing.Size(369, 242);
+            D0_treeView_ActionDetails.Size = new System.Drawing.Size(345, 242);
             D0_treeView_ActionDetails.TabIndex = 1;
             // 
             // D0_saveFileDialog_ExportLog
@@ -381,6 +381,7 @@
             Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 238);
             Margin = new System.Windows.Forms.Padding(4);
             Name = "D0_MainDiagnosticsForm";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             Text = "Diagnostics";
             FormClosing += D0_MainDiagnosticsForm_FormClosing;
             Load += D0_MainDiagnosticsPanel_Load;

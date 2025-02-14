@@ -79,7 +79,7 @@ namespace CoDesigner_IDE
         private void F2_ConfigureNewProject_Load(object sender, EventArgs e)
         {
 #if DEBUG
-            this.F2_textBox_SelectedProjectLocation.Text = "A:\\Development_Software\\Playground\\MCL_Project\\MCL_Project";
+            this.F2_textBox_SelectedProjectLocation.Text = "D:\\Sandbox\\CoDesigner-IDE Projects\\SandboxProject";
 #endif
             //set minimum and maximum form sizes
             this.MinimumSize = this.MaximumSize = this.Size;

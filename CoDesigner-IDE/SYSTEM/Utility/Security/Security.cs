@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoDesigner_IDE.SYSTEM.Utility;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Versioning;
@@ -337,7 +338,7 @@ namespace CoDesigner_IDE
                         {
                             byte[] bytePlainText = Encoding.UTF8.GetBytes(plainText);
 
-                            cipherText = Convert.ToBase64String(ProtectedData.Protect(bytePlainText, Encoding.UTF8.GetBytes(Utility.GetHashedUuid()), DataProtectionScope.CurrentUser));
+                            cipherText = Convert.ToBase64String(ProtectedData.Protect(bytePlainText, Encoding.UTF8.GetBytes(Security.GetHashedGuid()), DataProtectionScope.CurrentUser));
                             break;
                         }
                     default: // log event and do not encrypt data
@@ -363,7 +364,6 @@ namespace CoDesigner_IDE
         /// <param name="cipherText">Text to be decrypted</param>
         /// <returns>The plain text representation of the provided cipher-text</returns>
         
-        //[SupportedOSPlatform("windows")]
         internal static string Decrypt(string cipherText)
         {
             string plainText = null;
@@ -375,7 +375,7 @@ namespace CoDesigner_IDE
                 {
                     case PlatformID.Win32NT: // windows
                         {
-                            plainText = Encoding.UTF8.GetString(ProtectedData.Unprotect(Convert.FromBase64String(cipherText), Encoding.UTF8.GetBytes(Utility.GetHashedUuid()), DataProtectionScope.CurrentUser));
+                            plainText = Encoding.UTF8.GetString(ProtectedData.Unprotect(Convert.FromBase64String(cipherText), Encoding.UTF8.GetBytes(Security.GetHashedGuid()), DataProtectionScope.CurrentUser));
 
                             break;
                         }
@@ -391,6 +391,45 @@ namespace CoDesigner_IDE
             {
                 plainText = null; // just in case
                 Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.DEC_ERROR, ex.Message);
+            }
+
+            return plainText;
+        }
+
+        /// <summary>
+        /// Decrypts the provided text (C# ProtectedData class; Windows only) and directly logs errors; this is to be used in 
+        /// case the events have not yet been loaded or an error causes loading errors.
+        /// </summary>
+        /// <param name="cipherText">Text to be decrypted</param>
+        /// <returns>The plain text representation of the provided cipher-text</returns>
+
+        internal static string DirectLoggingDecrypt(string cipherText)
+        {
+            string plainText = null;
+
+            try
+            {
+                // platform handling for possible future extensions
+                switch (System.Environment.OSVersion.Platform) // use different encryption methods or do not encrypt the data at all, depending on the OS
+                {
+                    case PlatformID.Win32NT: // windows
+                        {
+                            plainText = Encoding.UTF8.GetString(ProtectedData.Unprotect(Convert.FromBase64String(cipherText), Encoding.UTF8.GetBytes(Security.GetHashedGuid()), DataProtectionScope.CurrentUser));
+
+                            break;
+                        }
+                    default: // log event and return null
+                        {
+                            plainText = null;
+                            Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.DEC_ERROR_UNSUPPORTED_OS);
+                            break;
+                        }
+                }
+            }
+            catch (Exception ex) // error encrypting data -> return null
+            {
+                plainText = null; // just in case
+                Diagnostics.LogDirectSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.DEC_ERROR, Diagnostics.EVENT_SEVERITY.Fatal , ex.Message);
             }
 
             return plainText;
@@ -592,7 +631,7 @@ namespace CoDesigner_IDE
                 {
                     xmlWriter.WriteStartElement("USED-TOKEN");
 
-                    xmlWriter.WriteAttributeString("machine-id", Utility.GetHashedUuid());
+                    xmlWriter.WriteAttributeString("machine-id", Security.GetHashedGuid());
                     xmlWriter.WriteAttributeString("token-string", usedToken.TOKEN_STRING);
 
                     xmlWriter.WriteEndElement();
@@ -638,7 +677,7 @@ namespace CoDesigner_IDE
                             case "USED-TOKEN":
                                 {
                                     // verify machine id
-                                    if (usedToken.Attributes["machine-id"].Value.Equals(Utility.GetHashedUuid()) == true)
+                                    if (usedToken.Attributes["machine-id"].Value.Equals(Security.GetHashedGuid()) == true)
                                     {
                                         // create a Token object and add it to the list of used tokens
                                         Security.AddUsedToken(new Security.Token(usedToken.Attributes["token-string"].Value));
@@ -651,14 +690,15 @@ namespace CoDesigner_IDE
                                 }
                         }
                     }
+
+                    // lock file; this will be closed when the application is closed
+                    Security.SEC_USED_TOKENS_FILESTREAM = File.Open(GeneralPaths.SEC_USED_TOKENS_FILE_PATH, FileMode.Open);
                 }
                 else // error: the used tokens file was deleted => stop application
                 {
                     Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_LOADING_USED_SEC_TOKENS);
                 }
-
-                // lock file; this will be closed when the application is closed
-                Security.SEC_USED_TOKENS_FILESTREAM = File.Open(GeneralPaths.SEC_USED_TOKENS_FILE_PATH, FileMode.Open);
+            
             }
             catch (Exception ex)
             {
@@ -690,7 +730,7 @@ namespace CoDesigner_IDE
                         {
                             case "ADMIN-WORKSTATION":
                                 {
-                                    if (Utility.GetHashedUuid().Equals(node.Attributes["id"].Value) == true)
+                                    if (Security.GetHashedGuid().Equals(node.Attributes["id"].Value) == true)
                                     {
                                         adminWorkstation = Convert.ToBoolean(node.Attributes["value"].Value.ToString());
                                     }
@@ -724,7 +764,7 @@ namespace CoDesigner_IDE
             try
             {
                 // extract and store the public key
-                byte[] publicKey = Convert.FromBase64String(File.ReadAllText(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY));
+                byte[] publicKey = Convert.FromBase64String(File.ReadAllText(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY_FILE_PATH));
 
                 CspParameters rsaCsp = new CspParameters();
                 rsaCsp.KeyContainerName = Security.RSA_KEY_CONTAINER_NAME;
@@ -734,7 +774,7 @@ namespace CoDesigner_IDE
                 rsa.ImportRSAPublicKey(publicKey, out _);
 
                 // delete public key file
-                File.Delete(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY);
+                File.Delete(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY_FILE_PATH);
             }
             catch (Exception ex)
             {
@@ -814,6 +854,37 @@ namespace CoDesigner_IDE
             }
 
             return cipherText;
+        }
+
+        /// <summary>
+        /// Retrieves the GUI generated for the current machine, stored in a local file, then hashes and returns it.
+        /// If the GUID was not generated before or the local file was deleted, a new GUID will be generated 
+        /// (data created / updated using the previous GUIDs might not be accessible anymore!), 
+        /// encrypted it for the current machine and stored in a local file.
+        /// 
+        /// </summary>
+        /// <returns>The hashed ID or null (if an error occurs)</returns>
+        public static string GetHashedGuid()
+        {
+            // read the generated GUID for this computer, if it exists
+            string hashedGuid = null;
+
+            if (File.Exists(GeneralPaths.SEC_HASHED_GUID_FILE_PATH) == true)
+            {
+                string encryptedFileText = File.ReadAllText(GeneralPaths.SEC_HASHED_GUID_FILE_PATH);
+                hashedGuid = Security.GenerateHash(Convert.ToBase64String(ProtectedData.Unprotect(Convert.FromBase64String(encryptedFileText), null, DataProtectionScope.LocalMachine)));
+            }
+            else // generate a new GUID and store it on the disk
+            {
+                Guid guid = Guid.NewGuid();
+            
+                hashedGuid = Security.GenerateHash(Convert.ToBase64String(guid.ToByteArray())); // string
+
+                // store the hashed, encrypted GUID
+                File.WriteAllText(GeneralPaths.SEC_HASHED_GUID_FILE_PATH, Convert.ToBase64String(ProtectedData.Protect(guid.ToByteArray(), null, DataProtectionScope.LocalMachine)));
+            }
+            
+            return hashedGuid;
         }
     }
 }

@@ -172,17 +172,31 @@ namespace Admin_Utility
             }
             else //=> use the current machine's UUID (hashed)
             {
-                ManagementClass mng = new ManagementClass("Win32_ComputerSystemProduct");
+                // read the generated GUID for this computer, if it exists
+                string hashedGuid = null;
 
-                foreach (ManagementObject obj in mng.GetInstances())
+                if (File.Exists(GeneralPaths.SEC_HASHED_GUID_FILE_PATH) == true)
                 {
-                    id = obj.Properties["UUID"].Value.ToString(); //=> get the machine UUID
-                    
-                    id = id.Replace("-", ""); //=> remove separators
+                    string encryptedFileText = File.ReadAllText(GeneralPaths.SEC_HASHED_GUID_FILE_PATH);
+                    id = Convert.ToBase64String(ProtectedData.Unprotect(Convert.FromBase64String(encryptedFileText), null, DataProtectionScope.CurrentUser));
+                }
+                else // generate a new GUID and store it on the disk
+                {
+                    Guid guid = Guid.NewGuid();
+                    byte[] byteHashedGuid;
+
+                    using (SHA256 sha256 = SHA256.Create())
+                    {
+                        byteHashedGuid = sha256.ComputeHash(guid.ToByteArray());
+                        id = Convert.ToBase64String(byteHashedGuid);
+                    }
+
+                    // store the hashed, encrypted GUID
+                    File.WriteAllText(GeneralPaths.SEC_HASHED_GUID_FILE_PATH, Convert.ToBase64String(ProtectedData.Protect(byteHashedGuid, null, DataProtectionScope.CurrentUser)));
                 }
             }
 
-            Security.GeneratorId = Security.GenerateHash(id); //=> store ID
+            Security.GeneratorId = Security.GenerateHash(id); //=> store ID in memory
             
 
             return Security.GeneratorId;

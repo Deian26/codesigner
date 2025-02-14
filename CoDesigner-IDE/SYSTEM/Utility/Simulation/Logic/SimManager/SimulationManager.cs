@@ -27,6 +27,7 @@ namespace CoDesigner_IDE
         /// <param name="description"></param>
         /// <param name="blueprintIndex"></param>
         /// <param name="imageFilePath"></param>
+        /// <param name="concreteType"></param>
         public AbstractSimElement(string name, string description, int blueprintIndex, string imageFilePath, Type concreteType) 
         {
             this.name = name;

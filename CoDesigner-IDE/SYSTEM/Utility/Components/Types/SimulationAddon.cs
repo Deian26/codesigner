@@ -32,7 +32,7 @@ namespace CoDesigner_IDE
             public const string transport_medium = "transport-medium";
 
             // abstract element types
-            public const string abstract_element_type_uP = "AbstractMicroprocessor";
+            public const string abstract_element_type_uP = "uP";
             public const string abstract_element_type_logicInput = "logic-input";
             public const string abstract_element_type_logicOutput = "logic-output";
             public const string abstract_element_type_note = "note";
@@ -43,7 +43,16 @@ namespace CoDesigner_IDE
 
         private List<AbstractTransportMedium> TransportMediums = new List<AbstractTransportMedium>();
 
-        public SimulationAddon(string Name, string Version, DateTime Timestamp, string Description, XmlNode simConfigRoot) : base(Name, Version, Timestamp, Description)
+        /// <summary>
+        /// Creates a new simulation addon component
+        /// </summary>
+        /// <param name="componentFolderPath"></param>
+        /// <param name="Name"></param>
+        /// <param name="Version"></param>
+        /// <param name="Timestamp"></param>
+        /// <param name="Description"></param>
+        /// <param name="simConfigRoot"></param>
+        public SimulationAddon(string componentFolderPath, string Name, string Version, DateTime Timestamp, string Description, XmlNode simConfigRoot) : base(componentFolderPath, Name, Version, Timestamp, Description)
         {
             //parse the configuration file and extract simulation element definitions
             try
@@ -110,9 +119,10 @@ namespace CoDesigner_IDE
                                                                 bool floating_point, programming;
                                                                 string name, description, imgFilePath;
                                                                 List<AbstractMicroprocessor.Port> ports = null;
+
                                                                 name = abstractElementConfig.Attributes["name"].Value.Trim();
                                                                 description = abstractElementConfig.Attributes["description"].Value.Trim();
-                                                                imgFilePath = abstractElementConfig.Attributes["image-filepath"].Value.Trim();
+                                                                imgFilePath = Path.Combine(componentFolderPath, abstractElementConfig.Attributes["image-filepath"].Value.Trim()); // the path is relative to the top directory of the component
 
                                                                 floating_point = false;
                                                                 programming = false;
@@ -162,7 +172,7 @@ namespace CoDesigner_IDE
 
                                                                         default: // unrecognized AbstractMicroprocessor part
                                                                             {
-                                                                                Diagnostics.LogSilentEvent(Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_ELEM_DEFINITION, upConfigElement.Name);
+                                                                                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_COMPONENT_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_ELEM_DEFINITION, upConfigElement.Name);
                                                                                 break;
                                                                             }
                                                                     }
@@ -175,7 +185,7 @@ namespace CoDesigner_IDE
 
                                                         default: // unsupported abstract element types
                                                             {
-                                                                Diagnostics.LogSilentEvent(Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_ELEM_DEFINITION, abstractElementConfig.Name);
+                                                                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_COMPONENT_ORIGIN_CODE,Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_ELEM_DEFINITION, abstractElementConfig.Name);
                                                                 break;
                                                             }
                                                     }
@@ -186,7 +196,7 @@ namespace CoDesigner_IDE
 
                                         default: // unrecognized simulation configuration element
                                             {
-                                                Diagnostics.LogSilentEvent(Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_ELEM_DEFINITION, simConfigElement.Name);
+                                                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_COMPONENT_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_ELEM_DEFINITION, simConfigElement.Name);
                                                 break;
                                             }
                                     }
@@ -197,7 +207,7 @@ namespace CoDesigner_IDE
 
                         default: // unrecognized category
                             {
-                                Diagnostics.LogSilentEvent(Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_ELEM_DEFINITION, configElement.Name);
+                                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_COMPONENT_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_ELEM_DEFINITION, configElement.Name);
                                 break;
                             }
                     }
@@ -205,7 +215,7 @@ namespace CoDesigner_IDE
 
             }catch (Exception ex) // format error
             {
-                Diagnostics.LogSilentEvent(Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_DEFINITION, ex.Message);
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_COMPONENT_ORIGIN_CODE, Diagnostics.DefaultEventCodes.INVALID_SIM_ADDON_DEFINITION, ex.Message);
             }
         }
 

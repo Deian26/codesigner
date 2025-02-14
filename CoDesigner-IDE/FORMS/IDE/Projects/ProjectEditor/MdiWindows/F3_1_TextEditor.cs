@@ -6,12 +6,14 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CoDesigner_IDE
 {
+    [SupportedOSPlatform("windows")]
     public partial class F3_1_TextEditor : Form
     {
         private F3_MainEditor containerEditorForm { get; } = null;
@@ -27,7 +29,7 @@ namespace CoDesigner_IDE
         {
             InitializeComponent();
 
-            this.u1_CodeEditor = new U1_CodeEditor(this);
+            this.u1_CodeEditor = new U1_CodeEditor(this, File.ReadAllText(filePath));
 
             //==// Code editor control
             u1_CodeEditor.Parent = this.F3_1_panel_CodeEditorContainer;
@@ -190,7 +192,7 @@ namespace CoDesigner_IDE
         public void CodeUpdated()
         {
             // Computes the wordcount.
-            // Done in parallel with the applicationThread part of the IDE.
+            // Done in parallel with the 'applicationThread' part of the IDE.
             Parallel.Invoke(new Action(countWords));
         }
 

@@ -1,4 +1,7 @@
-#ignore artifacts
+# artifacts
 /CoDesigner-IDE/bin/
 /CoDesigner-IDE/obj/
 /CoDesigner-IDE/.vs/
+
+# security files
+*.sec

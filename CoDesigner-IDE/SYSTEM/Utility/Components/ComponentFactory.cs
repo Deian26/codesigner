@@ -110,13 +110,13 @@ namespace CoDesigner_IDE
                     {
                         case COMPONENT_TYPE_NAMES.ProgrammingLanguage:
                             {
-                                component = new ProgrammingLanguage(Name, Version, Timestamp, Description, rootElement);
+                                component = new ProgrammingLanguage(componentFolderPath, Name, Version, Timestamp, Description, rootElement);
                                 break;
                             }
 
                         case COMPONENT_TYPE_NAMES.SimulationAddon:
                             {
-                                component = new SimulationAddon(Name, Version, Timestamp, Description, rootElement);
+                                component = new SimulationAddon(componentFolderPath, Name, Version, Timestamp, Description, rootElement);
                                 break;
                             }
 

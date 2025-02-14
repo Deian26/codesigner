@@ -23,10 +23,13 @@ namespace Admin_Utility.UTILITY
         public static readonly string OUTPUT_CONFIG_DIR_ZIP_ARCHIVE = Path.Combine(new string[] { GeneralPaths.OUTPUT, "Configuration.zip" });
         public static readonly string OUTPUT_CONFIG_RSA_PUBLIC_KEY = Path.Combine(new string[] { GeneralPaths.OUTPUT_CONFIG_DIR, "SEC_PUBLIC_REPORT_ENC_KEY.sec" }); // public RSA key
         public static readonly string OUTPUT_CONFIG_CRT_GEN_ID = Path.Combine(new string[] { GeneralPaths.OUTPUT_CONFIG_DIR, "SEC_CONFIG_GEN_ID.sec" }); // this machine's generator ID
-
+        
         //=// Storage
         public static readonly string STORAGE = Path.Combine(new string[] { GeneralPaths.TOP_REL_PATH, "STORAGE" }); // local storage folder
 
+        //==// Security
+        public static readonly string SEC_HASHED_GUID_FILE_PATH = Path.Combine(new string[] { GeneralPaths.STORAGE, "Data", "Security", "SEC_HASHED_UUID.sec" }); // hashed GUID, generated for the current machine then stored on the disk
+        
         //=// User-specific
         public static readonly string LOCAL_USERS_STORAGE_DIR = Path.Combine(new string[] {GeneralPaths.STORAGE, "UserData" }); // directory used to store user-specific data
         #endregion

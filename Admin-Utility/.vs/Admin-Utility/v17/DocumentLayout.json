@@ -3,28 +3,28 @@
   "WorkspaceRootPath": "D:\\CoDesigner-IDE\\Admin-Utility\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\security\\security.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:security\\security.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\utility\\generalpaths.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:utility\\generalpaths.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\utility\\utility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:utility\\utility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\utility\\generalpaths.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:utility\\generalpaths.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|D:\\CoDesigner-IDE\\Admin-Utility\\forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:forms\\u0_mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|solutionrelative:start.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CC183AA1-0ECE-4D9C-B55C-07B401B19CAF}|Admin-Utility.csproj|d:\\codesigner-ide\\admin-utility\\forms\\diagnostics\\u1_diagnosticreportinvestigator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -51,44 +51,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "U0_MainForm.cs [Design]",
-              "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs",
-              "RelativeDocumentMoniker": "FORMS\\U0_MainForm.cs",
-              "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs [Design]",
-              "RelativeToolTip": "FORMS\\U0_MainForm.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-31T15:13:02.418Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
               "Title": "GeneralPaths.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\UTILITY\\GeneralPaths.cs",
               "RelativeDocumentMoniker": "UTILITY\\GeneralPaths.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\UTILITY\\GeneralPaths.cs",
               "RelativeToolTip": "UTILITY\\GeneralPaths.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAuwAwAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAWwB0AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-30T14:31:28.377Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Utility.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\UTILITY\\Utility.cs",
               "RelativeDocumentMoniker": "UTILITY\\Utility.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\UTILITY\\Utility.cs",
               "RelativeToolTip": "UTILITY\\Utility.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAowDQAAABXAAAAAAAAAA==",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAWwFIAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-30T14:19:11.733Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Start.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\Start.cs",
               "RelativeDocumentMoniker": "Start.cs",
@@ -96,8 +84,7 @@
               "RelativeToolTip": "Start.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAwwCMAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-30T14:17:18.077Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-30T14:17:18.077Z"
             },
             {
               "$type": "Document",
@@ -125,28 +112,39 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Security.cs",
-              "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\SECURITY\\Security.cs",
-              "RelativeDocumentMoniker": "SECURITY\\Security.cs",
-              "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\SECURITY\\Security.cs",
-              "RelativeToolTip": "SECURITY\\Security.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAgwB4AAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-29T19:41:05.411Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "U0_MainForm.cs",
               "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs",
               "RelativeDocumentMoniker": "FORMS\\U0_MainForm.cs",
               "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs",
               "RelativeToolTip": "FORMS\\U0_MainForm.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAAAC4AAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAB4AAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-29T19:41:00.925Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "U0_MainForm.cs [Design]",
+              "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs",
+              "RelativeDocumentMoniker": "FORMS\\U0_MainForm.cs",
+              "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\FORMS\\U0_MainForm.cs [Design]",
+              "RelativeToolTip": "FORMS\\U0_MainForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-31T15:13:02.418Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Security.cs",
+              "DocumentMoniker": "D:\\CoDesigner-IDE\\Admin-Utility\\SECURITY\\Security.cs",
+              "RelativeDocumentMoniker": "SECURITY\\Security.cs",
+              "ToolTip": "D:\\CoDesigner-IDE\\Admin-Utility\\SECURITY\\Security.cs",
+              "RelativeToolTip": "SECURITY\\Security.cs",
+              "ViewState": "AgIAALAAAAAAAAAAAAAAAMIAAACwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-29T19:41:05.411Z",
               "EditorCaption": ""
             }
           ]

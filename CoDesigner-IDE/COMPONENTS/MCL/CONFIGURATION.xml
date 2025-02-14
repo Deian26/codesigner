@@ -1,8 +1,7 @@
-<component name="MCL" type="programming-language" version="00.01.00" timestamp="18.11.2024 21:15:28" signature="">
-	
+<component name="MCL" type="programming-language" version="00.01.00" timestamp="18/11/2024 21:15:28" signature="">
 	
 	<description>
-		MiniComp Language
+MiniComp Language
 	</description>
 
 
@@ -15,12 +14,14 @@
 
 		<!-- Required folder structure (relative to the project folder) -->
 		<folder-substructure>
-			<subfolder relative_path="Output"/> <!-- Creates the 'Output' subfolder, in the root folder of the project which will contain the output (compiled code) -->
+			<executable-folder-output relative-path = "Output"/> <!-- Relative path (from the component's top directory) to the directory where the executable file will be generated (mandatory  ) -->
+			<!-- Other required subfolders (optional) -->
+			<subfolder relative-path=" "/> <!-- Creates the 'Output' subfolder, in the root folder of the project which will contain the output (compiled code) -->
 		</folder-substructure>
 		
 		<!-- File formats for files that can be executed by this component -->
 		<executable-files>
-			<executable-file extension="emcl"/> <!-- Only the extension text should be included here (i.e., excluding the dot - '.' ) -->
+			<executable extension="emcl"/> <!-- Only the extension text should be included here (i.e., excluding the dot - '.' ) -->
 		</executable-files>
 		
 		<!-- Source files extensions supported by this component -->
@@ -31,9 +32,9 @@
 	
 	
 	<!-- Grammar definition -->
-	<grammar>
+	<grammar case-sensitive="true">
 		<!-- Keywords -->
-		<keyword name="" code="1" style="0,0,0" case-sensitive="true" /> <!-- The 'name' attribute is the actual string to be searched for in the source code; the 'style' attributes defines how the token will be displayed in the editor (the int 3-tuple defines the RGB colour to be used for the token) -->
+		<keyword name="" code="1" style="0,0,0"/> <!-- The 'name' attribute is the actual string to be searched for in the source code; the 'style' attributes defines how the token will be displayed in the editor (the int 3-tuple defines the RGB colour to be used for the token) -->
 		
 		<!-- Rules -->
 		<rule name="Assignment"/> <!-- 'rule' sub-nodes must formally define grammar rules -->

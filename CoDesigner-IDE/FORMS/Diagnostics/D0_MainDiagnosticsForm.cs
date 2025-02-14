@@ -1,5 +1,6 @@
 ﻿using CoDesigner_IDE.FORMS.IDE;
 using CoDesigner_IDE.FORMS.IDE.Utility;
+using CoDesigner_IDE.SYSTEM.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,9 @@ using static CoDesigner_IDE.Diagnostics;
 
 namespace CoDesigner_IDE
 {
+    /// <summary>
+    /// Provides access to diagnostic actions
+    /// </summary>
     [SupportedOSPlatform("windows")]
     public partial class D0_MainDiagnosticsForm : Form
     {

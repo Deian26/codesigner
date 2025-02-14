@@ -43,18 +43,36 @@ namespace CoDesigner_IDE
         public string Version { get;  }
 
         /// <summary>
+        /// Path to the folder where the component is installed
+        /// </summary>
+        public string ComponentFolderPath { get; } = null;
+        
+        /// <summary>
+        /// Executable file formats (extensions) 
+        /// </summary>
+        public List<string> ExecutableFileFormats { get; } = new List<string>();
+
+        /// <summary>
+        /// Source file formats (extensions) 
+        /// </summary>
+        public List<string> SrcExtensions { get; } = new List<string>(); // key = file extension; value = method used to analyze the contents of a corresponding file type; if the first character of the extension int the component configuration is not a dot ('.'), the dot is prepended to the string when it is added to this list
+
+
+        /// <summary>
         /// Creates a new component with the given details
         /// </summary>
+        /// <param name="componentFolderPath"></param>
         /// <param name="Name"></param>
         /// <param name="Version"></param>
         /// <param name="Timestamp">Creation date</param>
         /// <param name="Description"></param>
-        public Component(string Name, string Version, DateTime Timestamp, string Description)
+        public Component(string componentFolderPath, string Name, string Version, DateTime Timestamp, string Description)
         {
             this.Name = Name;
             this.Description = Description;
             this.Version = Version;
             this.Timestamp = Timestamp;
+            this.ComponentFolderPath = componentFolderPath;
 
             // get class instance
             try
