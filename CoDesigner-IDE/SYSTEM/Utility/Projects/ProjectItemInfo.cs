@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace CoDesigner_IDE
     /// Contains attributes used to store details about a given project item (displayed in the project structure tree view), 
     /// such as if is a supported file type or an executable file type for a given project.
     /// </summary>
+    [SupportedOSPlatform("windows")]
     internal class ProjectItemInfo
     {
         public string FileNameAndExt { get; } = null; //=> item name (displayed in the project structure tree view); it must be a file containing an extension

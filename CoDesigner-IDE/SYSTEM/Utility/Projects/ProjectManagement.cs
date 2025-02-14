@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,43 +16,126 @@ namespace CoDesigner_IDE
     /// <summary>
     /// Tracks IDE projects
     /// </summary>
+    [SupportedOSPlatform("windows")]
     public static class ProjectManagement
     {
-        public static Dictionary<string,Project> Projects = new Dictionary<string, Project>(); //list of actively; project filepath, Project object loaded projects
+        /// <summary>
+        /// List of projects loaded into memory
+        /// </summary>
+        public static Dictionary<string,Project> Projects = new Dictionary<string, Project>();
         
-        //=// Project structure display
+        /// <summary>
+        /// Project structure display
+        /// </summary>
         public static ImageList ProjectStructureImages = new ImageList();//=> file and folder images
                                                                          //=> key = the TAGNAME variables defined below, for each supported file / directory type
                                                                          //=// Project structure tree node image keys
+        /// <summary>
+        /// Image keys for project structure element types (i.e., folders and files from the tree-view)
+        /// </summary>
         public struct ProjectStructureImageKeys
         {
+            /// <summary>
+            /// Unselected directory
+            /// </summary>
             public const string PROJECT_STRUCTURE_DIRECTORY_UNSEL_IMGKEY = "UNSEL_DIR";
+            /// <summary>
+            /// Selected directory
+            /// </summary>
             public const string PROJECT_STRUCTURE_DIRECTORY_SEL_IMGKEY = "SEL_DIR";
 
+            /// <summary>
+            /// Unselected file
+            /// </summary>
             public const string PROJECT_STRUCTURE_GENERAL_FILE_UNSEL_IMGKEY = "UNSEL_FILE";
+            /// <summary>
+            /// Selected file
+            /// </summary>
             public const string PROJECT_STRUCTURE_GENERAL_FILE_SEL_IMGKEY = "SEL_FILE";
 
+            /// <summary>
+            /// Unselected project
+            /// </summary>
             public const string PROJECT_STRUCTURE_PROJECT_UNSEL_IMGKEY = "UNSEL_PROJ";
+            /// <summary>
+            /// Selected project
+            /// </summary>
             public const string PROJECT_STRUCTURE_PROJECT_SEL_IMGKEY = "SEL_PROJ";
         }
 
+        /// <summary>
+        /// File types supported by default
+        /// </summary>
         public struct DefaultSupportedFileTypes
         {
+            /// <summary>
+            /// Text files
+            /// </summary>
             public const string TXT = "txt"; // text file
+            /// <summary>
+            /// Simulation files
+            /// </summary>
             public const string SIM = "sim"; // simulation file
+            /// <summary>
+            /// Tables
+            /// </summary>
             public const string TABLE = "tbl"; // table
         }
 
-        //=// Console notifications
-        public enum ConsoleNotificationTypes { ERROR = 0, WARNING = 1, INFO = 2 };
+        /// <summary>
+        /// Console notifications
+        /// </summary>
+        public enum ConsoleNotificationTypes { 
+            /// <summary>
+            /// Error related to the project's code
+            /// </summary>
+            ERROR = 0, 
+            /// <summary>
+            /// Warning related to the project's code
+            /// </summary>
+            WARNING = 1, 
+            /// <summary>
+            /// Info message (could be from the project's code or the IDE itself)
+            /// </summary>
+            INFO = 2 };
+
+        /// <summary>
+        /// Images for the console notifications
+        /// </summary>
         public static Bitmap[] ConsoleNotificationImages = { // array index >=> (int)ConsoleNotificationTypes
             Bitmap.FromHicon(SystemIcons.Error.Handle),
             Bitmap.FromHicon(SystemIcons.Warning.Handle),
             Bitmap.FromHicon(SystemIcons.Information.Handle)
         };
 
-        //=// Text Editor images
-        public enum TextEditorIconTypes { BUILD = 0, RUN = 1, SAVE = 2, LOAD = 3, INFO = 4 };
+        /// <summary>
+        /// Text (code) editor images
+        /// </summary>
+        public enum TextEditorIconTypes {
+            /// <summary>
+            /// Build project code
+            /// </summary>
+            BUILD = 0, 
+            /// <summary>
+            /// Run built project code
+            /// </summary>
+            RUN = 1, 
+            /// <summary>
+            /// Save current file (text/code)
+            /// </summary>
+            SAVE = 2, 
+            /// <summary>
+            /// Load a new text/code file
+            /// </summary>
+            LOAD = 3, 
+            /// <summary>
+            /// Display more information about the current context
+            /// </summary>
+            INFO = 4 };
+        
+        /// <summary>
+        /// Images used within the text (code) editor
+        /// </summary>
         public static Image[] TextEditorImages = { // array index >=> (int)TextEditorIconTypes
             Image.FromFile(GeneralPaths.ProjectStructure.CODE_BUILD_IMG_FILEPATH),
             Image.FromFile(GeneralPaths.ProjectStructure.CODE_RUN_IMG_FILEPATH),
@@ -57,6 +143,47 @@ namespace CoDesigner_IDE
             Image.FromFile(GeneralPaths.ProjectStructure.LOAD_CODE_IMG_FILEPATH),
             Image.FromFile(GeneralPaths.ProjectStructure.CODE_INFO_IMG_FILEPATH)
         };
+
+        /// <summary>
+        /// Stores the list of current projects (loaded into memory) in a local file.
+        /// The projects from this file are loaded into memory when the application starts.
+        /// </summary>
+        public static void StoreActiveProjects()
+        {
+            try
+            {
+                XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+                xmlWriterSettings.Indent = true;
+                xmlWriterSettings.Encoding = Encoding.UTF8;
+                xmlWriterSettings.IndentChars = "\t";
+                xmlWriterSettings.NewLineChars = "\r\n";
+
+                StringBuilder activeProjectsString = new StringBuilder();
+                XmlWriter xmlWriter = XmlWriter.Create(activeProjectsString,xmlWriterSettings);
+
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("projects");
+
+                foreach (string projectName in ProjectManagement.Projects.Keys)
+                {
+                    xmlWriter.WriteStartElement("project");
+
+                    xmlWriter.WriteString(ProjectManagement.Projects[projectName].ToString());
+
+                    xmlWriter.WriteEndElement();
+                }
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+
+                xmlWriter.Close();
+
+                File.WriteAllText(GeneralPaths.ACTIVE_PROJECTS_FILEPATH,Security.Encrypt(activeProjectsString.ToString()));
+            }
+            catch (Exception ex)
+            {
+                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERR_LOADING_ACTIVE_PROJECTS, ex.Message);
+            }
+        }
 
     }
 }

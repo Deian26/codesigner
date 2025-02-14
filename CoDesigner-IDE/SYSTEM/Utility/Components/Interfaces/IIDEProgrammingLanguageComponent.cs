@@ -21,6 +21,11 @@ namespace CoDesigner_IDE
             string name { get; }
             int size { get; } //=> allocated memory, in bytes
 
+            /// <summary>
+            /// Creates a new Variable details struct
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="size"></param>
             public Variable(string name, int size)
             {
                 this.name = name;
@@ -33,9 +38,20 @@ namespace CoDesigner_IDE
         /// </summary>
         public struct Function
         {
-            public string name { get; } //=> function name
-            public int totalSize { get; } //=> allocated memory, in bytes; includes parameters, local variables and the return value(s)
+            /// <summary>
+            /// Function name
+            /// </summary>
+            public string name { get; }
+            /// <summary>
+            /// Allocated memory, in bytes; includes parameters, local variables and the return value(s)
+            /// </summary>
+            public int totalSize { get; }
 
+            /// <summary>
+            /// Creates a new Function details struct
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="totalSize"></param>
             public Function(string name, int totalSize)
             {
                 this.name = name;
@@ -50,15 +66,46 @@ namespace CoDesigner_IDE
         /// </summary>
         public struct CodeSnapshot
         {
-            public List<Variable> variables { get; } //=> current variable list
-            public List<Function> functions { get; } //=> current function list
-            public int codeLines { get; } //=> current lines of code
-            public int functionCalls { get; } //=> current number of function calls
+            /// <summary>
+            /// Current variable list
+            /// </summary>
+            public List<Variable> variables { get; }
+            /// <summary>
+            /// Current function list
+            /// </summary>
+            public List<Function> functions { get; }
+            /// <summary>
+            /// Current lines of code
+            /// </summary>
+            public int codeLines { get; }
+            /// <summary>
+            /// Current number of function calls
+            /// </summary>
+            public int functionCalls { get; }
 
-            public int conditionalInstr { get; } //=> current number of conditional instructions (e.g., 'if')
-            public List<Tuple<int, int>> scopes { get; } //=> current number of scopes, each defines by 2 indices: start (includes the first instruction, if applicable) and end line of the scope
-            public int loops { get; } //=> current number of loop instructions
+            /// <summary>
+            /// Current number of conditional instructions (e.g., 'if')
+            /// </summary>
+            public int conditionalInstr { get; }
+            /// <summary>
+            /// Current number of scopes, each defines by 2 indices: start (includes the first instruction, if applicable) and end line of the scope
+            /// </summary>
+            public List<Tuple<int, int>> scopes { get; }
+            /// <summary>
+            /// Current number of loop instructions
+            /// </summary>
+            public int loops { get; }
 
+            /// <summary>
+            /// Creates a new code snapshot struct
+            /// </summary>
+            /// <param name="variables"></param>
+            /// <param name="functions"></param>
+            /// <param name="codeLines"></param>
+            /// <param name="functionCalls"></param>
+            /// <param name="conditionalInstr"></param>
+            /// <param name="scopes"></param>
+            /// <param name="loops"></param>
             public CodeSnapshot(
                 List<Variable> variables,
                 List<Function> functions,

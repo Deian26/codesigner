@@ -1,4 +1,4 @@
-<component name="MCS" type="simulation-addon" version="00.01.00" timestamp="18.11.2024 21:15:28" signature="">
+<component name="MCS" type="simulation-addon" version="00.01.00" timestamp="18/11/2024 21:15:28" signature="">
 	
 	<description>
 		MiniComp Simulation
@@ -63,7 +63,7 @@
 				</uP>
 			-->
 			
-			<uP name="MC" description="MiniComp microprocessor" image-filepath="Resources/MC_uC_BlueprintImg.jpg"> <!-- Defines a Mini Comp uP -->
+			<uP name="MC" description="MiniComp microprocessor" image-filepath="Resources/MC_uC_BlueprintImg.jpg"> <!-- Defines a Mini Comp uP; paths are relative to the top directory of the component-->
 				<logic supports-floating-point="false" supports-programming="true"/>
 				<ports>
 					<port name="GAP" 

@@ -199,6 +199,7 @@ public class MCL : IIDEProgrammingLanguageComponent
     /// Mandatory method
     /// 
     /// Compiles the code analysis results into a final package (e.g., executable file(s)).
+    /// The file to be openeded (executable) must be stored at the path specified in the configuration XML file, 
     /// </summary>
     /// <returns> True if the code was successfully compiled </returns>
     public bool Compile()
@@ -235,7 +236,7 @@ public class MCL : IIDEProgrammingLanguageComponent
     #endregion
 
     #region code-execution
-
+    
     #endregion
     
     #region singleton

@@ -11,14 +11,24 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static CoDesigner_IDE.Diagnostics;
 using System.Xml;
+using System.Runtime.Versioning;
+using System.Security.Cryptography;
+using CoDesigner_IDE.SYSTEM.Utility;
 
 namespace CoDesigner_IDE
 {
+    /// <summary>
+    /// Handles component loading and displays the progress, as well as the IDE logo
+    /// </summary>
+    [SupportedOSPlatform("windows")]
     public partial class F0_Logo : Form
     {
         private int delayTimerIntervalMs = 500;
         private int cancelLoadingTimerFactor = 2000; //factor by which to multiply the number of elements to be loaded, which will then be used as a maximum amount of time to wait for them to be loaded
 
+        /// <summary>
+        /// Creates a new logo form
+        /// </summary>
         public F0_Logo()
         {
             InitializeComponent();
@@ -40,22 +50,66 @@ namespace CoDesigner_IDE
             XmlDocument defaultMessages = new XmlDocument();
             XmlDocument versions = new XmlDocument();
 
+            // load events, messages and other application details and configurations
             try
             {
-                eventsFile.Load(GeneralPaths.DEFAULT_EVENTS_FILEPATH);
-                activeProjectsFile.Load(GeneralPaths.ACTIVE_PROJECTS_FILEPATH);
-                defaultMessages.Load(GeneralPaths.DEFAULT_MESSAGES_FILEPATH);
-                versions.Load(GeneralPaths.VERSIONS_FILEPATH);
-            }catch(Exception ex)
-            {
-                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.INVALID_PROGR_ITEMS_DEFINITIONS, ex.Message);
-            }
+                //=// Read XML configuration file signatures and data
+                Dictionary<string, string> configFileSegments = null;
 
-            this.F0_progressBar_IdeLoading.Maximum = installedComponents.Count +  
-                                                     activeProjectsFile.DocumentElement.ChildNodes.Count +
-                                                     versions.DocumentElement.ChildNodes.Count +
-                                                     2 ; //events + messages (1 step each)
-            this.F0_progressBar_IdeLoading.Step = 1;
+                //==// Events
+                configFileSegments = Utility.GetConfigFileSegments(GeneralPaths.DEFAULT_EVENTS_FILEPATH);
+                if (configFileSegments == null ||
+                    Security.VerifySignature(configFileSegments[Utility.ConfigFileSegmentHeaders.SIGNATURE], configFileSegments[Utility.ConfigFileSegmentHeaders.XML_DATA]) == false)
+                    throw new Exception(GeneralPaths.DEFAULT_EVENTS_FILEPATH);
+
+                eventsFile.LoadXml(configFileSegments[Utility.ConfigFileSegmentHeaders.XML_DATA]);
+
+                //==// Default messages
+                configFileSegments = Utility.GetConfigFileSegments(GeneralPaths.DEFAULT_MESSAGES_FILEPATH);
+                if (configFileSegments == null ||
+                    Security.VerifySignature(configFileSegments[Utility.ConfigFileSegmentHeaders.SIGNATURE], configFileSegments[Utility.ConfigFileSegmentHeaders.XML_DATA]) == false) 
+                    throw new Exception(GeneralPaths.DEFAULT_MESSAGES_FILEPATH);
+
+                defaultMessages.LoadXml(configFileSegments[Utility.ConfigFileSegmentHeaders.XML_DATA]);
+
+                //==// Element versions
+                configFileSegments = Utility.GetConfigFileSegments(GeneralPaths.VERSIONS_FILEPATH);
+                if (configFileSegments == null ||
+                    Security.VerifySignature(configFileSegments[Utility.ConfigFileSegmentHeaders.SIGNATURE], configFileSegments[Utility.ConfigFileSegmentHeaders.XML_DATA]) == false) 
+                    throw new Exception(GeneralPaths.VERSIONS_FILEPATH);
+
+                versions.LoadXml(configFileSegments[Utility.ConfigFileSegmentHeaders.XML_DATA]);
+
+
+                // local storage files, not app-config
+                //==// Active projects
+                if (File.Exists(GeneralPaths.ACTIVE_PROJECTS_FILEPATH) == false) // create the file with no active projects
+                {
+                    ProjectManagement.StoreActiveProjects();
+                }
+                string activeProjectsEnc = File.ReadAllText(GeneralPaths.ACTIVE_PROJECTS_FILEPATH);
+                activeProjectsFile.LoadXml(Security.DirectLoggingDecrypt(activeProjectsEnc));
+
+
+                // check values
+                if (installedComponents == null ||
+                    activeProjectsFile.DocumentElement == null || activeProjectsFile.DocumentElement.ChildNodes == null ||
+                    versions.DocumentElement == null || versions.DocumentElement.ChildNodes == null)
+                    throw new Exception();
+
+                this.F0_progressBar_IdeLoading.Maximum = installedComponents.Count +
+                                         activeProjectsFile.DocumentElement.ChildNodes.Count +
+                                         versions.DocumentElement.ChildNodes.Count +
+                                         2; //events + messages (1 step each)
+                this.F0_progressBar_IdeLoading.Step = 1;
+
+            }
+            catch(Exception ex)
+            {
+                Diagnostics.LogDirectEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DEFAULT_UNDEFINED_EVENT_CODE, Diagnostics.EVENT_SEVERITY.Fatal, "EN: Could not load configuration files !", ex.Message);
+                // stop processing further files
+                return;
+            }
 
             //start the timer used to cancel the loading of elements, if a certain time limit is reached (dynamic, based on the number of elements to load)
             this.F0_timer_CancelLoadTimer.Interval = this.F0_progressBar_IdeLoading.Maximum * this.cancelLoadingTimerFactor;
@@ -66,6 +120,8 @@ namespace CoDesigner_IDE
             {
                 try
                 {
+                    if (versions.DocumentElement == null) throw new Exception();
+
                     foreach (XmlNode version in versions.DocumentElement.ChildNodes)
                     {
                         if (version.Name.Equals("item") == true)
@@ -87,50 +143,56 @@ namespace CoDesigner_IDE
 
             if (File.Exists(GeneralPaths.DEFAULT_EVENTS_FILEPATH) == true)
             {
-
-                XmlNode root = eventsFile.DocumentElement;
-
-                foreach (XmlNode _event in root.ChildNodes)
+                try
                 {
-                    if (_event.Name.Equals("event") == true)
+
+                    if (eventsFile.DocumentElement == null) throw new Exception();
+
+                    foreach (XmlNode _event in eventsFile.DocumentElement.ChildNodes)
                     {
-                        try
+                        if (_event.Name.Equals("event") == true)
                         {
-                            int code;
-                            Diagnostics.EVENT_ORIGIN origin;
-                            string message = null;
-
-                            origin = (Diagnostics.EVENT_ORIGIN)Convert.ToInt32(_event.Attributes["origin"].Value.ToString());
-                            code = ((Convert.ToInt32(_event.Attributes["code"].Value) & 0xFFFF) | (((int)origin & 0xFFFF) << 16));
-
-                            //get event message, based on the current language
-                            foreach (XmlNode messageTranslation in _event.ChildNodes)
+                            try
                             {
-                                if (messageTranslation.Name.Equals(Customization.Language) == true)
+                                int code;
+                                Diagnostics.EVENT_ORIGIN origin;
+                                string message = null;
+
+                                origin = (Diagnostics.EVENT_ORIGIN)Convert.ToInt32(_event.Attributes["origin"].Value.ToString());
+                                code = ((Convert.ToInt32(_event.Attributes["code"].Value) & 0xFFFF) | (((int)origin & 0xFFFF) << 16));
+
+                                //get event message, based on the current language
+                                foreach (XmlNode messageTranslation in _event.ChildNodes)
                                 {
-                                    message = messageTranslation.Attributes["message"].Value.ToString();
-                                    break;
+                                    if (messageTranslation.Name.Equals(Customization.Language) == true)
+                                    {
+                                        message = messageTranslation.Attributes["message"].Value.ToString();
+                                        break;
+                                    }
                                 }
+
+                                Diagnostics.PossibleEvents.Add(((int)origin << 16) | (code & 0xFFFF), new Event(
+                                    origin,
+                                    (Diagnostics.EVENT_SEVERITY)Convert.ToInt32(_event.Attributes["severity"].Value.ToString()),
+                                    code,
+                                    message
+                                    ));
+
+                                this.F0_progressBar_IdeLoading.PerformStep();
                             }
-
-                            Diagnostics.PossibleEvents.Add(((int)origin << 16) | (code & 0xFFFF), new Event(
-                                origin,
-                                (Diagnostics.EVENT_SEVERITY)Convert.ToInt32(_event.Attributes["severity"].Value.ToString()),
-                                code,
-                                message
-                                ));
-
-                            this.F0_progressBar_IdeLoading.PerformStep();
-                        }
-                        catch (Exception ex)
-                        {
-                            allEventsLoaded = false;
-                            //invalid event definition
-                            Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_EVENT, ex.Message);
+                            catch (Exception ex)
+                            {
+                                allEventsLoaded = false;
+                                //invalid event definition
+                                Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_EVENT, ex.Message);
+                            }
                         }
                     }
                 }
-
+                catch (Exception ex)
+                {
+                    Diagnostics.LogSilentEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, DefaultEventCodes.ERR_LOADING_EVENT, ex.Message);
+                }
             }
             else //fatal error -> could not load default events
             {
@@ -154,9 +216,9 @@ namespace CoDesigner_IDE
             this.F0_listBox_LoadingElements.Items.Add("Loading prompts from "+ GeneralPaths.DEFAULT_MESSAGES_FILEPATH + " ... ");
             try
             {
-                XmlNode root = defaultMessages.DocumentElement;
+                if (defaultMessages.DocumentElement == null) throw new Exception();
 
-                foreach (XmlNode message in root.ChildNodes)
+                foreach (XmlNode message in defaultMessages.DocumentElement.ChildNodes)
                 {
                     if (message.Name.Equals("message"))
                     {
@@ -183,10 +245,11 @@ namespace CoDesigner_IDE
                             Prompts.Messages.Add(
                                 code,
                                 new PromptMessage(
+                                    code,
                                     caption,
                                     text,
-                                    Convert.ToInt32(message.Attributes["dialog_buttons"].Value.Trim()),
-                                    Convert.ToInt32(message.Attributes["dialog_icon"].Value.Trim())
+                                    message.Attributes["dialog_buttons"].Value.Trim(),
+                                    message.Attributes["dialog_icon"].Value.Trim()
                                     )
                                 );
                         }
@@ -333,7 +396,8 @@ namespace CoDesigner_IDE
                 Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_DIRECTORY_SEL_IMAGE_FILEPATH));
 
 
-            //=// Project images
+            //=// Images
+            // project images
             ProjectManagement.ProjectStructureImages.Images.Add(
                 ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_PROJECT_UNSEL_IMGKEY,
                 Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_PROJECT_UNSEL_IMAGE_FILEPATH));
@@ -342,7 +406,32 @@ namespace CoDesigner_IDE
                 ProjectManagement.ProjectStructureImageKeys.PROJECT_STRUCTURE_PROJECT_SEL_IMGKEY,
                 Image.FromFile(GeneralPaths.ProjectStructure.PROJECT_STRUCTURE_PROJECT_SEL_IMAGE_FILEPATH));
 
+            //=// Security
+            // load security details
+            bool validGenIdsFile = Security.LoadApprovedGeneratorId();
+            // check if this instance was activated and if not, request activation with an admin-utility
+            if (validGenIdsFile == false) // request activation
+            {
+                // stop cancel component loading timer
+                this.F0_timer_CancelLoadTimer.Stop();
 
+                // request activation
+                F4_RegisterGenId f4_RegisterIdeForm = new F4_RegisterGenId(true); //=> create the used tokens local file
+                DialogResult programActivationResult = f4_RegisterIdeForm.ShowDialog(); // necessary local files are also crated when the program is activated
+
+                if (programActivationResult != DialogResult.OK) // error
+                {
+                    Diagnostics.LogEvent(Diagnostics.DEFAULT_IDE_ORIGIN_CODE, Diagnostics.DefaultEventCodes.ERROR_ACTIVATING_PROGRAM);
+                }
+
+            }else //=> the file exists and could be read successfully => this program is activate
+            {
+                Security.LoadUsedSecurityTokens(); // a used tokens file already exists => load tokens from it
+            }
+
+            Security.LoadSecurityProperties();
+            if(File.Exists(GeneralPaths.SEC_PUBLIC_REPORT_ENC_KEY_FILE_PATH) == true) Security.LoadReportEncKey(); // should only be done when the program is (re)configured
+            
             //close form
             if (this.F0_progressBar_IdeLoading.Value == this.F0_progressBar_IdeLoading.Maximum)
             {
@@ -375,5 +464,6 @@ namespace CoDesigner_IDE
 
             Program.StopAll();
         }
+
     }
 }

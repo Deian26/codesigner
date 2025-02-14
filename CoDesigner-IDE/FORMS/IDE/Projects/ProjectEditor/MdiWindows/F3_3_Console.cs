@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CoDesigner_IDE.FORMS.IDE.Projects.ProjectEditor.MdiWindows
+namespace CoDesigner_IDE
 {
     /// <summary>
     /// Defines the console and its components. This form is mainly used as a way to display information; most / all data 

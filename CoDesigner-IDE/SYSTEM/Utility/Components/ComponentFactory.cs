@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using static CoDesigner_IDE.Diagnostics;
 using System.Xml;
 using System.Globalization;
+using System.Runtime.Versioning;
 
 namespace CoDesigner_IDE
 {
@@ -15,9 +16,20 @@ namespace CoDesigner_IDE
     /// </summary>
     public class ProjectComboBoxDetails
     {
+        /// <summary>
+        /// Label associated with the combo box
+        /// </summary>
         public string labelText = "";
+        /// <summary>
+        /// Combo box values
+        /// </summary>
         public List<string> comboValues = new List<string>();
 
+        /// <summary>
+        /// Creates a new Combo box details object
+        /// </summary>
+        /// <param name="labelText"></param>
+        /// <param name="comboValues"></param>
         public ProjectComboBoxDetails(string labelText, List<string> comboValues)
         {
             this.labelText = labelText;
@@ -28,6 +40,7 @@ namespace CoDesigner_IDE
     /// <summary>
     /// Manages components and component configuration files
     /// </summary>
+    [SupportedOSPlatform("windows")]
     internal static class ComponentFactory
     {
         /// <summary>
@@ -97,13 +110,13 @@ namespace CoDesigner_IDE
                     {
                         case COMPONENT_TYPE_NAMES.ProgrammingLanguage:
                             {
-                                component = new ProgrammingLanguage(Name, Version, Timestamp, Description, rootElement);
+                                component = new ProgrammingLanguage(componentFolderPath, Name, Version, Timestamp, Description, rootElement);
                                 break;
                             }
 
                         case COMPONENT_TYPE_NAMES.SimulationAddon:
                             {
-                                component = new SimulationAddon(Name, Version, Timestamp, Description, rootElement);
+                                component = new SimulationAddon(componentFolderPath, Name, Version, Timestamp, Description, rootElement);
                                 break;
                             }
 

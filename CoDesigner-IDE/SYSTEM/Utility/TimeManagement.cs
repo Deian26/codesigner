@@ -11,6 +11,9 @@ namespace CoDesigner_IDE
     /// </summary>
     public class TimeManagement
     {
-        public const string TimestampFormat = "dd/MM/yyyy HH:mm:ss"; // => timestamp used across the IDE
+        /// <summary>
+        /// Format for the timestamps used across the IDE
+        /// </summary>
+        public const string TimestampFormat = "dd/MM/yyyy HH:mm:ss";
     }
 }

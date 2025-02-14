@@ -1,4 +1,4 @@
-﻿namespace CoDesigner_IDE.FORMS.IDE.Projects.ProjectEditor.MdiWindows
+﻿namespace CoDesigner_IDE
 {
     partial class F3_3_Console
     {

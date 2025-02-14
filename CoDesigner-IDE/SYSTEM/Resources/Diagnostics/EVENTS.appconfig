@@ -1,0 +1,197 @@
+﻿#S\@11937392102423927492111140209184152951318386683213524167861232242252421771463
+#X\@
+<events>
+	<!-- 
+	- The event code must be unique in the default files (for components, the codes must be unique component-wide); the event code will be: bytes0-1= origin, bytes2-3=code
+	  The event code here is represented as a decimal
+	- Origin: 
+		-> 0 = Undefined
+		-> 1 = IDE
+		-> 2 = Component
+		-> 3 = UserProgram (for component events, this is attribute is not used)
+	- Severity: 
+		-> 0 = Info
+		-> 1 = Debug
+		-> 2 = Warning
+		-> 3 = Error
+		-> 4 = Fatal
+	-->
+	
+	<event code="1" origin="0" severity="3"> 
+		<EN message="Invalid component loaded: unsupported component type!"/>
+	</event>
+	
+	<event code="2" origin="0" severity="2"> 
+		<EN message="Invalid project name! Check textbox hint for details on valid names."/>
+	</event>
+	
+	<event code="3" origin="0" severity="2"> 
+		<EN message="Invalid project folder location!"/>
+	</event>
+
+	<event code="4" origin="0" severity="2"> 
+		<EN message="Invalid message box buttons or icon code. "/>
+	</event>
+
+	<event code="5" origin="0" severity="4">
+		<EN message="Could not load GUI default messages! "/>
+	</event>
+
+	<event code="6" origin="0" severity="2">
+		<EN message="Could not load a GUI default message translation for the current language. "/>
+	</event>
+
+	<event code="7" origin="0" severity="2">
+		<EN message="Could not load project from file. The file does not exist or has an invalid format! "/>
+	</event>
+	
+	
+	<event code="8" origin="1" severity="3">
+		<EN message="Could not load event(s)! "/>
+	</event>
+
+	<event code="9" origin="0" severity="3">
+		<EN message="Could not load active projects! "/>
+	</event>
+
+	<event code="10" origin="1" severity="4">
+		<EN message="Could not load program items due to invalid files or file formats (including components)! "/>
+	</event>
+
+	<event code="11" origin="0" severity="2">
+		<EN message="Could not load versions! "/>
+	</event>
+
+	<event code="12" origin="2" severity="3">
+		<EN message="Could not load component control for project configuration (invalid name). "/>
+	</event>
+
+	<event code="13" origin="2" severity="3">
+		<EN message="Could not load component (undefined). "/>
+	</event>
+
+	<event code="14" origin="2" severity="3">
+		<EN message="Could not load simulation addon (invalid definition). Check the transport mediums, transport protocols and elements nodes."/>
+	</event>
+
+	<event code="15" origin="2" severity="3">
+		<EN message="Could not load simulation addon (invalid element definition). "/>
+	</event>
+
+	<event code="16" origin="2" severity="3">
+		<EN message="Could not load component configuration (invalid component file or invalid required classes implementations). "/>
+	</event>
+
+	<event code="17" origin="3" severity="3">
+		<EN message="Invalid signal generator value type representation. "/>
+	</event>
+
+	<event code="18" origin="3" severity="3">
+		<EN message="Unsupported concrete simulation element type. "/>
+	</event>
+
+	<event code="19" origin="3" severity="2">
+		<EN message="Could not create the project. "/>
+	</event>
+
+	<event code="20" origin="3" severity="2">
+		<EN message="Could not retrieve project item details. Check if the file / directory still exists. "/>
+	</event>
+
+	<event code="21" origin="0" severity="3">
+		<EN message="Could not generate the signature. "/>
+	</event>
+
+	<event code="22" origin="1" severity="2">
+		<EN message="Could not load security properties. "/>
+	</event>
+
+	<event code="23" origin="1" severity="2">
+		<EN message="Invalid token."/>
+	</event>
+
+	<event code="24" origin="1" severity="2">
+		<EN message="Invalid token string format."/>
+	</event>
+
+	<event code="25" origin="1" severity="2">
+		<EN message="Token expired."/>
+	</event>
+
+	<event code="26" origin="1" severity="2">
+		<EN message="The provided token does not grant a sufficient access level for this operation."/>
+	</event>
+
+	<event code="27" origin="1" severity="2">
+		<EN message="Could not store the new security properties."/>
+	</event>
+
+	<event code="28" origin="1" severity="3">
+		<EN message="Error encrypting data."/>
+	</event>
+
+	<event code="29" origin="1" severity="3">
+		<EN message="Error decrypting data."/>
+	</event>
+
+	<event code="30" origin="1" severity="3">
+		<EN message="Error encrypting data: unsupported OS. Data was not encrypted!"/>
+	</event>
+
+	<event code="31" origin="1" severity="3">
+		<EN message="Error decrypting data: unsupported OS. Data was not decrypted!"/>
+	</event>
+
+	<event code="32" origin="1" severity="2">
+		<EN message="Error storing application exit data."/>
+	</event>
+
+	<event code="33" origin="1" severity="4">
+		<EN message="Error loading used tokens."/>
+	</event>
+
+	<event code="34" origin="1" severity="2">
+		<EN message="This token was already used and cannot be used again."/>
+	</event>
+
+	<event code="35" origin="1" severity="4">
+		<EN message="Error parsing configuration files."/>
+	</event>
+
+	<event code="36" origin="1" severity="3">
+		<EN message="Inauthentic file."/>
+	</event>
+
+	<event code="37" origin="1" severity="2">
+		<EN message="Could not generate action report."/>
+	</event>
+
+	<event code="38" origin="1" severity="2">
+		<EN message="Could not encrypt the diagnostic report."/>
+	</event>
+
+	<event code="39" origin="1" severity="3">
+		<EN message="General fatal security error."/>
+	</event>
+	
+	<event code="40" origin="1" severity="4">
+		<EN message="Could not activate program."/>
+	</event>
+
+	<event code="41" origin="1" severity="2">
+		<EN message="Could not add generator ID."/>
+	</event>
+
+	<event code="42" origin="1" severity="2">
+		<EN message="Could not load the public report encryption key."/>
+	</event>
+
+	<event code="43" origin="1" severity="2">
+		<EN message="Could not load the selected log."/>
+	</event>
+
+	<event code="44" origin="1" severity="3">
+		<EN message="Could not encrypt the diagnostic report."/>
+	</event>
+	
+</events>
